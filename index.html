@@ -17,7 +17,7 @@
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
   <p class="muted" style="font-size:12px;text-align:center">اطلاعات واقعی دانش آموزان و مسئولین بعدا از طریق پایگاه داده وارد می شود.</p>
-  <div class="version">v0.2.1</div>
+  <div class="version">v0.2.2</div>
 </section>
 
 <section id="app" class="app">
@@ -60,7 +60,7 @@
 
 <script>
 const SUPABASE_URL="https://pwwicgyrycaexjnnhseb.supabase.co";
-const SUPABASE_KEY="sb_publishable_CiQbGJJx_WGbeGTPssoWYQ_kutyUJ9h";
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3d2ljZ3lyeWNhZXhqbm5oc2ViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwMzczMjgsImV4cCI6MjEwNjYxMzMyOH0.860RskDmycONZUHyOloN8AmKqRkzU5YNXUUze2DuPdM";
 const API=SUPABASE_URL+"/functions/v1/helligram-api";
 let token=localStorage.getItem("helligram_token")||"";
 let profile=null;
