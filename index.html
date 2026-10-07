@@ -1,36 +1,145 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>حلی گرام | پیام رسان مدرسه</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#08111f;color:#eef5ff;min-height:100vh}.wrap{max-width:1100px;margin:auto;padding:24px}.card{background:rgba(18,31,51,.82);border:1px solid #263a58;border-radius:24px;box-shadow:0 20px 60px #0006;backdrop-filter:blur(16px)}.login{max-width:460px;margin:7vh auto;padding:32px}.brand{text-align:center}.logo{width:82px;height:82px;border-radius:24px;margin:auto auto 14px;background:linear-gradient(135deg,#37a5ff,#7c5cff);display:grid;place-items:center;font-size:34px;font-weight:900}.muted{color:#9eb0c8}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:24px 0}.tabs button,.btn{border:0;border-radius:14px;padding:13px;cursor:pointer;font-weight:700;background:#16263e;color:#dceaff}.tabs button.active,.btn.primary{background:linear-gradient(135deg,#318fff,#7a5cff);color:white}.field{margin:12px 0}.field label{display:block;font-size:13px;margin-bottom:7px;color:#b9c9dd}input,textarea,select{width:100%;padding:13px;border-radius:13px;border:1px solid #2b4261;background:#0b182a;color:white;outline:none}textarea{resize:vertical}.btn{width:100%;margin-top:10px}.error{color:#ff8f9b;min-height:20px;margin-top:8px}.app{display:none}.top{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;margin-bottom:16px}.top h2{margin:0}.grid{display:grid;grid-template-columns:280px 1fr;gap:16px}.side{padding:16px}.side button{width:100%;margin:5px 0}.chat{min-height:600px;display:flex;flex-direction:column}.chathead{padding:18px;border-bottom:1px solid #263a58}.messages{flex:1;padding:18px;overflow:auto}.msg{max-width:75%;padding:11px 14px;border-radius:16px;margin:8px 0;background:#172942}.msg.me{margin-right:auto;background:#305ba8}.composer{display:flex;gap:8px;padding:14px;border-top:1px solid #263a58}.composer textarea{min-height:48px}.composer .btn{width:110px;margin:0}.notice{padding:12px;border-radius:13px;background:#10233a;margin-bottom:10px;font-size:13px}.hidden{display:none!important}@media(max-width:750px){.grid{grid-template-columns:1fr}.side{order:2}.chat{min-height:520px}.wrap{padding:12px}.top{gap:10px}.msg{max-width:90%}}
-</style></head>
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#07101d;color:#edf5ff;min-height:100vh}.wrap{max-width:1180px;margin:auto;padding:18px}.card{background:rgba(15,29,48,.88);border:1px solid #263c59;border-radius:22px;box-shadow:0 18px 55px #0008;backdrop-filter:blur(15px)}button{font-family:inherit}.login{max-width:470px;margin:6vh auto;padding:30px}.brand{text-align:center}.logo{width:84px;height:84px;border-radius:24px;margin:auto auto 14px;background:linear-gradient(135deg,#37a5ff,#755dff);display:grid;place-items:center;font-size:36px;font-weight:900}.muted{color:#9eb0c8}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:24px 0}.tabs button,.btn{border:0;border-radius:13px;padding:12px;cursor:pointer;font-weight:700;background:#16283f;color:#e8f2ff}.tabs button.active,.btn.primary{background:linear-gradient(135deg,#2f91ff,#795cff);color:white}.field{margin:12px 0}.field label{display:block;font-size:13px;margin-bottom:7px;color:#c1cee0}input,textarea,select{width:100%;padding:12px;border-radius:12px;border:1px solid #2b4564;background:#091729;color:white;outline:none}select option{background:#0b1727}textarea{resize:vertical}.btn{width:100%;margin-top:9px}.error{color:#ff9ba5;min-height:22px;margin-top:8px}.app{display:none}.top{display:flex;justify-content:space-between;align-items:center;padding:15px 18px;margin-bottom:14px}.top h2{margin:0}.top .btn{width:auto;margin:0}.grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.side{padding:14px}.side .btn{margin:5px 0}.chat{min-height:650px;display:flex;flex-direction:column}.chathead{padding:17px;border-bottom:1px solid #263c59}.messages{flex:1;padding:17px;overflow:auto;min-height:450px}.msg{max-width:78%;padding:10px 13px;border-radius:16px;margin:8px 0;background:#172b45;position:relative}.msg.me{margin-right:auto;background:#315fa8}.msg small{display:block;color:#9db1c9;font-size:10px;margin-top:4px}.composer{display:flex;gap:8px;padding:13px;border-top:1px solid #263c59}.composer textarea{min-height:50px}.composer .btn{width:105px;margin:0}.notice{padding:11px;border-radius:12px;background:#10243c;margin-bottom:10px;font-size:13px}.admin{margin-top:14px;padding:18px;display:none}.adminGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.list{max-height:250px;overflow:auto}.row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #20344e}.row .btn{width:auto;margin:0;padding:8px 10px;font-size:12px}.hidden{display:none!important}.status{font-size:11px;margin-top:5px}.version{text-align:center;color:#566b84;font-size:10px;margin-top:12px}@media(max-width:760px){.grid{grid-template-columns:1fr}.side{order:2}.chat{min-height:540px}.messages{min-height:350px}.adminGrid{grid-template-columns:1fr}.msg{max-width:92%}.wrap{padding:10px}}
+</style>
+</head>
 <body>
 <div class="wrap">
 <section id="login" class="card login">
-<div class="brand"><div class="logo">ح</div><h1>حلی گرام</h1><p class="muted">پیام رسان مدرسه</p></div>
-<div class="tabs"><button id="studentTab" class="active" onclick="setMode('student')">دانش آموز</button><button id="staffTab" onclick="setMode('staff')">مسئولین</button></div>
-<div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حلی گرام</button></div>
-<div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
-<div id="error" class="error"></div>
-<p class="muted" style="font-size:12px;text-align:center">نسخه آزمایشی اولیه — اطلاعات واقعی بعدا متصل می شود.</p>
+  <div class="brand"><div class="logo">ح</div><h1>حلی گرام</h1><p class="muted">پیام رسان مدرسه</p></div>
+  <div class="tabs"><button id="studentTab" class="active" onclick="setMode('student')">دانش آموز</button><button id="staffTab" onclick="setMode('staff')">مسئولین</button></div>
+  <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حلی گرام</button></div>
+  <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
+  <div id="error" class="error"></div>
+  <p class="muted" style="font-size:12px;text-align:center">اطلاعات واقعی دانش آموزان و مسئولین بعدا از طریق پایگاه داده وارد می شود.</p>
+  <div class="version">v0.2.0</div>
 </section>
+
 <section id="app" class="app">
-<div class="card top"><div><h2>حلی گرام</h2><small id="who" class="muted"></small></div><button class="btn" style="width:auto;margin:0" onclick="logout()">خروج</button></div>
-<div class="grid"><aside class="card side"><div class="notice" id="roleNotice"></div><button class="btn primary" onclick="showDemoChat()">💬 پیام رسان</button><button class="btn" id="adminBtn" onclick="toggleAdmin()">🛡️ مدیریت</button></aside>
-<main class="card chat"><div class="chathead"><b id="chatTitle">گفتگوی آزمایشی</b><div class="muted" id="chatStatus">آماده ارسال پیام</div></div><div id="messages" class="messages"></div><div class="composer"><textarea id="messageInput" placeholder="پیام خود را بنویسید..."></textarea><button class="btn primary" onclick="sendMessage()">ارسال</button></div></main></div>
-<div id="adminPanel" class="card" style="margin-top:16px;padding:20px;display:none"><h3>پنل مسئول</h3><div class="notice">در نسخه واقعی، این بخش به Supabase متصل می شود و حذف پیام، بستن نوشتن فردی و گروهی و مدیریت کاربران از اینجا انجام می شود.</div><div class="grid" style="grid-template-columns:1fr 1fr"><div><label>دانش آموز</label><select><option>نمونه دانش آموز ۱</option><option>نمونه دانش آموز ۲</option></select><button class="btn" onclick="alert('مجوز نوشتن این کاربر در نسخه واقعی بسته می شود.')">🚫 بستن نوشتن</button></div><div><label>گروه</label><select><option>کلاس نمونه</option></select><button class="btn" onclick="alert('نوشتن گروه در نسخه واقعی بسته می شود.')">🚫 بستن نوشتن گروه</button></div></div></div>
-</section></div>
+  <div class="card top"><div><h2>حلی گرام</h2><small id="who" class="muted"></small></div><button class="btn" onclick="logout()">خروج</button></div>
+  <div class="grid">
+    <aside class="card side">
+      <div class="notice" id="roleNotice"></div>
+      <button class="btn primary" onclick="showChat()">💬 پیام رسان</button>
+      <button class="btn" id="adminBtn" onclick="toggleAdmin()">🛡️ پنل مدیریت</button>
+      <button class="btn" onclick="refreshAll()">🔄 بروزرسانی</button>
+    </aside>
+    <main class="card chat">
+      <div class="chathead"><b id="chatTitle">پیام ها</b><div class="muted" id="chatStatus">متصل به حلی گرام</div></div>
+      <div id="messages" class="messages"></div>
+      <div class="composer">
+        <textarea id="messageInput" placeholder="پیام خود را بنویسید..."></textarea>
+        <button class="btn primary" onclick="sendMessage()">ارسال</button>
+      </div>
+    </main>
+  </div>
+
+  <section id="adminPanel" class="card admin">
+    <h3>پنل مدیریت</h3>
+    <div class="adminGrid">
+      <div>
+        <h4>کنترل دانش آموزان</h4>
+        <div id="studentList" class="list"></div>
+      </div>
+      <div>
+        <h4>کنترل گروه ها</h4>
+        <div id="groupList" class="list"></div>
+      </div>
+    </div>
+    <h4>پیام های اخیر</h4>
+    <div id="adminMessages" class="list"></div>
+  </section>
+  <div class="version">v0.2.0</div>
+</section>
+</div>
+
 <script>
-const DEMO_STUDENTS={'1111111111':{name:'دانش آموز نمونه',className:'کلاس نمونه'}};
-let mode='student',current=null,blocked=false;
-function setMode(m){mode=m;studentForm.classList.toggle('hidden',m!=='student');staffForm.classList.toggle('hidden',m!=='staff');studentTab.classList.toggle('active',m==='student');staffTab.classList.toggle('active',m==='staff');error.textContent=''}
-function loginStudent(){const id=nationalId.value.trim();if(!/^\d{10}$/.test(id))return error.textContent='کد ملی باید ۱۰ رقم باشد.';current={type:'student',...(DEMO_STUDENTS[id]||{name:'دانش آموز آزمایشی',className:'کلاس آزمایشی'})};openApp()}
-function loginStaff(){if(!staffCode.value.trim()||staffPass.value!=='helli43helli42')return error.textContent='کد ورود یا رمز عبور نادرست است.';current={type:'staff',name:'مسئول آزمایشی'};openApp()}
-function openApp(){login.style.display='none';app.style.display='block';who.textContent=current.name;roleNotice.textContent=current.type==='staff'?'ورود مسئول فعال است.':'ورود دانش آموز | '+(current.className||'');adminBtn.classList.toggle('hidden',current.type!=='staff');showDemoChat()}
-function showDemoChat(){adminPanel.style.display='none';chatTitle.textContent=current.type==='staff'?'گفتگوی مدیریت':'گفتگوی آزمایشی';messages.innerHTML='<div class="msg">به حلی گرام خوش آمدید 👋</div><div class="msg">این نسخه اولیه برای آماده سازی ساختار پیام رسان است.</div>'}
-function toggleAdmin(){adminPanel.style.display=adminPanel.style.display==='none'?'block':'none'}
-function sendMessage(){const v=messageInput.value.trim();if(!v)return;if(blocked&&current.type==='student')return alert('ارسال پیام برای شما بسته شده است.');const d=document.createElement('div');d.className='msg me';d.textContent=v;messages.appendChild(d);messageInput.value='';messages.scrollTop=messages.scrollHeight}
-function logout(){current=null;app.style.display='none';login.style.display='block';nationalId.value='';staffCode.value='';staffPass.value='';error.textContent='';setMode('student')}
-</script></body></html>
+const SUPABASE_URL="https://pwwicgyrycaexjnnhseb.supabase.co";
+const SUPABASE_KEY="sb_publishable_CiQbGJJx_WGbeGTPssoWYQ_kutyUJ9h";
+const API=SUPABASE_URL+"/functions/v1/helligram-api";
+let token=localStorage.getItem("helligram_token")||"";
+let profile=null;
+let mode="student";
+let groups=[];
+let students=[];
+let messages=[];
+let sendTarget={staff:null,student:null,group:null};
+
+async function api(action,body={}){
+  const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY,...(token?{Authorization:"Bearer "+token}:{})},body:JSON.stringify({action,...body})});
+  let data={};try{data=await r.json()}catch{}
+  if(!r.ok)throw new Error(data.error||"خطا در ارتباط با سرور");
+  return data;
+}
+function setMode(m){mode=m;studentForm.classList.toggle("hidden",m!=="student");staffForm.classList.toggle("hidden",m!=="staff");studentTab.classList.toggle("active",m==="student");staffTab.classList.toggle("active",m==="staff");error.textContent=""}
+function busy(text){error.textContent=text}
+async function loginStudent(){
+  const id=nationalId.value.trim(); if(!/^\d{10}$/.test(id)) return busy("کد ملی باید ۱۰ رقم باشد.");
+  busy("در حال ورود...");
+  try{const d=await api("login",{type:"student",national_id:id}); token=d.token;profile=d.profile;localStorage.setItem("helligram_token",token);openApp()}catch(e){busy(e.message)}
+}
+async function loginStaff(){
+  const code=staffCode.value.trim(),pass=staffPass.value;
+  if(!code||!pass)return busy("کد ورود و رمز عبور را وارد کنید.");
+  busy("در حال ورود...");
+  try{const d=await api("login",{type:"staff",login_code:code,password:pass});token=d.token;profile=d.profile;localStorage.setItem("helligram_token",token);openApp()}catch(e){busy(e.message)}
+}
+function openApp(){
+  login.style.display="none";app.style.display="block";who.textContent=profile.name+(profile.className?" | "+profile.className:"");
+  roleNotice.textContent=profile.type==="staff"?"ورود مسئول فعال است.":"دانش آموز | وضعیت ارسال: "+(profile.canWrite?"فعال":"بسته");
+  adminBtn.classList.toggle("hidden",profile.type!=="staff");
+  showChat();refreshAll();
+}
+async function refreshAll(){
+  try{
+    const g=await api("groups");groups=g.groups||[];
+    const m=await api("messages");messages=m.messages||[];renderMessages();
+    if(profile?.type==="staff"){const s=await api("students");students=s.students||[];renderAdmin()}
+  }catch(e){chatStatus.textContent=e.message}
+}
+function showChat(){adminPanel.style.display="none";chatTitle.textContent="پیام رسان";renderMessages()}
+function renderMessages(){
+  messagesBox=messages;messagesEl=document.getElementById("messages");
+  if(!messages.length){messagesEl.innerHTML='<div class="notice">هنوز پیامی وجود ندارد.</div>';return}
+  messagesEl.innerHTML=messages.map(m=>{
+    const mine=(profile.type==="student"?m.sender_student_id===profile.id:m.sender_staff_id===profile.id);
+    return '<div class="msg '+(mine?"me":"")+'">'+escapeHtml(m.content)+'<small>'+new Date(m.created_at).toLocaleString("fa-IR")+'</small></div>'
+  }).join("");
+  messagesEl.scrollTop=messagesEl.scrollHeight;
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+async function sendMessage(){
+  const content=messageInput.value.trim();if(!content)return;
+  if(profile.type==="student"&&!profile.canWrite)return alert("ارسال پیام برای شما بسته شده است.");
+  const body={content};
+  if(sendTarget.group)body.group_id=sendTarget.group;
+  else if(sendTarget.student)body.recipient_student_id=sendTarget.student;
+  else if(sendTarget.staff)body.recipient_staff_id=sendTarget.staff;
+  else if(profile.type==="student"&&profile.defaultStaffId)body.recipient_staff_id=profile.defaultStaffId;
+  try{await api("send",body);messageInput.value="";await refreshAll()}catch(e){alert(e.message)}
+}
+function toggleAdmin(){adminPanel.style.display=adminPanel.style.display==="none"?"block":"none";if(adminPanel.style.display==="block")renderAdmin()}
+function renderAdmin(){
+  studentList.innerHTML=students.map(s=>'<div class="row"><span>'+escapeHtml(s.full_name)+'<br><small class="muted">'+escapeHtml(s.class_name||"")+'</small></span><button class="btn" onclick="setStudentWrite(\''+s.id+'\','+s.can_write+')">'+(s.can_write?"بستن ارسال":"باز کردن ارسال")+'</button></div>').join("")||'<div class="notice">دانش آموزی ثبت نشده است.</div>';
+  groupList.innerHTML=groups.map(g=>'<div class="row"><span>'+escapeHtml(g.name)+'</span><button class="btn" onclick="setGroupWrite(\''+g.id+'\','+g.write_disabled+')">'+(g.write_disabled?"باز کردن گروه":"بستن گروه")+'</button></div>').join("")||'<div class="notice">گروهی ثبت نشده است.</div>';
+  adminMessages.innerHTML=messages.slice(-30).reverse().map(m=>'<div class="row"><span>'+escapeHtml(m.content)+'</span><button class="btn" onclick="deleteMessage(\''+m.id+'\')">حذف</button></div>').join("")||'<div class="notice">پیامی نیست.</div>';
+}
+async function setStudentWrite(id,canWrite){try{await api("set_student_write",{id,disabled:canWrite});await refreshAll()}catch(e){alert(e.message)}}
+async function setGroupWrite(id,disabled){try{await api("set_group_write",{id,disabled:!disabled});await refreshAll()}catch(e){alert(e.message)}}
+async function deleteMessage(id){try{await api("delete_message",{id});await refreshAll()}catch(e){alert(e.message)}}
+async function logout(){token="";profile=null;localStorage.removeItem("helligram_token");app.style.display="none";login.style.display="block";nationalId.value="";staffCode.value="";staffPass.value="";setMode("student")}
+async function restore(){
+  if(!token)return;
+  try{const d=await api("me");profile=d.profile;openApp()}catch{token="";localStorage.removeItem("helligram_token")}
+}
+let messagesEl=null,messagesBox=null;
+restore();
+setInterval(()=>{if(profile)refreshAll()},4000);
+</script>
+</body>
+</html>
