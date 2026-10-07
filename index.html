@@ -17,7 +17,7 @@
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
   <p class="muted" style="font-size:12px;text-align:center">اطلاعات واقعی دانش آموزان و مسئولین بعدا از طریق پایگاه داده وارد می شود.</p>
-  <div class="version">v0.2.9</div>
+  <div class="version">v0.3.0</div>
 </section>
 
 <section id="app" class="app">
@@ -82,7 +82,7 @@ async function api(action,body={}){
 function setMode(m){mode=m;studentForm.classList.toggle("hidden",m!=="student");staffForm.classList.toggle("hidden",m!=="staff");studentTab.classList.toggle("active",m==="student");staffTab.classList.toggle("active",m==="staff");error.textContent=""}
 function busy(text){error.textContent=text}
 async function loginStudent(){
-  const id=nationalId.value.trim(); if(!/^\d{10}$/.test(id)) return busy("کد ملی باید ۱۰ رقم باشد.");
+  const rawId=nationalId.value.trim(); const id=rawId.replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-1776)).replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-1632)); if(!/^\d{10}$/.test(id)) return busy("کد ملی باید ۱۰ رقم باشد.");
   busy("در حال ورود...");
   try{const d=await api("login",{type:"student",national_id:id}); token=d.token;profile=d.profile;localStorage.setItem("helligram_token",token);openApp()}catch(e){busy(e.message)}
 }
