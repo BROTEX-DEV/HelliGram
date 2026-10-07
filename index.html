@@ -125,8 +125,12 @@ function renderMessages(){
     const mine=profile.type==="student"
       ? m.sender_student_id===profile.id
       : m.sender_staff_id===profile.id;
+    const canDelete=mine || (profile.type==="staff" && profile.role==="admin");
+    const deleteButton=canDelete
+      ? '<button class="btn delete-msg" onclick="deleteMessage(\''+m.id+'\')" type="button">حذف پیام</button>'
+      : "";
     return '<div class="msg '+(mine?"me":"")+'"><strong class="sender-name">'+escapeHtml(m.sender_name||"کاربر")+'</strong><div>'+escapeHtml(m.content)+'</div>'+
-      '<small>'+new Date(m.created_at).toLocaleString("fa-IR")+'</small></div>';
+      '<small>'+new Date(m.created_at).toLocaleString("fa-IR")+'</small>'+deleteButton+'</div>';
   }).join("");
   el.scrollTop=el.scrollHeight;
 }
