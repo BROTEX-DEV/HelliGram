@@ -40,7 +40,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.48</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.49</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -116,7 +116,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.48</div>
+  <div class="version">v0.5.49</div>
 </section>
 <div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس</div><div id="callState" class="callState">در حال برقراری تماس...</div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()">🎙️</button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
@@ -710,7 +710,7 @@ async function joinGroupCallFromLink(callId){
   }catch(e){alert(e.message||"ورود به تماس گروهی انجام نشد.")}finally{groupCallJoining=false;if(location.hash.startsWith("#groupcall="))history.replaceState(null,"",location.pathname+location.search)}
 }
 function finishGroupCall(updateServer=true){
-  const call=groupCall;if(call&&updateServer)api("group_call_end",{call_id:call.id}).catch(()=>{});
+  const call=groupCall;if(call&&updateServer)api("group_call_end",{call_id:call.id}).then(()=>refreshAll()).catch(()=>{});
   if(groupCallPollTimer){clearInterval(groupCallPollTimer);groupCallPollTimer=null}groupPeers.forEach(st=>{try{st.pc.close()}catch{}});groupPeers.clear();groupCandidateQueues.clear();groupIceSeen.clear();
   groupAudioEls.forEach(a=>{try{a.pause()}catch{}a.srcObject=null});groupAudioEls.clear();if(groupLocalStream){groupLocalStream.getTracks().forEach(t=>t.stop());groupLocalStream=null}
   groupCall=null;callStartedAt=0;callUi(false);resetCallUi();document.getElementById("callMembers")?.classList.add("hidden");
@@ -719,7 +719,7 @@ async function startVoiceCall(){if(!selectedChat||activeCall)return;const m=chat
 async function joinCallFromLink(callId){if(!profile||!callId||activeCall||callJoiningFromLink)return;callJoiningFromLink=true;try{const d=await api("call_poll",{call_id:callId});const call=(d.calls||[])[0];if(!call)throw new Error("این لینک تماس منقضی شده یا تماس پیدا نشد.");if(call.callee_type!==profile.type||call.callee_id!==profile.id)throw new Error("این تماس برای حساب شما نیست.");if(call.status!=="ringing"||!call.offer)throw new Error("این تماس دیگر فعال نیست.");activeCall={id:call.id,peerType:call.caller_type,peerId:call.caller_id,role:"callee",offer:call.offer};callIceSeen=new Set((d.ice||[]).map(x=>x.id));const pm=callPeerMeta({type:call.caller_type,id:call.caller_id});document.getElementById("callName").textContent=pm.name;document.getElementById("callState").textContent="تماس صوتی ورودی";callAvatar(pm);resetCallUi();document.getElementById("callAcceptBtn")?.classList.remove("hidden");callUi(true)}catch(e){alert(e.message||"ورود به تماس انجام نشد.")}finally{callJoiningFromLink=false;if(location.hash.startsWith("#call="))history.replaceState(null,"",location.pathname+location.search)}}
 async function acceptIncomingCall(){if(!activeCall||activeCall.role!=="callee")return;try{await prepareCallPeer();await callPeer.setRemoteDescription(activeCall.offer);const answer=await callPeer.createAnswer();await callPeer.setLocalDescription(answer);await waitForIceGathering();await api("call_update",{call_id:activeCall.id,status:"accepted",answer:callPeer.localDescription});document.getElementById("callState").textContent="در حال اتصال...";document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.remove("hidden");startCallPolling()}catch(e){alert(e.message||"پذیرش تماس انجام نشد.");finishCallUi(false)}}
 async function rejectOrHangupCall(){if(groupCall)return finishGroupCall(true);if(activeCall){try{await api("call_update",{call_id:activeCall.id,status:activeCall.role==="callee"?"rejected":"ended"})}catch{}}finishCallUi(false)}
-function finishCallUi(updateServer=true){if(groupCall)return finishGroupCall(updateServer);const call=activeCall;if(call&&updateServer)api("call_update",{call_id:call.id,status:"ended"}).catch(()=>{});if(callPollTimer){clearInterval(callPollTimer);callPollTimer=null}closeCallMedia();activeCall=null;callStartedAt=0;callIceSeen=new Set();callUi(false);resetCallUi();}
+function finishCallUi(updateServer=true){if(groupCall)return finishGroupCall(updateServer);const call=activeCall;if(call&&updateServer)api("call_update",{call_id:call.id,status:"ended"}).then(()=>refreshAll()).catch(()=>{});if(callPollTimer){clearInterval(callPollTimer);callPollTimer=null}closeCallMedia();activeCall=null;callStartedAt=0;callIceSeen=new Set();callUi(false);resetCallUi();}
 function toggleCallMute(){const stream=groupCall?groupLocalStream:callLocalStream;if(!stream)return;callMuted=!callMuted;stream.getAudioTracks().forEach(t=>t.enabled=!callMuted);const b=document.getElementById("callMuteBtn");if(b)b.textContent=callMuted?"🔇":"🎙️";}
 function updateCallTimer(){if(groupCall){if(!callStartedAt)return;const n=Math.floor((Date.now()-callStartedAt)/1000),m=String(Math.floor(n/60)).padStart(2,"0"),ss=String(n%60).padStart(2,"0");const e=document.getElementById("callTimer");if(e)e.textContent=m+":"+ss;return}if(!activeCall||!callPeer||callPeer.connectionState!=="connected")return;if(!callStartedAt)callStartedAt=Date.now();const n=Math.floor((Date.now()-callStartedAt)/1000),m=String(Math.floor(n/60)).padStart(2,"0"),s=String(n%60).padStart(2,"0");const e=document.getElementById("callTimer");if(e)e.textContent=m+":"+s;}
 function handleCallLink(){const match=location.hash.match(/^#call=([A-Za-z0-9-]+)$/);if(match&&profile)joinCallFromLink(decodeURIComponent(match[1]));const gm=location.hash.match(/^#groupcall=([A-Za-z0-9-]+)$/);if(gm&&profile)joinGroupCallFromLink(decodeURIComponent(gm[1]));}
