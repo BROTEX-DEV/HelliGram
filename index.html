@@ -374,7 +374,8 @@ function showChatList(){
   renderChatList();
   updateComposerState();
 }
-function updateComposerState(){const comp=document.querySelector(".composer"),input=document.getElementById("messageInput"),btn=document.getElementById("sendBtn"),emoji=document.getElementById("emojiBtn"),st=document.getElementById("chatWriteStatus");if(!comp||!input||!btn||!st)return;const meta=selectedChat?chatMeta(selectedChat):null;const blocked=profile?.type==="student"&&(!profile.canWrite||(meta?.kind==="group"&&meta.writeDisabled));comp.classList.toggle("blocked",blocked);input.disabled=blocked;btn.disabled=blocked;if(emoji)emoji.disabled=blocked;st.classList.toggle("hidden",!blocked);st.textContent=blocked?(meta?.kind==="group"&&meta.writeDisabled?"نوشتن در این گروه بسته است.":"ارسال پیام برای شما بسته است."): "";}\nfunction openChat(key){
+function updateComposerState(){const comp=document.querySelector(".composer"),input=document.getElementById("messageInput"),btn=document.getElementById("sendBtn"),emoji=document.getElementById("emojiBtn"),st=document.getElementById("chatWriteStatus");if(!comp||!input||!btn||!st)return;const meta=selectedChat?chatMeta(selectedChat):null;const blocked=profile?.type==="student"&&(!profile.canWrite||(meta?.kind==="group"&&meta.writeDisabled));comp.classList.toggle("blocked",blocked);input.disabled=blocked;btn.disabled=blocked;if(emoji)emoji.disabled=blocked;st.classList.toggle("hidden",!blocked);st.textContent=blocked?(meta?.kind==="group"&&meta.writeDisabled?"نوشتن در این گروه بسته است.":"ارسال پیام برای شما بسته است."): "";}
+function openChat(key){
   selectedChat=key;
   const meta=chatMeta(key);
   setChatVisualMode(meta.kind,meta.avatarUrl);
