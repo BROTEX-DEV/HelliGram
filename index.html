@@ -38,7 +38,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.24</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.25</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -103,12 +103,14 @@
       <div class="field"><label>دانش آموز</label><select id="manageStudentSelect"></select></div>
       <div class="row"><button class="btn" onclick="changeGroupMember(true)">افزودن به گروه</button><button class="btn" onclick="changeGroupMember(false)">حذف از گروه</button></div>
       <button class="btn primary" type="button" onclick="addAllStudentsToGroup()">➕ افزودن همه دانش آموزان</button>
+      <button class="btn primary" type="button" onclick="addAllStaffToGroup()">👥 افزودن همه مسئولین</button>
+      <button class="btn" type="button" onclick="deleteSelectedGroup()">🗑️ حذف گروه</button>
       <div id="groupMemberStatus" class="status muted"></div>
     </div>
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.24</div>
+  <div class="version">v0.5.25</div>
 </section>
 </div>
 
@@ -475,6 +477,30 @@ async function addAllStudentsToGroup(){
     }
     await refreshAll();
     alert("همه دانش آموزان به گروه اضافه شدند.");
+  }catch(e){alert(e.message)}
+}
+async function addAllStaffToGroup(){
+  const groupId=document.getElementById("manageGroupSelect").value;
+  if(!groupId)return alert("ابتدا یک گروه را انتخاب کنید.");
+  if(!staff.length)return alert("مسئول فعالی ثبت نشده است.");
+  if(!confirm("همه مسئولین فعال عضو این گروه شوند؟"))return;
+  try{
+    const d=await api("add_all_staff_to_group",{group_id:groupId});
+    await refreshAll();
+    alert(d.message||"همه مسئولین به گروه اضافه شدند.");
+  }catch(e){alert(e.message)}
+}
+async function deleteSelectedGroup(){
+  const groupId=document.getElementById("manageGroupSelect").value;
+  if(!groupId)return alert("ابتدا یک گروه را انتخاب کنید.");
+  const group=groups.find(x=>x.id===groupId);
+  if(!group)return;
+  if(!confirm("گروه «"+group.name+"» حذف شود؟"))return;
+  try{
+    await api("delete_group",{group_id:groupId});
+    selectedChat=null;
+    await refreshAll();
+    alert("گروه حذف شد.");
   }catch(e){alert(e.message)}
 }
 function renderMessages(){renderChatList();if(selectedChat)renderConversation()}
