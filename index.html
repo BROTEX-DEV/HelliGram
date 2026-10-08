@@ -39,7 +39,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.32</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.33</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -112,7 +112,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.32</div>
+  <div class="version">v0.5.33</div>
 </section>
 </div>
 
@@ -485,10 +485,7 @@ function renderConversation(){
         ? '<div class="messageAvatar"><img src="'+escapeHtml(m.sender_avatar_url)+'" alt=""></div>'
         : '<div class="messageAvatar">'+avatarLetter+'</div>')
       : "";
-    return '<div class="messageLine '+(mine?"me":"")+'">'+avatarHtml+'<div id="msg-'+m.id+'" class="msg '+(mine?"me":"")+'">'<strong class="sender-name">'+escapeHtml(senderName)+'</strong><div>'+escapeHtml(m.content)+'</div><small>'+new Date(m.created_at).toLocaleString("fa-IR")+'</small><div class="messageActions">'+pinButton+deleteButton+'</div></div></div>';
-  }).join("");
-  el.scrollTop=el.scrollHeight;
-}
+    return '<div class="messageLine '+(mine?"me":"")+'">'+avatarHtml+'<div id="msg-'+m.id+'" class="msg '+(mine?"me":"")+'"><strong class="sender-name">'+escapeHtml(senderName)+'</strong><div>'+escapeHtml(m.content)+'</div><small>'+new Date(m.created_at).toLocaleString("fa-IR")+'</small><div class="messageActions">'+pinButton+deleteButton+'</div></div></div>';
 function setTarget(value){
   const [kind,id]=String(value||"").split(":");
   sendTarget={kind,id:id||null};
