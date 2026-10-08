@@ -39,7 +39,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.38</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.39</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -111,7 +111,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.38</div>
+  <div class="version">v0.5.39</div>
 </section>
 <div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس</div><div id="callState" class="callState">در حال برقراری تماس...</div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()">🎙️</button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
@@ -687,7 +687,7 @@ async function prepareCallPeer(){
   callLocalStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
   callLocalStream.getTracks().forEach(t=>callPeer.addTrack(t,callLocalStream));
 }
-async function startVoiceCall(){
+async async function startVoiceCall(){
   if(!selectedChat||activeCall)return;
   const m=chatMeta(selectedChat);if(m.kind==="group"||!m.id)return;
   if(!callSocket||callSocket.readyState!==WebSocket.OPEN){alert("اتصال تماس آماده نیست. یک لحظه صبر کنید.");connectCallSocket();return}
