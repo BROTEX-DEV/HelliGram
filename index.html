@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>حلی گرام | پیام رسان مدرسه</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#07101d;color:#f1f3f5;min-height:100vh}.wrap{max-width:720px;margin:auto;padding:0}.card{background:#0f1d30;border:0;border-radius:0;box-shadow:none;backdrop-filter:none}button{font-family:inherit}.login{max-width:470px;margin:6vh auto;padding:30px;border-radius:20px}.brand{text-align:center}.logo{width:84px;height:84px;border-radius:50%;margin:auto auto 14px;display:grid;place-items:center;overflow:hidden;background:#13243a}.logo img{width:100%;height:100%;object-fit:contain}.muted{color:#92969d}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:24px 0}.tabs button,.btn{border:0;border-radius:13px;padding:12px;cursor:pointer;font-weight:700;background:#16283f;color:#e8eaed}.tabs button.active,.btn.primary{background:#2f91ff;color:white}.field{margin:12px 0}.field label{display:block;font-size:13px;margin-bottom:7px;color:#c7cbd0}input,textarea,select{width:100%;padding:12px;border-radius:12px;border:1px solid #2b4564;background:#07101d;color:white;outline:none}select option{background:#0f1d30}textarea{resize:vertical}.btn{width:100%;margin-top:9px}.error{color:#ff9ba5;min-height:22px;margin-top:8px}.app{display:none;min-height:100vh;background:#07101d}.appHeader{height:82px;background:#0f1d30;display:flex;align-items:center;gap:14px;padding:0 18px;position:sticky;top:0;z-index:20;border-bottom:1px solid #242629}.appBrand{display:flex;align-items:center;gap:10px;flex:1}.appLogo{width:43px;height:43px;border-radius:50%;overflow:hidden;background:#13243a;display:grid;place-items:center}.appLogo img{width:100%;height:100%;object-fit:contain}.appBrandText b{display:block;font-size:19px}.appBrandText small{color:#8f949b;font-size:10px}.iconBtn{width:44px;height:44px;border:0;border-radius:50%;background:transparent;color:#f1f3f5;font-size:29px;cursor:pointer;display:grid;place-items:center}.iconBtn:hover{background:#16283f}.plusBtn{background:#2f91ff;font-size:28px}.top{display:none}.grid{display:block}.side{position:fixed;top:0;right:0;width:min(310px,82vw);height:100vh;z-index:50;padding:25px 16px;background:#181a1c;box-shadow:-20px 0 50px #0008;transform:translateX(105%);transition:transform .22s ease;overflow:auto}.side.open{transform:translateX(0)}.side .menuTitle{font-size:22px;font-weight:700;margin:10px 8px 25px}.side .btn{margin:5px 0;text-align:right;padding:15px 16px;background:transparent;border-radius:12px}.side .btn:hover{background:#16283f}.side .btn.primary{background:#2f91ff}.menuClose{position:absolute;left:10px;top:12px;width:40px;height:40px;border:0;background:transparent;color:#ddd;font-size:28px}.menuOverlay{position:fixed;inset:0;background:#0008;z-index:40;display:none}.menuOverlay.show{display:block}.chat{min-height:calc(100vh - 82px);display:flex;flex-direction:column;background:#07101d}.chathead{min-height:66px;padding:12px 15px;border-bottom:1px solid #263c59;display:flex;align-items:center;gap:10px;background:#0f1d30}.chatTitleWrap{flex:1}.chatTitleWrap b{font-size:18px}.chatBack,.chatNew{border:0;background:transparent;color:#eaf4ff;font-size:31px;line-height:1;cursor:pointer;width:42px;height:42px}.chatNew{font-size:28px;border-radius:50%;background:#2f91ff}.chatList{flex:1;overflow:auto;min-height:450px}.chatItem{display:flex;align-items:center;gap:13px;padding:14px 16px;border-bottom:1px solid #20344e;cursor:pointer;transition:.15s}.chatItem:hover{background:#10243a}.chatAvatar{width:57px;height:57px;flex:0 0 57px;border-radius:50%;display:grid;place-items:center;background:#2f91ff;color:white;font-size:20px;font-weight:800;overflow:hidden}.chatAvatar img{width:100%;height:100%;object-fit:cover}.chatInfo{min-width:0;flex:1}.chatTopLine{display:flex;align-items:center;gap:8px}.chatName{font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chatTime{margin-right:auto;font-size:11px;color:#777c83;white-space:nowrap}.chatPreview{margin-top:7px;color:#858a91;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chatBadge{min-width:22px;height:22px;padding:0 6px;border-radius:12px;background:#2f91ff;color:white;display:grid;place-items:center;font-size:10px}.conversation{display:flex;flex:1;min-height:0;flex-direction:column}.messages{flex:1;padding:18px;overflow:auto;min-height:450px;display:flex;flex-direction:column;gap:10px}.msg{max-width:78%;padding:11px 14px;border-radius:16px;background:#172b45;align-self:flex-start;word-break:break-word}.msg.me{align-self:flex-end;background:#245da5}.msg .sender-name{display:block;font-size:12px;color:#d9e8ff;margin-bottom:6px}.msg small{display:block;color:#9db1c9;font-size:10px;margin-top:5px}.delete-msg{width:auto!important;margin-top:8px!important;padding:6px 10px!important;font-size:11px!important;background:#2b4564!important}.delete-msg:hover{background:#44494e!important}.targetbar{padding:12px 13px 0;border-top:1px solid #263c59}.targetbar label{display:block;font-size:12px;color:#92969d;margin-bottom:6px}.targetbar select{padding:10px}.composer{display:flex;gap:8px;padding:13px;border-top:1px solid #263c59;background:#0f1d30}.composer textarea{min-height:50px;max-height:140px}.composer .btn{width:105px;margin:0}.groupTools{margin-top:18px;padding-top:12px;border-top:1px solid #263c59}.groupTools .row{border:0}.groupTools .row .btn{flex:1}.notice{padding:11px;border-radius:12px;background:#172b45;margin-bottom:10px;font-size:13px}.admin{margin:14px 0;padding:18px;display:none;background:#0f1d30}.adminGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.list{max-height:250px;overflow:auto}.row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #263c59}.row .btn{width:auto;margin:0;padding:8px 10px;font-size:12px}.hidden{display:none!important}.chatEmpty{padding:45px 22px;text-align:center;color:#82878e}.chatEmpty strong{display:block;color:#e5e7ea;margin-bottom:8px}.status{font-size:11px;margin-top:5px}.version{text-align:center;color:#566b84;font-size:9px;margin-top:12px}@media(max-width:760px){.grid{display:block}.chat{min-height:calc(100vh - 82px)}.chatList{min-height:calc(100vh - 148px)}.messages{min-height:350px}.adminGrid{grid-template-columns:1fr}.msg{max-width:92%}.wrap{padding:0}.chatItem{padding:13px 12px}.chatAvatar{width:53px;height:53px;flex-basis:53px}.chatName{font-size:15px}.appHeader{height:74px}.chat{min-height:calc(100vh - 74px)}}
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#07101d;color:#f1f3f5;min-height:100vh}.wrap{max-width:720px;margin:auto;padding:0}.card{background:#0f1d30;border:0;border-radius:0;box-shadow:none;backdrop-filter:none}button{font-family:inherit}.login{max-width:470px;margin:6vh auto;padding:30px;border-radius:20px}.brand{text-align:center}.logo{width:84px;height:84px;border-radius:50%;margin:auto auto 14px;display:grid;place-items:center;overflow:hidden;background:#13243a}.logo img{width:100%;height:100%;object-fit:contain}.muted{color:#92969d}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:24px 0}.tabs button,.btn{border:0;border-radius:13px;padding:12px;cursor:pointer;font-weight:700;background:#16283f;color:#e8eaed}.tabs button.active,.btn.primary{background:#2f91ff;color:white}.field{margin:12px 0}.field label{display:block;font-size:13px;margin-bottom:7px;color:#c7cbd0}input,textarea,select{width:100%;padding:12px;border-radius:12px;border:1px solid #2b4564;background:#07101d;color:white;outline:none}select option{background:#0f1d30}textarea{resize:vertical}.btn{width:100%;margin-top:9px}.error{color:#ff9ba5;min-height:22px;margin-top:8px}.app{display:none;min-height:100vh;background:#07101d}.appHeader{height:82px;background:#0f1d30;display:flex;align-items:center;gap:14px;padding:0 18px;position:sticky;top:0;z-index:20;border-bottom:1px solid #242629}.appBrand{display:flex;align-items:center;gap:10px;flex:1}.appLogo{width:43px;height:43px;border-radius:50%;overflow:hidden;background:#13243a;display:grid;place-items:center}.appLogo img{width:100%;height:100%;object-fit:contain}.appBrandText b{display:block;font-size:19px}.appBrandText small{color:#8f949b;font-size:10px}.profileBox{padding:18px 10px 16px;margin:8px 0 12px;border-bottom:1px solid #263c59;text-align:center}.profileAvatar{width:86px;height:86px;border-radius:50%;overflow:hidden;margin:0 auto 10px;background:#2f91ff;display:grid;place-items:center;font-size:28px;font-weight:800}.profileAvatar img{width:100%;height:100%;object-fit:cover}.profileName{font-weight:700;margin-bottom:9px}.avatarInput{display:none}.avatarBtn{width:auto!important;display:inline-block!important;padding:9px 13px!important;background:#16283f!important;border:1px solid #2b4564!important}.avatarBtn:hover{background:#203b5c!important}.iconBtn{width:44px;height:44px;border:0;border-radius:50%;background:transparent;color:#f1f3f5;font-size:29px;cursor:pointer;display:grid;place-items:center}.iconBtn:hover{background:#16283f}.plusBtn{background:#2f91ff;font-size:28px}.top{display:none}.grid{display:block}.side{position:fixed;top:0;right:0;width:min(310px,82vw);height:100vh;z-index:50;padding:25px 16px;background:#181a1c;box-shadow:-20px 0 50px #0008;transform:translateX(105%);transition:transform .22s ease;overflow:auto}.side.open{transform:translateX(0)}.side .menuTitle{font-size:22px;font-weight:700;margin:10px 8px 25px}.side .btn{margin:5px 0;text-align:right;padding:15px 16px;background:transparent;border-radius:12px}.side .btn:hover{background:#16283f}.side .btn.primary{background:#2f91ff}.menuClose{position:absolute;left:10px;top:12px;width:40px;height:40px;border:0;background:transparent;color:#ddd;font-size:28px}.menuOverlay{position:fixed;inset:0;background:#0008;z-index:40;display:none}.menuOverlay.show{display:block}.chat{min-height:calc(100vh - 82px);display:flex;flex-direction:column;background:#07101d}.chathead{min-height:66px;padding:12px 15px;border-bottom:1px solid #263c59;display:flex;align-items:center;gap:10px;background:#0f1d30}.chatTitleWrap{flex:1}.chatTitleWrap b{font-size:18px}.chatBack,.chatNew{border:0;background:transparent;color:#eaf4ff;font-size:31px;line-height:1;cursor:pointer;width:42px;height:42px}.chatNew{font-size:28px;border-radius:50%;background:#2f91ff}.chatList{flex:1;overflow:auto;min-height:450px}.chatItem{display:flex;align-items:center;gap:13px;padding:14px 16px;border-bottom:1px solid #20344e;cursor:pointer;transition:.15s}.chatItem:hover{background:#10243a}.chatAvatar{width:57px;height:57px;flex:0 0 57px;border-radius:50%;display:grid;place-items:center;background:#2f91ff;color:white;font-size:20px;font-weight:800;overflow:hidden}.chatAvatar img{width:100%;height:100%;object-fit:cover}.chatInfo{min-width:0;flex:1}.chatTopLine{display:flex;align-items:center;gap:8px}.chatName{font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chatTime{margin-right:auto;font-size:11px;color:#777c83;white-space:nowrap}.chatPreview{margin-top:7px;color:#858a91;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chatBadge{min-width:22px;height:22px;padding:0 6px;border-radius:12px;background:#2f91ff;color:white;display:grid;place-items:center;font-size:10px}.conversation{display:flex;flex:1;min-height:0;flex-direction:column}.messages{flex:1;padding:18px;overflow:auto;min-height:450px;display:flex;flex-direction:column;gap:10px}.msg{max-width:78%;padding:11px 14px;border-radius:16px;background:#172b45;align-self:flex-start;word-break:break-word}.msg.me{align-self:flex-end;background:#245da5}.msg .sender-name{display:block;font-size:12px;color:#d9e8ff;margin-bottom:6px}.msg small{display:block;color:#9db1c9;font-size:10px;margin-top:5px}.delete-msg{width:auto!important;margin-top:8px!important;padding:6px 10px!important;font-size:11px!important;background:#2b4564!important}.delete-msg:hover{background:#44494e!important}.targetbar{padding:12px 13px 0;border-top:1px solid #263c59}.targetbar label{display:block;font-size:12px;color:#92969d;margin-bottom:6px}.targetbar select{padding:10px}.composer{display:flex;gap:8px;padding:13px;border-top:1px solid #263c59;background:#0f1d30}.composer textarea{min-height:50px;max-height:140px}.composer .btn{width:105px;margin:0}.groupTools{margin-top:18px;padding-top:12px;border-top:1px solid #263c59}.groupTools .row{border:0}.groupTools .row .btn{flex:1}.notice{padding:11px;border-radius:12px;background:#172b45;margin-bottom:10px;font-size:13px}.admin{margin:14px 0;padding:18px;display:none;background:#0f1d30}.adminGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.list{max-height:250px;overflow:auto}.row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #263c59}.row .btn{width:auto;margin:0;padding:8px 10px;font-size:12px}.hidden{display:none!important}.chatEmpty{padding:45px 22px;text-align:center;color:#82878e}.chatEmpty strong{display:block;color:#e5e7ea;margin-bottom:8px}.status{font-size:11px;margin-top:5px}.version{text-align:center;color:#566b84;font-size:9px;margin-top:12px}@media(max-width:760px){.grid{display:block}.chat{min-height:calc(100vh - 82px)}.chatList{min-height:calc(100vh - 148px)}.messages{min-height:350px}.adminGrid{grid-template-columns:1fr}.msg{max-width:92%}.wrap{padding:0}.chatItem{padding:13px 12px}.chatAvatar{width:53px;height:53px;flex-basis:53px}.chatName{font-size:15px}.appHeader{height:74px}.chat{min-height:calc(100vh - 74px)}}
 </style>
 </head>
 <body>
@@ -16,7 +16,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حلی گرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.4.4</div>
+  <div class="version">v0.4.5</div>
 </section>
 
 <section id="app" class="app">
@@ -30,6 +30,13 @@
     <aside id="sideMenu" class="card side">
       <button class="menuClose" onclick="toggleMenu(false)">×</button>
       <div class="menuTitle">منوی حلی گرام</div>
+      <div class="profileBox">
+        <div id="profileAvatar" class="profileAvatar"></div>
+        <div id="profileName" class="profileName"></div>
+        <input id="avatarInput" class="avatarInput" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadAvatar(this)">
+        <button class="btn avatarBtn" type="button" onclick="document.getElementById('avatarInput').click()">📷 تغییر عکس پروفایل</button>
+        <div id="avatarStatus" class="status muted"></div>
+      </div>
       <div class="notice" id="roleNotice"></div>
       <button class="btn primary" onclick="showChat();toggleMenu(false)">💬 پیام رسان</button>
       <button class="btn" id="adminBtn" onclick="toggleAdmin();toggleMenu(false)">🛡️ پنل مدیریت</button>
@@ -81,7 +88,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.4.4</div>
+  <div class="version">v0.4.5</div>
 </section>
 </div>
 
@@ -121,11 +128,63 @@ async function loginStaff(){
   busy("در حال ورود...");
   try{const d=await api("login",{type:"staff",login_code:code,password:pass});token=d.token;profile=d.profile;localStorage.setItem("helligram_token",token);openApp()}catch(e){busy(e.message)}
 }
+function setProfileAvatar(){
+  const el=document.getElementById("profileAvatar");
+  const nameEl=document.getElementById("profileName");
+  if(!el||!profile)return;
+  nameEl.textContent=profile.name||"کاربر";
+  const letter=escapeHtml((profile.name||"?").trim().slice(0,1));
+  el.innerHTML=profile.avatarUrl
+    ? '<img src="'+escapeHtml(profile.avatarUrl)+'" alt="عکس پروفایل">'
+    : letter;
+}
 function openApp(){
   login.style.display="none";app.style.display="block";who.textContent=profile.name+(profile.className?" | "+profile.className:"");
   roleNotice.textContent=profile.type==="staff"?"ورود مسئول فعال است.":"دانش آموز | وضعیت ارسال: "+(profile.canWrite?"فعال":"بسته");
   adminBtn.classList.toggle("hidden",profile.type!=="staff");
+  setProfileAvatar();
   showChat();refreshAll();
+}
+async function uploadAvatar(input){
+  const file=input.files?.[0];
+  if(!file)return;
+  const status=document.getElementById("avatarStatus");
+  const allowed=["image/jpeg","image/png","image/webp"];
+  if(!allowed.includes(file.type)){status.textContent="فقط JPG، PNG یا WebP مجاز است.";input.value="";return;}
+  if(file.size>3*1024*1024){status.textContent="حجم عکس زیاد است؛ حداکثر ۳ مگابایت.";input.value="";return;}
+  status.textContent="در حال آماده سازی عکس...";
+  try{
+    const dataUrl=await resizeAvatar(file);
+    status.textContent="در حال آپلود...";
+    const d=await api("upload_avatar",{data_url:dataUrl});
+    profile.avatarUrl=d.avatarUrl||"";
+    setProfileAvatar();
+    await refreshAll();
+    status.textContent="عکس پروفایل با موفقیت تغییر کرد.";
+  }catch(e){
+    status.textContent=e.message;
+  }finally{input.value="";}
+}
+function resizeAvatar(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        const max=512,scale=Math.min(1,max/Math.max(img.width,img.height));
+        const canvas=document.createElement("canvas");
+        canvas.width=Math.max(1,Math.round(img.width*scale));
+        canvas.height=Math.max(1,Math.round(img.height*scale));
+        const ctx=canvas.getContext("2d");
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        resolve(canvas.toDataURL("image/webp",.82));
+      };
+      img.onerror=()=>reject(new Error("خواندن عکس انجام نشد."));
+      img.src=reader.result;
+    };
+    reader.onerror=()=>reject(new Error("خواندن فایل انجام نشد."));
+    reader.readAsDataURL(file);
+  });
 }
 async function refreshAll(){
   try{
@@ -200,10 +259,10 @@ function chatMeta(key){
   }
   if(kind==="student"){
     const x=students.find(x=>x.id===id);
-    return {kind,id,name:x?.full_name||"دانش آموز",icon:"🎓"};
+    return {kind,id,name:x?.full_name||"دانش آموز",icon:"🎓",avatarUrl:x?.avatar_url||""};
   }
   const x=staff.find(x=>x.id===id);
-  return {kind,id,name:x?.full_name||"مسئول",icon:"👤"};
+  return {kind,id,name:x?.full_name||"مسئول",icon:"👤",avatarUrl:x?.avatar_url||""};
 }
 function formatChatTime(date){
   const d=new Date(date);
@@ -228,7 +287,9 @@ function renderChatList(){
     const meta=chatMeta(key);
     const preview=(last.sender_name?last.sender_name+" : ":"")+last.content;
     const avatar=meta.kind==="student"||meta.kind==="staff"
-      ? '<div class="chatAvatar">'+escapeHtml((meta.name||"?").trim().slice(0,1))+'</div>'
+      ? (meta.avatarUrl
+        ? '<div class="chatAvatar"><img src="'+escapeHtml(meta.avatarUrl)+'" alt=""></div>'
+        : '<div class="chatAvatar">'+escapeHtml((meta.name||"?").trim().slice(0,1))+'</div>')
       : '<div class="chatAvatar">'+meta.icon+'</div>';
     return '<div class="chatItem" onclick="openChat(\''+escapeHtml(key)+'\')">'+avatar+
       '<div class="chatInfo"><div class="chatTopLine"><span class="chatName">'+escapeHtml(meta.name)+'</span><span class="chatTime">'+formatChatTime(last.created_at)+'</span></div>'+
