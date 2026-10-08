@@ -28,6 +28,7 @@
   .side{width:340px}
 }
 @media(max-width:760px){.grid{display:block}.chat{height:calc(100vh - 74px);min-height:0}.chatList{flex:1;min-height:0;height:auto;overflow:auto}.messages{min-height:350px}.adminGrid{grid-template-columns:1fr}.msg{max-width:92%}.wrap{padding:0}.chatItem{padding:13px 12px}.chatAvatar{width:53px;height:53px;flex-basis:53px}.chatName{font-size:15px}.appHeader{height:74px}.chat{height:calc(100vh - 74px);min-height:0}}
+.reactionBar{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px}.reactionBtn{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:10px;padding:3px 7px;cursor:pointer}.reactionSummary{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}.reactionCount,.pinnedNotice{font-size:12px;border-radius:9px;padding:3px 7px;background:rgba(255,255,255,.07)}.messageActions{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
 </style>
 </head>
 <body>
@@ -38,7 +39,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.27</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.28</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -110,7 +111,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.27</div>
+  <div class="version">v0.5.28</div>
 </section>
 </div>
 
@@ -463,6 +464,11 @@ function renderConversation(){
     const mine=profile.type==="student"?m.sender_student_id===profile.id:m.sender_staff_id===profile.id;
     const canDelete=mine||(profile.type==="staff"&&profile.role==="admin");
     const deleteButton=canDelete?'<button class="btn delete-msg" onclick="deleteMessage(\''+m.id+'\')" type="button">حذف پیام</button>':"";
+    const pinButton=(profile.type==="staff")?(m.pinned?'<button class="btn" onclick="unpinMessage(\''+m.id+'\')" type="button">📌 برداشتن سنجاق</button>':'<button class="btn" onclick="pinMessage(\''+m.id+'\')" type="button">📌 سنجاق</button>'):"";
+    const reactionButtons=["❤️","👍","😂","😮","😢","🔥"].map(r=>'<button class="reactionBtn" type="button" onclick="toggleReaction(\''+m.id+'\',\''+r+'\')">'+r+'</button>').join("");
+    const reactionSummary=(m.reactions||[]).reduce((acc,r)=>{acc[r.reaction]=(acc[r.reaction]||0)+1;return acc},{}); 
+    const reactionHtml=Object.entries(reactionSummary).map(([r,n])=>'<span class="reactionCount">'+r+' '+n+'</span>').join("");
+    const pinnedHtml=m.pinned?'<div class="pinnedNotice">📌 پیام سنجاق شده</div>':"";
     const senderName=m.sender_name||"کاربر";
     const avatarLetter=escapeHtml(senderName.trim().slice(0,1)||"?");
     const avatarHtml=(!mine)
@@ -470,7 +476,7 @@ function renderConversation(){
         ? '<div class="messageAvatar"><img src="'+escapeHtml(m.sender_avatar_url)+'" alt=""></div>'
         : '<div class="messageAvatar">'+avatarLetter+'</div>')
       : "";
-    return '<div class="messageLine '+(mine?"me":"")+'">'+avatarHtml+'<div class="msg '+(mine?"me":"")+'"><strong class="sender-name">'+escapeHtml(senderName)+'</strong><div>'+escapeHtml(m.content)+'</div><small>'+new Date(m.created_at).toLocaleString("fa-IR")+'</small>'+deleteButton+'</div></div>';
+    return '<div class="messageLine '+(mine?"me":"")+'">'+avatarHtml+'<div class="msg '+(mine?"me":"")+'">'+pinnedHtml+'<strong class="sender-name">'+escapeHtml(senderName)+'</strong><div>'+escapeHtml(m.content)+'</div><small>'+new Date(m.created_at).toLocaleString("fa-IR")+'</small><div class="reactionBar">'+reactionButtons+'</div><div class="reactionSummary">'+reactionHtml+'</div><div class="messageActions">'+pinButton+deleteButton+'</div></div></div>';
   }).join("");
   el.scrollTop=el.scrollHeight;
 }
@@ -653,6 +659,9 @@ function renderAdmin(){
 async function setStudentWrite(id,canWrite){try{await api("set_student_write",{id,disabled:canWrite});await refreshAll()}catch(e){alert(e.message)}}
 async function setGroupWrite(id,disabled){try{await api("set_group_write",{id,disabled:!disabled});await refreshAll()}catch(e){alert(e.message)}}
 async function deleteMessage(id){try{await api("delete_message",{id});await refreshAll()}catch(e){alert(e.message)}}
+async function toggleReaction(messageId,reaction){try{await api("toggle_reaction",{message_id:messageId,reaction});await refreshAll();if(selectedChat)renderConversation()}catch(e){alert(e.message)}}
+async function pinMessage(messageId){try{await api("pin_message",{message_id:messageId});await refreshAll();if(selectedChat)renderConversation()}catch(e){alert(e.message)}}
+async function unpinMessage(messageId){try{await api("unpin_message",{message_id:messageId});await refreshAll();if(selectedChat)renderConversation()}catch(e){alert(e.message)}}
 async function logout(){token="";profile=null;localStorage.removeItem("helligram_token");$("app").style.display="none";$("login").style.display="block";$("nationalId").value="";$("staffCode").value="";$("staffPass").value="";setMode("student")}
 async function restore(){
   if(!token)return;
