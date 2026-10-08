@@ -38,7 +38,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حلی گرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.18</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.19</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -107,7 +107,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.18</div>
+  <div class="version">v0.5.19</div>
 </section>
 </div>
 
@@ -218,7 +218,10 @@ function resizeAvatar(file){
     reader.readAsDataURL(file);
   });
 }
+let refreshInFlight=false;
 async function refreshAll(){
+  if(refreshInFlight)return;
+  refreshInFlight=true;
   try{
     const m=await api("messages");
     messages=m.messages||[];
@@ -238,6 +241,8 @@ async function refreshAll(){
     renderTargets();
   }catch(e){
     chatStatus.textContent=e.message;
+  }finally{
+    refreshInFlight=false;
   }
 }
 function toggleMenu(force){const menu=document.getElementById("sideMenu"),overlay=document.getElementById("menuOverlay");const open=force===undefined?!menu.classList.contains("open"):!!force;menu.classList.toggle("open",open);overlay.classList.toggle("show",open)}
