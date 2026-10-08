@@ -26,7 +26,7 @@
   .admin{margin:14px 24px;padding:20px}
   .side{width:340px}
 }
-@media(max-width:760px){.grid{display:block}.chat{min-height:calc(100vh - 82px)}.chatList{min-height:calc(100vh - 148px)}.messages{min-height:350px}.adminGrid{grid-template-columns:1fr}.msg{max-width:92%}.wrap{padding:0}.chatItem{padding:13px 12px}.chatAvatar{width:53px;height:53px;flex-basis:53px}.chatName{font-size:15px}.appHeader{height:74px}.chat{min-height:calc(100vh - 74px)}}
+@media(max-width:760px){.grid{display:block}.chat{height:calc(100vh - 74px);min-height:0}.chatList{flex:1;min-height:0;height:auto;overflow:auto}.messages{min-height:350px}.adminGrid{grid-template-columns:1fr}.msg{max-width:92%}.wrap{padding:0}.chatItem{padding:13px 12px}.chatAvatar{width:53px;height:53px;flex-basis:53px}.chatName{font-size:15px}.appHeader{height:74px}.chat{height:calc(100vh - 74px);min-height:0}}
 </style>
 </head>
 <body>
@@ -37,7 +37,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حلی گرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.12</div>
+  <div class="version">v0.5.13</div>
 </section>
 
 <section id="app" class="app">
@@ -106,7 +106,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.12</div>
+  <div class="version">v0.5.13</div>
 </section>
 </div>
 
