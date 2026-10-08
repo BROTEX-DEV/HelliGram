@@ -39,7 +39,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.45</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.46</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -108,10 +108,14 @@
       <button class="btn" type="button" onclick="deleteSelectedGroup()">🗑️ حذف گروه</button>
       <div id="groupMemberStatus" class="status muted"></div>
     </div>
+    <div class="row" style="margin-top:14px;align-items:center;justify-content:space-between;gap:8px">
+      <h4 style="margin:0">مدیریت پیام ها</h4>
+      <button class="btn" type="button" onclick="deleteAllMessages()">🗑️ پاک کردن تمام پیام ها</button>
+    </div>
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.45</div>
+  <div class="version">v0.5.46</div>
 </section>
 <div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس</div><div id="callState" class="callState">در حال برقراری تماس...</div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()">🎙️</button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
@@ -700,6 +704,15 @@ function renderAdmin(){
 async function setStudentWrite(id,canWrite){try{await api("set_student_write",{id,disabled:canWrite});await refreshAll()}catch(e){alert(e.message)}}
 async function setGroupWrite(id,disabled){try{await api("set_group_write",{id,disabled:!disabled});await refreshAll()}catch(e){alert(e.message)}}
 async function deleteMessage(id){try{await api("delete_message",{id});await refreshAll()}catch(e){alert(e.message)}}
+async function deleteAllMessages(){
+  if(profile?.type!=="staff"||profile.role!=="admin")return alert("فقط مدیر می تواند همه پیام ها را حذف کند.");
+  if(!confirm("همه پیام های حلی گرام حذف شوند؟ این کار قابل بازگشت نیست."))return;
+  try{
+    const d=await api("delete_all_messages");
+    await refreshAll();
+    alert(faNum(d.deleted_count||0)+" پیام حذف شد.");
+  }catch(e){alert(e.message)}
+}
 async function pinMessage(messageId){try{await api("pin_message",{message_id:messageId});await refreshAll();if(selectedChat){renderConversation();renderPinnedHeader()}}catch(e){alert(e.message)}}
 async function unpinMessage(messageId){try{await api("unpin_message",{message_id:messageId});await refreshAll();if(selectedChat){renderConversation();renderPinnedHeader()}}catch(e){alert(e.message)}}
 async function logout(){token="";profile=null;localStorage.removeItem("helligram_token");$("app").style.display="none";$("login").style.display="block";$("nationalId").value="";$("staffCode").value="";$("staffPass").value="";setMode("student")}
