@@ -38,7 +38,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.26</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.27</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -60,7 +60,7 @@
         <div id="avatarStatus" class="status muted"></div>
       </div>
       <div class="notice" id="roleNotice"></div>
-      <button class="btn primary" onclick="showChat();toggleMenu(false)">💬 پیام رسان <span id="menuUnreadBadge" class="unreadBadge menuUnreadBadge hidden">0</span></button>
+      <button class="btn primary" onclick="showChat();toggleMenu(false)">💬 پیام رسان <span id="menuUnreadBadge" class="unreadBadge menuUnreadBadge hidden">0</span></button><button id="notifyBtn" class="btn" type="button" onclick="enableNotifications()">🔔 فعال سازی اعلان پیام</button>
       <button class="btn" id="adminBtn" onclick="toggleAdmin();toggleMenu(false)">🛡️ پنل مدیریت</button>
       <button class="btn" onclick="refreshAll();toggleMenu(false)">🔄 بروزرسانی</button>
       <button class="btn" onclick="logout()">🚪 خروج از حساب</button>
@@ -110,7 +110,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.26</div>
+  <div class="version">v0.5.27</div>
 </section>
 </div>
 
@@ -127,6 +127,9 @@ let staff=[];
 let messages=[];
 let sendTarget={kind:"staff",id:null};
 let selectedChat=null;
+let notificationsReady=false;
+let notificationInitialized=false;
+let knownMessageIds=new Set();
 
 async function api(action,body={}){
   const controller=new AbortController();
@@ -543,7 +546,68 @@ async function deleteSelectedGroup(){
     alert("گروه حذف شد.");
   }catch(e){alert(e.message)}
 }
-function renderMessages(){renderChatList();updateUnreadIndicator();if(selectedChat)renderConversation()}
+function notifyKey(){return "helligram_notification_ids_"+(profile?.type||"guest")+"_"+(profile?.id||"guest")}
+function loadKnownMessageIds(){
+  try{return new Set(JSON.parse(localStorage.getItem(notifyKey())||"[]"))}catch{return new Set()}
+}
+function saveKnownMessageIds(ids){
+  const arr=[...ids].slice(-300);
+  localStorage.setItem(notifyKey(),JSON.stringify(arr));
+}
+async function enableNotifications(){
+  if(!("Notification" in window)){alert("مرورگر شما اعلان های وب را پشتیبانی نمی کند.");return}
+  try{
+    const permission=await Notification.requestPermission();
+    if(permission==="granted"){
+      notificationsReady=true;
+      localStorage.setItem("helligram_notifications","1");
+      updateNotificationButton();
+      new Notification("حــلــی‌گــــرام",{body:"اعلان پیام های جدید فعال شد."});
+    }else{
+      notificationsReady=false;
+      updateNotificationButton();
+      alert("اجازه اعلان داده نشد. از تنظیمات مرورگر، اعلان های این سایت را فعال کنید.");
+    }
+  }catch(e){alert("فعال سازی اعلان انجام نشد.")}
+}
+function updateNotificationButton(){
+  const b=document.getElementById("notifyBtn");
+  if(!b)return;
+  if(!("Notification" in window)){b.textContent="🔕 اعلان پشتیبانی نمی شود";b.disabled=true;return}
+  if(Notification.permission==="granted"||notificationsReady){
+    b.textContent="🔔 اعلان پیام فعال است";
+    b.classList.add("primary");
+  }else if(Notification.permission==="denied"){
+    b.textContent="🔕 اعلان مسدود شده";
+  }else b.textContent="🔔 فعال سازی اعلان پیام";
+}
+function processIncomingNotifications(){
+  if(!profile)return;
+  const current=loadKnownMessageIds();
+  if(!notificationInitialized){
+    messages.forEach(m=>current.add(m.id));
+    saveKnownMessageIds(current);
+    knownMessageIds=current;
+    notificationInitialized=true;
+    notificationsReady=localStorage.getItem("helligram_notifications")==="1"&&("Notification" in window)&&Notification.permission==="granted";
+    updateNotificationButton();
+    return;
+  }
+  const fresh=messages.filter(m=>m?.id&&!current.has(m.id)&&!isOwnMessage(m));
+  fresh.forEach(m=>{
+    current.add(m.id);
+    if(notificationsReady&&document.visibilityState!=="visible"){
+      const key=chatKey(m);
+      const meta=chatMeta(key);
+      try{
+        new Notification("پیام جدید در حــلــی‌گــــرام",{body:(m.sender_name?m.sender_name+" : ":"")+String(m.content||"").slice(0,120),tag:"helligram-"+key});
+      }catch{}
+    }
+  });
+  saveKnownMessageIds(current);
+  knownMessageIds=current;
+}
+function renderMessages(){renderChatList();updateUnreadIndicator();processIncomingNotifications();if(selectedChat)renderConversation()}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 async function sendMessage(){
   const input=document.getElementById("messageInput");
@@ -595,6 +659,7 @@ async function restore(){
   try{const d=await api("me");profile=d.profile;openApp()}catch{token="";localStorage.removeItem("helligram_token")}
 }
 let messagesEl=null,messagesBox=null;
+updateNotificationButton();
 restore();
 setInterval(()=>{if(profile)refreshAll()},4000);
 </script>
