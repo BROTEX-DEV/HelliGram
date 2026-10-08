@@ -29,7 +29,7 @@
 }
 @media(max-width:760px){.grid{display:block}.chat{height:calc(100vh - 74px);min-height:0}.chatList{flex:1;min-height:0;height:auto;overflow:auto}.messages{min-height:350px}.adminGrid{grid-template-columns:1fr}.msg{max-width:92%}.wrap{padding:0}.chatItem{padding:13px 12px}.chatAvatar{width:53px;height:53px;flex-basis:53px}.chatName{font-size:15px}.appHeader{height:74px}.chat{height:calc(100vh - 74px);min-height:0}}
 
-</style>
+.callMembers{margin:10px 0 16px;color:#c7d4e5;font-size:12px;max-height:120px;overflow:auto;text-align:right}.callMembers div{padding:4px 0;border-bottom:1px solid #263b55}\n</style>
 </head>
 <body>
 <div class="wrap">
@@ -39,7 +39,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.46</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.47</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -69,7 +69,7 @@
     <main class="card chat">
       <div class="chathead">
         <button id="backChats" class="chatBack" onclick="showChatList()">‹</button>
-        <div id="chatHeaderAvatar" class="chatHeaderAvatar">👥</div><div class="chatTitleWrap"><b id="chatTitle">گفتگوها</b><div class="muted" id="chatStatus">پیام های شما</div><div id="chatWriteStatus" class="chatWriteStatus hidden"></div></div><button id="callBtn" class="callBtn hidden" type="button" onclick="startVoiceCall()" aria-label="تماس صوتی">📞</button>
+        <div id="chatHeaderAvatar" class="chatHeaderAvatar">👥</div><div class="chatTitleWrap"><b id="chatTitle">گفتگوها</b><div class="muted" id="chatStatus">پیام های شما</div><div id="chatWriteStatus" class="chatWriteStatus hidden"></div></div><button id="callBtn" class="callBtn hidden" type="button" onclick="startCall()" aria-label="تماس صوتی">📞</button>
       </div>
       <div id="pinnedHeader" class="pinnedHeader hidden"></div>
       <div id="chatList" class="chatList"></div>
@@ -638,27 +638,175 @@ function processIncomingNotifications(){
 }
 function renderMessages(){renderChatList();updateUnreadIndicator();processIncomingNotifications();if(selectedChat){renderConversation();renderPinnedHeader()}}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-let callPollTimer=null,callStartedAt=0,activeCall=null,callPeer=null,callLocalStream=null,callMuted=false,callIceSeen=new Set(),callJoiningFromLink=false;
+let callPollTimer=null,callStartedAt=0,activeCall=null,callPeer=null,callLocalStream=null,callMuted=false,callIceSeen=new Set(),callJoiningFromLink=false;\nlet groupCall=null,groupCallPollTimer=null,groupLocalStream=null,groupPeers=new Map(),groupIceSeen=new Set(),groupCandidateQueues=new Map(),groupCallJoining=false,groupAudioEls=new Map();
 function callPeerMeta(ref){const a=ref?.type==="student"?students.find(x=>x.id===ref.id):staff.find(x=>x.id===ref.id);return {name:a?.full_name||(ref?.type==="student"?"دانش آموز":"مسئول"),avatarUrl:a?.avatar_url||null};}
-function updateCallButton(){const b=document.getElementById("callBtn");if(!b)return;const m=selectedChat?chatMeta(selectedChat):null;b.classList.toggle("hidden",!(profile&&m&&m.kind!=="group"&&m.id));}
+function updateCallButton(){const b=document.getElementById("callBtn");if(!b)return;const m=selectedChat?chatMeta(selectedChat):null;b.classList.toggle("hidden",!(profile&&m&&m.id));b.title=m?.kind==="group"?"تماس صوتی گروهی":"تماس صوتی";}
 function callUi(show){document.getElementById("callOverlay")?.classList.toggle("show",show);}
 function callAvatar(m){const e=document.getElementById("callAvatar");if(e)e.innerHTML=m?.avatarUrl?'<img src="'+escapeHtml(m.avatarUrl)+'" alt="">':escapeHtml((m?.name||"؟").slice(0,1));}
 function closeCallMedia(){if(callPeer){try{callPeer.close()}catch{}callPeer=null}if(callLocalStream){callLocalStream.getTracks().forEach(t=>t.stop());callLocalStream=null}const a=document.getElementById("remoteAudio");if(a)a.srcObject=null;}
 function resetCallUi(){document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.add("hidden");document.getElementById("callTimer").textContent="";callMuted=false;const b=document.getElementById("callMuteBtn");if(b)b.textContent="🎙️";}
-function callLink(callId){return location.origin+location.pathname+"#call="+encodeURIComponent(callId);}
+function callLink(callId){return location.origin+location.pathname+"#call="+encodeURIComponent(callId);}\nfunction groupCallLink(callId){return location.origin+location.pathname+"#groupcall="+encodeURIComponent(callId);}
 function callMessageHtml(content){const raw=String(content||"");const match=raw.match(/(https?:\/\/[^\s]+#call=([A-Za-z0-9-]+))/i);if(!match)return escapeHtml(raw);const url=match[1];const label=raw.replace(match[1],"").trim()||"📞 ورود به تماس";return escapeHtml(label).replace(/\\n/g,"<br>")+'<br><a href="'+escapeHtml(url)+'" class="callJoinLink">📞 ورود به تماس</a>';}
 async function waitForIceGathering(){if(!callPeer||callPeer.iceGatheringState==="complete")return;await new Promise(resolve=>{const done=()=>{if(callPeer?.iceGatheringState==="complete"){callPeer.removeEventListener("icegatheringstatechange",done);resolve()}};callPeer.addEventListener("icegatheringstatechange",done);setTimeout(resolve,7000)})}
 async function prepareCallPeer(){if(!navigator.mediaDevices?.getUserMedia||!window.RTCPeerConnection)throw new Error("مرورگر شما از تماس صوتی پشتیبانی نمی کند.");callPeer=new RTCPeerConnection({iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"},{urls:"stun:stun.cloudflare.com:3478"}]});callPeer.onicecandidate=e=>{if(e.candidate&&activeCall)api("call_ice",{call_id:activeCall.id,candidate:e.candidate.toJSON()}).catch(()=>{})};callPeer.ontrack=e=>{const a=document.getElementById("remoteAudio");if(a&&e.streams[0]){a.srcObject=e.streams[0];a.play().catch(()=>{})}};callPeer.onconnectionstatechange=()=>{if(!callPeer)return;if(callPeer.connectionState==="connected"){document.getElementById("callState").textContent="تماس برقرار است";if(!callStartedAt)callStartedAt=Date.now()}else if(["failed","closed"].includes(callPeer.connectionState))finishCallUi(false)};callPeer.oniceconnectionstatechange=()=>{if(callPeer?.iceConnectionState==="failed")document.getElementById("callState").textContent="اتصال شبکه تماس برقرار نشد."};callLocalStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});callLocalStream.getTracks().forEach(t=>callPeer.addTrack(t,callLocalStream));}
 async function pollActiveCall(){if(!activeCall||!profile)return;try{const d=await api("call_poll",{call_id:activeCall.id});const call=(d.calls||[])[0];for(const item of(d.ice||[])){if(callIceSeen.has(item.id))continue;callIceSeen.add(item.id);if(item.sender_id===profile.id)continue;if(callPeer?.remoteDescription)await callPeer.addIceCandidate(item.candidate).catch(()=>{})}if(!call)return;if(activeCall.role==="caller"&&call.answer&&!callPeer?.currentRemoteDescription){await callPeer.setRemoteDescription(call.answer).catch(()=>{});document.getElementById("callState").textContent="در حال اتصال..."}if(call.status==="accepted"){document.getElementById("callState").textContent="در حال اتصال...";document.getElementById("callMuteBtn")?.classList.remove("hidden")}if(call.status==="rejected"||call.status==="ended")finishCallUi(false)}catch{}}
 function startCallPolling(){if(callPollTimer)clearInterval(callPollTimer);callPollTimer=setInterval(pollActiveCall,900);pollActiveCall();}
+function startCall(){if(selectedChat&&chatMeta(selectedChat)?.kind==="group")return startGroupVoiceCall();return startVoiceCall();}
+
+function groupCallMemberLabel(type,id){
+  const a=type==="student"?students.find(x=>x.id===id):staff.find(x=>x.id===id);
+  return a?.full_name||(type==="student"?"دانش آموز":"مسئول");
+}
+function groupPeerIsA(p){return p.a_type===profile.type&&p.a_id===profile.id}
+function groupPeerKey(p){return p.id}
+function groupPcConfig(){return {iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"},{urls:"stun:stun.cloudflare.com:3478"}]}}
+async function addQueuedGroupIce(peerId){
+  const pc=groupPeers.get(peerId)?.pc;
+  if(!pc||!pc.remoteDescription)return;
+  const q=groupCandidateQueues.get(peerId)||[];
+  while(q.length){const c=q.shift();await pc.addIceCandidate(c).catch(()=>{})}
+}
+async function createGroupPeer(peer){
+  const key=groupPeerKey(peer);
+  if(groupPeers.has(key))return groupPeers.get(key);
+  const pc=new RTCPeerConnection(groupPcConfig());
+  const state={pc,peer,offerSent:false,answerApplied:false,remoteDescriptionSet:false,connected:false,receivedTracks:new Set()};
+  groupPeers.set(key,state);
+  if(groupLocalStream)groupLocalStream.getTracks().forEach(t=>pc.addTrack(t,groupLocalStream));
+  pc.onicecandidate=e=>{if(e.candidate&&groupCall)api("group_call_ice",{peer_id:peer.id,candidate:e.candidate.toJSON()}).catch(()=>{})};
+  pc.ontrack=e=>{
+    const stream=e.streams?.[0]||new MediaStream([e.track]);
+    let audio=groupAudioEls.get(peer.id);
+    if(!audio){audio=new Audio();audio.autoplay=true;audio.playsInline=true;audio.volume=1;groupAudioEls.set(peer.id,audio)}
+    audio.srcObject=stream;audio.play().catch(()=>{});
+  };
+  pc.onconnectionstatechange=()=>{state.connected=pc.connectionState==="connected";if(state.connected){document.getElementById("callState").textContent="تماس گروهی برقرار است";if(!callStartedAt)callStartedAt=Date.now()}};
+  return state;
+}
+async function waitGroupIce(pc){if(pc.iceGatheringState==="complete")return;await new Promise(resolve=>{const done=()=>{if(pc.iceGatheringState==="complete"){pc.removeEventListener("icegatheringstatechange",done);resolve()}};pc.addEventListener("icegatheringstatechange",done);setTimeout(resolve,7000)})}
+async function ensureGroupOffer(peer){
+  const state=await createGroupPeer(peer);
+  if(!groupPeerIsA(peer)||state.offerSent)return;
+  const offer=await state.pc.createOffer();
+  await state.pc.setLocalDescription(offer);
+  await waitGroupIce(state.pc);
+  await api("group_call_peer_update",{peer_id:peer.id,offer:state.pc.localDescription,status:"offered"});
+  state.offerSent=true;
+}
+async function applyGroupPeer(peer){
+  const state=await createGroupPeer(peer);
+  const isA=groupPeerIsA(peer);
+  if(!isA&&peer.offer&&!state.pc.remoteDescription){
+    await state.pc.setRemoteDescription(peer.offer);
+    state.remoteDescriptionSet=true;
+    await addQueuedGroupIce(peer.id);
+    const answer=await state.pc.createAnswer();
+    await state.pc.setLocalDescription(answer);
+    await waitGroupIce(state.pc);
+    await api("group_call_peer_update",{peer_id:peer.id,answer:state.pc.localDescription,status:"accepted"});
+    state.answerApplied=true;
+  }
+  if(isA&&peer.answer&&!state.pc.currentRemoteDescription){
+    await state.pc.setRemoteDescription(peer.answer);
+    state.remoteDescriptionSet=true;
+    await addQueuedGroupIce(peer.id);
+    state.answerApplied=true;
+  }
+}
+async function processGroupIce(items){
+  for(const item of items){
+    if(groupIceSeen.has(item.id))continue;
+    groupIceSeen.add(item.id);
+    const state=groupPeers.get(item.peer_id);
+    const c=item.candidate;
+    if(!state?.pc?.remoteDescription){
+      const q=groupCandidateQueues.get(item.peer_id)||[];q.push(c);groupCandidateQueues.set(item.peer_id,q);
+      continue;
+    }
+    await state.pc.addIceCandidate(c).catch(()=>{});
+  }
+}
+function renderGroupCallMembers(peers){
+  const e=document.getElementById("callMembers");if(!e)return;
+  const names=[];
+  const seen=new Set();
+  peers.forEach(p=>{const other=groupPeerIsA(p)?{type:p.b_type,id:p.b_id}:{type:p.a_type,id:p.a_id};const k=other.type+":"+other.id;if(!seen.has(k)){seen.add(k);names.push(groupCallMemberLabel(other.type,other.id))}});
+  if(groupCall?.hostType&&groupCall?.hostId){const k=groupCall.hostType+":"+groupCall.hostId;if(!seen.has(k))names.unshift(groupCallMemberLabel(groupCall.hostType,groupCall.hostId))}
+  e.innerHTML=names.length?names.map(n=>"<div>👤 "+escapeHtml(n)+"</div>").join(""):"";
+  e.classList.toggle("hidden",!names.length);
+}
+async function pollGroupCall(){
+  if(!groupCall||!profile)return;
+  try{
+    const d=await api("group_call_poll",{call_id:groupCall.id});
+    if(d.call?.status==="ended"){finishGroupCall(false);return}
+    groupCall.status=d.call?.status||groupCall.status;
+    renderGroupCallMembers(d.peers||[]);
+    for(const p of(d.peers||[])){await createGroupPeer(p);await ensureGroupOffer(p);await applyGroupPeer(p)}
+    await processGroupIce(d.ice||[]);
+  }catch{}
+}
+function startGroupPolling(){if(groupCallPollTimer)clearInterval(groupCallPollTimer);groupCallPollTimer=setInterval(pollGroupCall,900);pollGroupCall()}
+async function startGroupVoiceCall(){
+  if(!selectedChat||groupCall)return;
+  const m=chatMeta(selectedChat);if(!m||m.kind!=="group"||!m.id)return;
+  try{
+    if(!navigator.mediaDevices?.getUserMedia||!window.RTCPeerConnection)throw new Error("مرورگر شما از تماس صوتی پشتیبانی نمی کند.");
+    const d=await api("group_call_start",{group_id:m.id});
+    groupCall={id:d.call.id,groupId:m.id,role:"host",status:d.call.status,hostType:d.call.host_type,hostId:d.call.host_id};
+    await api("group_call_join",{call_id:groupCall.id});
+    groupLocalStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+    callStartedAt=Date.now();callMuted=false;groupIceSeen=new Set();groupCandidateQueues=new Map();
+    document.getElementById("callName").textContent=m.name||"تماس گروهی";
+    document.getElementById("callState").textContent="در حال آماده سازی تماس گروهی...";
+    document.getElementById("callAcceptBtn")?.classList.add("hidden");
+    document.getElementById("callMuteBtn")?.classList.remove("hidden");
+    document.getElementById("callMembers")?.classList.remove("hidden");
+    callAvatar({name:"👥"});
+    callUi(true);
+    const callDate=new Date().toLocaleString("fa-IR",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});
+    await api("send",{group_id:m.id,content:"📞 تماس صوتی گروهی حــلــی‌گرام\n📅 تاریخ تماس: "+callDate+"\n"+groupCallLink(groupCall.id)});
+    document.getElementById("callState").textContent="تماس گروهی فعال است؛ اعضا می توانند وارد شوند.";
+    startGroupPolling();
+  }catch(e){finishGroupCall(false);alert(e.message||"شروع تماس گروهی انجام نشد.")}
+}
+async function joinGroupCallFromLink(callId){
+  if(!profile||!callId||groupCall||groupCallJoining)return;
+  groupCallJoining=true;
+  try{
+    if(!navigator.mediaDevices?.getUserMedia||!window.RTCPeerConnection)throw new Error("مرورگر شما از تماس صوتی پشتیبانی نمی کند.");
+    const d=await api("group_call_join",{call_id:callId});
+    const call=d.call;
+    groupCall={id:call.id,groupId:call.group_id,role:"member",status:call.status,hostType:call.host_type,hostId:call.host_id};
+    groupLocalStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+    callStartedAt=Date.now();callMuted=false;groupIceSeen=new Set();groupCandidateQueues=new Map();
+    const g=groups.find(x=>x.id===call.group_id);
+    document.getElementById("callName").textContent=g?.name||"تماس گروهی";
+    document.getElementById("callState").textContent="در حال اتصال به تماس گروهی...";
+    document.getElementById("callAcceptBtn")?.classList.add("hidden");
+    document.getElementById("callMuteBtn")?.classList.remove("hidden");
+    callAvatar({name:"👥"});callUi(true);startGroupPolling();
+  }catch(e){alert(e.message||"ورود به تماس گروهی انجام نشد.")}finally{groupCallJoining=false;if(location.hash.startsWith("#groupcall="))history.replaceState(null,"",location.pathname+location.search)}
+}
+function finishGroupCall(updateServer=true){
+  const call=groupCall;
+  if(call&&updateServer)api("group_call_end",{call_id:call.id}).catch(()=>{});
+  if(groupCallPollTimer){clearInterval(groupCallPollTimer);groupCallPollTimer=null}
+  groupPeers.forEach(s=>{try{s.pc.close()}catch{}});
+  groupPeers.clear();groupCandidateQueues.clear();groupIceSeen.clear();
+  groupAudioEls.forEach(a=>{try{a.pause()}catch{}a.srcObject=null});groupAudioEls.clear();
+  if(groupLocalStream){groupLocalStream.getTracks().forEach(t=>t.stop());groupLocalStream=null}
+  groupCall=null;callStartedAt=0;callUi(false);resetCallUi();
+  document.getElementById("callMembers")?.classList.add("hidden");
+}
 async function startVoiceCall(){if(!selectedChat||activeCall)return;const m=chatMeta(selectedChat);if(m.kind==="group"||!m.id)return;if(profile.type==="student"&&!profile.canWrite){alert("ارسال پیام برای شما بسته شده است و دعوت تماس هم ارسال نمی شود.");return}try{const created=await api("start_call",{callee_type:m.kind,callee_id:m.id});const call=created.call;activeCall={id:call.id,peerType:m.kind,peerId:m.id,role:"caller"};callIceSeen=new Set();const pm=callPeerMeta({type:m.kind,id:m.id});document.getElementById("callName").textContent=pm.name;document.getElementById("callState").textContent="در حال آماده سازی تماس...";callAvatar(pm);resetCallUi();document.getElementById("callMuteBtn")?.classList.remove("hidden");callUi(true);await prepareCallPeer();const offer=await callPeer.createOffer();await callPeer.setLocalDescription(offer);await waitForIceGathering();await api("call_update",{call_id:call.id,status:"ringing",offer:callPeer.localDescription});const callDate=new Date().toLocaleString("fa-IR",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});const content="📞 دعوت تماس صوتی حــلــی‌گرام\n📅 تاریخ تماس: "+callDate+"\n"+callLink(call.id);const body={content};if(m.kind==="staff")body.recipient_staff_id=m.id;else body.recipient_student_id=m.id;await api("send",body);document.getElementById("callState").textContent="دعوت تماس برای گیرنده ارسال شد.";startCallPolling()}catch(e){finishCallUi(false);alert(e.message||"برقراری تماس انجام نشد.")}}
 async function joinCallFromLink(callId){if(!profile||!callId||activeCall||callJoiningFromLink)return;callJoiningFromLink=true;try{const d=await api("call_poll",{call_id:callId});const call=(d.calls||[])[0];if(!call)throw new Error("این لینک تماس منقضی شده یا تماس پیدا نشد.");if(call.callee_type!==profile.type||call.callee_id!==profile.id)throw new Error("این تماس برای حساب شما نیست.");if(call.status!=="ringing"||!call.offer)throw new Error("این تماس دیگر فعال نیست.");activeCall={id:call.id,peerType:call.caller_type,peerId:call.caller_id,role:"callee",offer:call.offer};callIceSeen=new Set((d.ice||[]).map(x=>x.id));const pm=callPeerMeta({type:call.caller_type,id:call.caller_id});document.getElementById("callName").textContent=pm.name;document.getElementById("callState").textContent="تماس صوتی ورودی";callAvatar(pm);resetCallUi();document.getElementById("callAcceptBtn")?.classList.remove("hidden");callUi(true)}catch(e){alert(e.message||"ورود به تماس انجام نشد.")}finally{callJoiningFromLink=false;if(location.hash.startsWith("#call="))history.replaceState(null,"",location.pathname+location.search)}}
 async function acceptIncomingCall(){if(!activeCall||activeCall.role!=="callee")return;try{await prepareCallPeer();await callPeer.setRemoteDescription(activeCall.offer);const answer=await callPeer.createAnswer();await callPeer.setLocalDescription(answer);await waitForIceGathering();await api("call_update",{call_id:activeCall.id,status:"accepted",answer:callPeer.localDescription});document.getElementById("callState").textContent="در حال اتصال...";document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.remove("hidden");startCallPolling()}catch(e){alert(e.message||"پذیرش تماس انجام نشد.");finishCallUi(false)}}
-async function rejectOrHangupCall(){if(activeCall){try{await api("call_update",{call_id:activeCall.id,status:activeCall.role==="callee"?"rejected":"ended"})}catch{}}finishCallUi(false)}
-function finishCallUi(updateServer=true){const call=activeCall;if(call&&updateServer)api("call_update",{call_id:call.id,status:"ended"}).catch(()=>{});if(callPollTimer){clearInterval(callPollTimer);callPollTimer=null}closeCallMedia();activeCall=null;callStartedAt=0;callIceSeen=new Set();callUi(false);resetCallUi();}
-function toggleCallMute(){if(!callLocalStream)return;callMuted=!callMuted;callLocalStream.getAudioTracks().forEach(t=>t.enabled=!callMuted);const b=document.getElementById("callMuteBtn");if(b)b.textContent=callMuted?"🔇":"🎙️";}
-function updateCallTimer(){if(!activeCall||!callPeer||callPeer.connectionState!=="connected")return;if(!callStartedAt)callStartedAt=Date.now();const n=Math.floor((Date.now()-callStartedAt)/1000),m=String(Math.floor(n/60)).padStart(2,"0"),s=String(n%60).padStart(2,"0");const e=document.getElementById("callTimer");if(e)e.textContent=m+":"+s;}
-function handleCallLink(){const match=location.hash.match(/^#call=([A-Za-z0-9-]+)$/);if(match&&profile)joinCallFromLink(decodeURIComponent(match[1]));}
+async function rejectOrHangupCall(){if(groupCall)return finishGroupCall(true);if(activeCall){try{await api("call_update",{call_id:activeCall.id,status:activeCall.role==="callee"?"rejected":"ended"})}catch{}}finishCallUi(false)}
+function finishCallUi(updateServer=true){if(groupCall)return finishGroupCall(updateServer);const call=activeCall;if(call&&updateServer)api("call_update",{call_id:call.id,status:"ended"}).catch(()=>{});if(callPollTimer){clearInterval(callPollTimer);callPollTimer=null}closeCallMedia();activeCall=null;callStartedAt=0;callIceSeen=new Set();callUi(false);resetCallUi();}
+function toggleCallMute(){const stream=groupCall?groupLocalStream:callLocalStream;if(!stream)return;callMuted=!callMuted;stream.getAudioTracks().forEach(t=>t.enabled=!callMuted);const b=document.getElementById("callMuteBtn");if(b)b.textContent=callMuted?"🔇":"🎙️";}
+function updateCallTimer(){if(groupCall){if(!callStartedAt)return;const n=Math.floor((Date.now()-callStartedAt)/1000),m=String(Math.floor(n/60)).padStart(2,"0"),ss=String(n%60).padStart(2,"0");const e=document.getElementById("callTimer");if(e)e.textContent=m+":"+ss;return}if(!activeCall||!callPeer||callPeer.connectionState!=="connected")return;if(!callStartedAt)callStartedAt=Date.now();const n=Math.floor((Date.now()-callStartedAt)/1000),m=String(Math.floor(n/60)).padStart(2,"0"),s=String(n%60).padStart(2,"0");const e=document.getElementById("callTimer");if(e)e.textContent=m+":"+s;}
+function handleCallLink(){const match=location.hash.match(/^#call=([A-Za-z0-9-]+)$/);if(match&&profile)joinCallFromLink(decodeURIComponent(match[1]));const gm=location.hash.match(/^#groupcall=([A-Za-z0-9-]+)$/);if(gm&&profile)joinGroupCallFromLink(decodeURIComponent(gm[1]));}
 window.addEventListener("hashchange",handleCallLink);
 async function sendMessage(){
   const input=document.getElementById("messageInput");
