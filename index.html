@@ -38,7 +38,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.21</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.22</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -68,7 +68,7 @@
     <main class="card chat">
       <div class="chathead">
         <button id="backChats" class="chatBack" onclick="showChatList()">‹</button>
-        <div id="chatHeaderAvatar" class="chatHeaderAvatar">👥</div><div class="chatTitleWrap"><b id="chatTitle">گفتگوها</b><div class="muted" id="chatStatus">پیام های شما</div></div>
+        <div id="chatHeaderAvatar" class="chatHeaderAvatar">👥</div><div class="chatTitleWrap"><b id="chatTitle">گفتگوها</b><div class="muted" id="chatStatus">پیام های شما</div><div id="chatWriteStatus" class="chatWriteStatus hidden"></div></div>
         
       </div>
       <div id="chatList" class="chatList"></div>
@@ -107,7 +107,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.20</div>
+  <div class="version">v0.5.22</div>
 </section>
 </div>
 
@@ -372,6 +372,7 @@ function showChatList(){
   document.getElementById("chatTitle").textContent="گفتگوها";
   document.getElementById("chatStatus").textContent="پیام های شما";
   renderChatList();
+  updateComposerState();
 }
 function updateComposerState(){const comp=document.querySelector(".composer"),input=document.getElementById("messageInput"),btn=document.getElementById("sendBtn"),emoji=document.getElementById("emojiBtn"),st=document.getElementById("chatWriteStatus");if(!comp||!input||!btn||!st)return;const meta=selectedChat?chatMeta(selectedChat):null;const blocked=profile?.type==="student"&&(!profile.canWrite||(meta?.kind==="group"&&meta.writeDisabled));comp.classList.toggle("blocked",blocked);input.disabled=blocked;btn.disabled=blocked;if(emoji)emoji.disabled=blocked;st.classList.toggle("hidden",!blocked);st.textContent=blocked?(meta?.kind==="group"&&meta.writeDisabled?"نوشتن در این گروه بسته است.":"ارسال پیام برای شما بسته است."): "";}\nfunction openChat(key){
   selectedChat=key;
@@ -385,6 +386,7 @@ function updateComposerState(){const comp=document.querySelector(".composer"),in
   document.getElementById("chatStatus").textContent=meta.kind==="group"?faNum(meta.memberCount)+" عضو":"گفتگوی خصوصی";
   renderTargets();
   renderConversation();
+  updateComposerState();
 }
 function openNewChat(){
   setChatVisualMode("");
@@ -397,6 +399,7 @@ function openNewChat(){
   const select=document.getElementById("targetSelect");
   if(select?.value)setTarget(select.value);
   renderConversation();
+  updateComposerState();
 }
 function renderConversation(){
   const el=document.getElementById("messages");
