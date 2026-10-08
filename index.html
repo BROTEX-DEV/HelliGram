@@ -16,7 +16,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حلی گرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.4.8</div>
+  <div class="version">v0.4.9</div>
 </section>
 
 <section id="app" class="app">
@@ -53,6 +53,7 @@
       <div id="conversation" class="conversation hidden">
         <div id="messages" class="messages"></div>
         <div class="composer">
+          <button class="iconBtn composerPlus" type="button" onclick="openNewChat()" aria-label="گفتگوی جدید">＋</button>
           <textarea id="messageInput" placeholder="پیام خود را بنویسید..." maxlength="5000"></textarea>
           <button id="emojiBtn" class="iconBtn" type="button" onclick="insertEmoji()" aria-label="ایموجی">☺</button><button id="sendBtn" class="btn primary" onclick="sendMessage()">ارسال</button>
         </div>
@@ -84,7 +85,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.4.8</div>
+  <div class="version">v0.4.9</div>
 </section>
 </div>
 
@@ -292,8 +293,22 @@ function renderChatList(){
       '<div class="chatPreview">'+escapeHtml(preview)+'</div></div></div>';
   }).join("");
 }
+function setChatVisualMode(kind){
+  const chat=document.querySelector(".chat");
+  const avatar=document.getElementById("chatHeaderAvatar");
+  const isGroup=kind==="group";
+  chat.classList.toggle("groupChat",isGroup);
+  avatar.classList.toggle("show",isGroup);
+  avatar.textContent=isGroup?"👥":"";
+}
+function insertEmoji(){
+  const input=document.getElementById("messageInput");
+  input.value+=(input.value?" ":"")+"🙂";
+  input.focus();
+}
 function showChatList(){
   selectedChat=null;
+  setChatVisualMode("");
   document.getElementById("chatList").classList.remove("hidden");
   document.getElementById("conversation").classList.add("hidden");
   document.getElementById("backChats").classList.add("hidden");
@@ -304,6 +319,7 @@ function showChatList(){
 function openChat(key){
   selectedChat=key;
   const meta=chatMeta(key);
+  setChatVisualMode(meta.kind);
   sendTarget={kind:meta.kind,id:meta.id};
   document.getElementById("chatList").classList.add("hidden");
   document.getElementById("conversation").classList.remove("hidden");
@@ -314,6 +330,7 @@ function openChat(key){
   renderConversation();
 }
 function openNewChat(){
+  setChatVisualMode("");
   document.getElementById("chatList").classList.add("hidden");
   document.getElementById("conversation").classList.remove("hidden");
   document.getElementById("backChats").classList.remove("hidden");
@@ -349,6 +366,7 @@ function setTarget(value){
       const meta=chatMeta(selectedChat);
       document.getElementById("chatTitle").textContent=meta.name;
       document.getElementById("chatStatus").textContent=meta.kind==="group"?"گروه":"گفتگوی خصوصی";
+      setChatVisualMode(meta.kind);
       renderConversation();
     }
   }
