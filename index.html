@@ -39,7 +39,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.36</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.37</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -111,7 +111,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.36</div>
+  <div class="version">v0.5.37</div>
 </section>
 <div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس</div><div id="callState" class="callState">در حال برقراری تماس...</div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()">🎙️</button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
@@ -173,6 +173,7 @@ function openApp(){
   $("roleNotice").textContent=profile.type==="staff"?"ورود مسئول فعال است.":"دانش آموز | وضعیت ارسال: "+(profile.canWrite?"فعال":"بسته");
   $("adminBtn").classList.toggle("hidden",profile.type!=="staff");
   setProfileAvatar();
+  connectCallSocket();
   showChat();refreshAll();
 }
 async function uploadAvatar(input){
@@ -622,7 +623,7 @@ function processIncomingNotifications(){
 }
 function renderMessages(){renderChatList();updateUnreadIndicator();processIncomingNotifications();if(selectedChat){renderConversation();renderPinnedHeader()}}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-let callSocket=null,callSocketRef=1,callHeartbeat=null,callMyTopic="",callStartedAt=0;
+let callSocket=null,callSocketRef=1,callHeartbeat=null,callMyTopic="",callStartedAt=0,activeCall=null,callPeer=null,callLocalStream=null,callMuted=false,callIceQueue=[];
 function callTopic(type,id){return "realtime:helligram-call-"+type+"-"+id;}
 function callSend(topic,payload){
   if(!callSocket||callSocket.readyState!==WebSocket.OPEN)return false;
@@ -665,7 +666,7 @@ async function handleCallSignal(data){
     await callPeer.setRemoteDescription(data.answer).catch(()=>{});
     document.getElementById("callState").textContent="در حال اتصال...";
   }
-  if(data.kind==="ice"&&callPeer?.remoteDescription){await callPeer.addIceCandidate(data.candidate).catch(()=>{});}
+  if(data.kind==="ice"){if(callPeer?.remoteDescription)await callPeer.addIceCandidate(data.candidate).catch(()=>{});else callIceQueue.push(data.candidate);}
   if(data.kind==="end"){await finishCallUi();}
 }
 function callPeerMeta(ref){
@@ -705,6 +706,7 @@ async function acceptIncomingCall(){
   try{
     await prepareCallPeer();
     await callPeer.setRemoteDescription(activeCall.offer);
+    for(const c of callIceQueue){await callPeer.addIceCandidate(c).catch(()=>{});}callIceQueue=[];
     const answer=await callPeer.createAnswer();await callPeer.setLocalDescription(answer);
     sendCallSignal(activeCall.peerType,activeCall.peerId,{kind:"answer",call_id:activeCall.id,answer:callPeer.localDescription});
     document.getElementById("callState").textContent="در حال اتصال...";
@@ -783,7 +785,6 @@ async function restore(){
 }
 let messagesEl=null,messagesBox=null;
 updateNotificationButton();
-connectCallSocket();
 setInterval(updateCallTimer,1000);
 restore();
 setInterval(()=>{if(profile)refreshAll()},4000);
