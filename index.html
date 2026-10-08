@@ -40,7 +40,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.50</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.51</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -118,7 +118,7 @@
   </section>
   <div class="version">v0.5.50</div>
 </section>
-<div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس تصویری</div><div id="callState" class="callState">در حال برقراری تماس...</div><div id="videoStage" class="videoStage"><video id="remoteVideo" class="remoteVideo" autoplay playsinline></video><video id="localVideo" class="localVideo" autoplay playsinline muted></video><div id="groupVideoGrid" class="groupVideoGrid hidden"></div></div><div id="callMembers" class="callMembers hidden"></div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()">🎙️</button><button id="callCameraBtn" class="callAction callMute hidden" type="button" onclick="toggleCallCamera()">📹</button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
+<div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس تصویری</div><div id="callState" class="callState">در حال برقراری تماس...</div><div id="videoStage" class="videoStage"><video id="remoteVideo" class="remoteVideo" autoplay playsinline></video><video id="localVideo" class="localVideo" autoplay playsinline muted></video><div id="groupVideoGrid" class="groupVideoGrid hidden"></div></div><div id="callMembers" class="callMembers hidden"></div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()">🎙️</button><button id="callCameraBtn" class="callAction callMute hidden" type="button" onclick="toggleCallCamera()">📹</button><button id="callShareBtn" class="callAction callMute hidden" type="button" onclick="toggleScreenShare()" aria-label="اشتراک صفحه">🖥️</button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
 
 <script>
@@ -639,14 +639,14 @@ function processIncomingNotifications(){
 }
 function renderMessages(){renderChatList();updateUnreadIndicator();processIncomingNotifications();if(selectedChat){renderConversation();renderPinnedHeader()}}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-let callPollTimer=null,callStartedAt=0,activeCall=null,callPeer=null,callLocalStream=null,callMuted=false,callCameraOff=false,callIceSeen=new Set(),callJoiningFromLink=false;
+let callPollTimer=null,callStartedAt=0,activeCall=null,callPeer=null,callLocalStream=null,callMuted=false,callCameraOff=false,callIceSeen=new Set(),callJoiningFromLink=false,screenShareStream=null,screenSharing=false;
 let groupCall=null,groupCallPollTimer=null,groupLocalStream=null,groupPeers=new Map(),groupIceSeen=new Set(),groupCandidateQueues=new Map(),groupCallJoining=false,groupAudioEls=new Map(),groupVideoEls=new Map();
 function callPeerMeta(ref){const a=ref?.type==="student"?students.find(x=>x.id===ref.id):staff.find(x=>x.id===ref.id);return {name:a?.full_name||(ref?.type==="student"?"دانش آموز":"مسئول"),avatarUrl:a?.avatar_url||null};}
 function updateCallButton(){const b=document.getElementById("callBtn");if(!b)return;const m=selectedChat?chatMeta(selectedChat):null;b.classList.toggle("hidden",!(profile&&m&&m.id));b.title=m?.kind==="group"?"تماس صوتی گروهی":"تماس صوتی";}
 function callUi(show){document.getElementById("callOverlay")?.classList.toggle("show",show);}
 function callAvatar(m){const e=document.getElementById("callAvatar");if(e)e.innerHTML=m?.avatarUrl?'<img src="'+escapeHtml(m.avatarUrl)+'" alt="">':escapeHtml((m?.name||"؟").slice(0,1));}
 function closeCallMedia(){if(callPeer){try{callPeer.close()}catch{}callPeer=null}if(callLocalStream){callLocalStream.getTracks().forEach(t=>t.stop());callLocalStream=null}const a=document.getElementById("remoteAudio"),v=document.getElementById("remoteVideo"),lv=document.getElementById("localVideo");if(a)a.srcObject=null;if(v){v.srcObject=null;v.style.display="none"}if(lv){lv.srcObject=null;lv.style.display="none"}}
-function resetCallUi(){document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.add("hidden");document.getElementById("callCameraBtn")?.classList.add("hidden");document.getElementById("callTimer").textContent="";callMuted=false;callCameraOff=false;const b=document.getElementById("callMuteBtn"),c=document.getElementById("callCameraBtn");if(b)b.textContent="🎙️";if(c)c.textContent="📹";const rv=document.getElementById("remoteVideo"),lv=document.getElementById("localVideo");if(rv){rv.srcObject=null;rv.style.display="none"}if(lv){lv.srcObject=null;lv.style.display="none"}}
+function resetCallUi(){screenSharing=false;screenShareStream=null;const sb=document.getElementById("callShareBtn");if(sb){sb.textContent="🖥️";sb.classList.add("hidden");}document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.add("hidden");document.getElementById("callCameraBtn")?.classList.add("hidden");document.getElementById("callTimer").textContent="";callMuted=false;callCameraOff=false;const b=document.getElementById("callMuteBtn"),c=document.getElementById("callCameraBtn");if(b)b.textContent="🎙️";if(c)c.textContent="📹";const rv=document.getElementById("remoteVideo"),lv=document.getElementById("localVideo");if(rv){rv.srcObject=null;rv.style.display="none"}if(lv){lv.srcObject=null;lv.style.display="none"}}
 function callLink(callId){return location.origin+location.pathname+"#call="+encodeURIComponent(callId);}
 function groupCallLink(callId){return location.origin+location.pathname+"#groupcall="+encodeURIComponent(callId);}
 function callMessageHtml(content){const raw=String(content||"");const match=raw.match(/(https?:\/\/[^\s]+#(?:call|groupcall)=([A-Za-z0-9-]+))/i);if(!match)return escapeHtml(raw);const url=match[1];const label=raw.replace(match[1],"").trim()||"📞 ورود به تماس";return escapeHtml(label).replace(/\\n/g,"<br>")+"<br><a href=\""+escapeHtml(url)+"\" class=\"callJoinLink\">📞 ورود به تماس</a>";}
@@ -693,7 +693,7 @@ async function startGroupVoiceCall(){
     await api("group_call_join",{call_id:groupCall.id});groupLocalStream=await navigator.mediaDevices.getUserMedia({audio:true,video:{facingMode:"user",width:{ideal:720},height:{ideal:1280}}});
     callStartedAt=Date.now();callMuted=false;groupIceSeen=new Set();groupCandidateQueues=new Map();
     document.getElementById("callName").textContent=m.name||"تماس گروهی";document.getElementById("callState").textContent="در حال آماده سازی تماس گروهی...";
-    document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.remove("hidden");document.getElementById("callCameraBtn")?.classList.remove("hidden");document.getElementById("callMembers")?.classList.remove("hidden");document.getElementById("groupVideoGrid")?.classList.remove("hidden");document.getElementById("videoStage")?.classList.remove("hidden");const glv=document.getElementById("localVideo");if(glv){glv.srcObject=groupLocalStream;glv.style.display="block";glv.play().catch(()=>{})}document.getElementById("remoteVideo")?.classList.add("hidden");callAvatar({name:"👥"});callUi(true);
+    document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.remove("hidden");document.getElementById("callCameraBtn")?.classList.remove("hidden");document.getElementById("callShareBtn")?.classList.remove("hidden");document.getElementById("callMembers")?.classList.remove("hidden");document.getElementById("groupVideoGrid")?.classList.remove("hidden");document.getElementById("videoStage")?.classList.remove("hidden");const glv=document.getElementById("localVideo");if(glv){glv.srcObject=groupLocalStream;glv.style.display="block";glv.play().catch(()=>{})}document.getElementById("remoteVideo")?.classList.add("hidden");callAvatar({name:"👥"});callUi(true);
     const callDate=new Date().toLocaleString("fa-IR",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});
     await api("send",{group_id:m.id,content:"📞 تماس صوتی گروهی حــلــی‌گرام\n📅 تاریخ تماس: "+callDate+"\n"+groupCallLink(groupCall.id)});
     document.getElementById("callState").textContent="تماس گروهی فعال است؛ اعضا می توانند وارد شوند.";startGroupPolling();
@@ -704,23 +704,77 @@ async function joinGroupCallFromLink(callId){
   try{
     if(!navigator.mediaDevices?.getUserMedia||!window.RTCPeerConnection)throw new Error("مرورگر شما از تماس صوتی پشتیبانی نمی کند.");
     const d=await api("group_call_join",{call_id:callId}),call=d.call;groupCall={id:call.id,groupId:call.group_id,role:"member",status:call.status,hostType:call.host_type,hostId:call.host_id};
-    groupLocalStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});callStartedAt=Date.now();callMuted=false;groupIceSeen=new Set();groupCandidateQueues=new Map();
+    groupLocalStream=await navigator.mediaDevices.getUserMedia({audio:true,video:{facingMode:"user",width:{ideal:720},height:{ideal:1280}}});callStartedAt=Date.now();callMuted=false;groupIceSeen=new Set();groupCandidateQueues=new Map();
     const g=groups.find(x=>x.id===call.group_id);document.getElementById("callName").textContent=g?.name||"تماس گروهی";document.getElementById("callState").textContent="در حال اتصال به تماس تصویری گروهی...";
-    document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.remove("hidden");document.getElementById("callCameraBtn")?.classList.remove("hidden");document.getElementById("groupVideoGrid")?.classList.remove("hidden");const glv=document.getElementById("localVideo");if(glv){glv.srcObject=groupLocalStream;glv.style.display="block";glv.play().catch(()=>{})}callAvatar({name:"👥"});callUi(true);startGroupPolling();
+    document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.remove("hidden");document.getElementById("callCameraBtn")?.classList.remove("hidden");document.getElementById("callShareBtn")?.classList.remove("hidden");document.getElementById("groupVideoGrid")?.classList.remove("hidden");const glv=document.getElementById("localVideo");if(glv){glv.srcObject=groupLocalStream;glv.style.display="block";glv.play().catch(()=>{})}callAvatar({name:"👥"});callUi(true);startGroupPolling();
   }catch(e){alert(e.message||"ورود به تماس گروهی انجام نشد.")}finally{groupCallJoining=false;if(location.hash.startsWith("#groupcall="))history.replaceState(null,"",location.pathname+location.search)}
 }
-function finishGroupCall(updateServer=true){
+function finishGroupCall(updateServer=true){if(screenSharing)stopScreenShare();
   const call=groupCall;if(call&&updateServer)api("group_call_end",{call_id:call.id}).then(()=>refreshAll()).catch(()=>{});
   if(groupCallPollTimer){clearInterval(groupCallPollTimer);groupCallPollTimer=null}groupPeers.forEach(st=>{try{st.pc.close()}catch{}});groupPeers.clear();groupCandidateQueues.clear();groupIceSeen.clear();
   groupAudioEls.forEach(a=>{try{a.pause()}catch{}a.srcObject=null});groupAudioEls.clear();groupVideoEls.forEach(v=>{try{v.pause()}catch{}v.srcObject=null;v.remove()});groupVideoEls.clear();const gv=document.getElementById("groupVideoGrid");if(gv)gv.innerHTML="";if(groupLocalStream){groupLocalStream.getTracks().forEach(t=>t.stop());groupLocalStream=null}
   groupCall=null;callStartedAt=0;callUi(false);resetCallUi();document.getElementById("callMembers")?.classList.add("hidden");
 }
-async function startVoiceCall(){if(!selectedChat||activeCall)return;const m=chatMeta(selectedChat);if(m.kind==="group"||!m.id)return;if(profile.type==="student"&&!profile.canWrite){alert("ارسال پیام برای شما بسته شده است و دعوت تماس هم ارسال نمی شود.");return}try{const created=await api("start_call",{callee_type:m.kind,callee_id:m.id});const call=created.call;activeCall={id:call.id,peerType:m.kind,peerId:m.id,role:"caller"};callIceSeen=new Set();const pm=callPeerMeta({type:m.kind,id:m.id});document.getElementById("callName").textContent=pm.name;document.getElementById("callState").textContent="در حال آماده سازی تماس...";callAvatar(pm);resetCallUi();document.getElementById("callMuteBtn")?.classList.remove("hidden");document.getElementById("callCameraBtn")?.classList.remove("hidden");callUi(true);await prepareCallPeer();const offer=await callPeer.createOffer();await callPeer.setLocalDescription(offer);await waitForIceGathering();await api("call_update",{call_id:call.id,status:"ringing",offer:callPeer.localDescription});const callDate=new Date().toLocaleString("fa-IR",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});const content="📹 دعوت تماس تصویری حــلــی‌گرام\n📅 تاریخ تماس: "+callDate+"\n"+callLink(call.id);const body={content};if(m.kind==="staff")body.recipient_staff_id=m.id;else body.recipient_student_id=m.id;await api("send",body);document.getElementById("callState").textContent="دعوت تماس تصویری برای گیرنده ارسال شد.";startCallPolling()}catch(e){finishCallUi(false);alert(e.message||"برقراری تماس انجام نشد.")}}
+async function startVoiceCall(){if(!selectedChat||activeCall)return;const m=chatMeta(selectedChat);if(m.kind==="group"||!m.id)return;if(profile.type==="student"&&!profile.canWrite){alert("ارسال پیام برای شما بسته شده است و دعوت تماس هم ارسال نمی شود.");return}try{const created=await api("start_call",{callee_type:m.kind,callee_id:m.id});const call=created.call;activeCall={id:call.id,peerType:m.kind,peerId:m.id,role:"caller"};callIceSeen=new Set();const pm=callPeerMeta({type:m.kind,id:m.id});document.getElementById("callName").textContent=pm.name;document.getElementById("callState").textContent="در حال آماده سازی تماس...";callAvatar(pm);resetCallUi();document.getElementById("callMuteBtn")?.classList.remove("hidden");document.getElementById("callCameraBtn")?.classList.remove("hidden");document.getElementById("callShareBtn")?.classList.remove("hidden");callUi(true);await prepareCallPeer();const offer=await callPeer.createOffer();await callPeer.setLocalDescription(offer);await waitForIceGathering();await api("call_update",{call_id:call.id,status:"ringing",offer:callPeer.localDescription});const callDate=new Date().toLocaleString("fa-IR",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});const content="📹 دعوت تماس تصویری حــلــی‌گرام\n📅 تاریخ تماس: "+callDate+"\n"+callLink(call.id);const body={content};if(m.kind==="staff")body.recipient_staff_id=m.id;else body.recipient_student_id=m.id;await api("send",body);document.getElementById("callState").textContent="دعوت تماس تصویری برای گیرنده ارسال شد.";startCallPolling()}catch(e){finishCallUi(false);alert(e.message||"برقراری تماس انجام نشد.")}}
 async function joinCallFromLink(callId){if(!profile||!callId||activeCall||callJoiningFromLink)return;callJoiningFromLink=true;try{const d=await api("call_poll",{call_id:callId});const call=(d.calls||[])[0];if(!call)throw new Error("این لینک تماس منقضی شده یا تماس پیدا نشد.");if(call.callee_type!==profile.type||call.callee_id!==profile.id)throw new Error("این تماس برای حساب شما نیست.");if(call.status!=="ringing"||!call.offer)throw new Error("این تماس دیگر فعال نیست.");activeCall={id:call.id,peerType:call.caller_type,peerId:call.caller_id,role:"callee",offer:call.offer};callIceSeen=new Set((d.ice||[]).map(x=>x.id));const pm=callPeerMeta({type:call.caller_type,id:call.caller_id});document.getElementById("callName").textContent=pm.name;document.getElementById("callState").textContent="تماس صوتی ورودی";callAvatar(pm);resetCallUi();document.getElementById("callAcceptBtn")?.classList.remove("hidden");callUi(true)}catch(e){alert(e.message||"ورود به تماس انجام نشد.")}finally{callJoiningFromLink=false;if(location.hash.startsWith("#call="))history.replaceState(null,"",location.pathname+location.search)}}
-async function acceptIncomingCall(){if(!activeCall||activeCall.role!=="callee")return;try{await prepareCallPeer();await callPeer.setRemoteDescription(activeCall.offer);const answer=await callPeer.createAnswer();await callPeer.setLocalDescription(answer);await waitForIceGathering();await api("call_update",{call_id:activeCall.id,status:"accepted",answer:callPeer.localDescription});document.getElementById("callState").textContent="در حال اتصال...";document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.remove("hidden");document.getElementById("callCameraBtn")?.classList.remove("hidden");startCallPolling()}catch(e){alert(e.message||"پذیرش تماس انجام نشد.");finishCallUi(false)}}
+async function acceptIncomingCall(){if(!activeCall||activeCall.role!=="callee")return;try{await prepareCallPeer();await callPeer.setRemoteDescription(activeCall.offer);const answer=await callPeer.createAnswer();await callPeer.setLocalDescription(answer);await waitForIceGathering();await api("call_update",{call_id:activeCall.id,status:"accepted",answer:callPeer.localDescription});document.getElementById("callState").textContent="در حال اتصال...";document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.remove("hidden");document.getElementById("callCameraBtn")?.classList.remove("hidden");document.getElementById("callShareBtn")?.classList.remove("hidden");startCallPolling()}catch(e){alert(e.message||"پذیرش تماس انجام نشد.");finishCallUi(false)}}
 async function rejectOrHangupCall(){if(groupCall)return finishGroupCall(true);if(activeCall){try{await api("call_update",{call_id:activeCall.id,status:activeCall.role==="callee"?"rejected":"ended"})}catch{}}finishCallUi(false)}
-function finishCallUi(updateServer=true){if(groupCall)return finishGroupCall(updateServer);const call=activeCall;if(call&&updateServer)api("call_update",{call_id:call.id,status:"ended"}).then(()=>refreshAll()).catch(()=>{});if(callPollTimer){clearInterval(callPollTimer);callPollTimer=null}closeCallMedia();activeCall=null;callStartedAt=0;callIceSeen=new Set();callUi(false);resetCallUi();}
+function finishCallUi(updateServer=true){if(screenSharing)stopScreenShare();if(groupCall)return finishGroupCall(updateServer);const call=activeCall;if(call&&updateServer)api("call_update",{call_id:call.id,status:"ended"}).then(()=>refreshAll()).catch(()=>{});if(callPollTimer){clearInterval(callPollTimer);callPollTimer=null}closeCallMedia();activeCall=null;callStartedAt=0;callIceSeen=new Set();callUi(false);resetCallUi();}
 function toggleCallMute(){const stream=groupCall?groupLocalStream:callLocalStream;if(!stream)return;callMuted=!callMuted;stream.getAudioTracks().forEach(t=>t.enabled=!callMuted);const b=document.getElementById("callMuteBtn");if(b)b.textContent=callMuted?"🔇":"🎙️";}function toggleCallCamera(){const stream=groupCall?groupLocalStream:callLocalStream;if(!stream)return;callCameraOff=!callCameraOff;stream.getVideoTracks().forEach(t=>t.enabled=!callCameraOff);const b=document.getElementById("callCameraBtn");if(b)b.textContent=callCameraOff?"🚫":"📹";}
+async function toggleScreenShare(){
+  if(screenSharing){stopScreenShare();return}
+  if(!navigator.mediaDevices?.getDisplayMedia){
+    alert("مرورگر یا دستگاه شما از اشتراک صفحه پشتیبانی نمی کند.");
+    return;
+  }
+  if(!activeCall&&!groupCall)return;
+  try{
+    const stream=await navigator.mediaDevices.getDisplayMedia({video:true,audio:false});
+    const track=stream.getVideoTracks()[0];
+    if(!track)throw new Error("تصویر صفحه دریافت نشد.");
+    screenShareStream=stream;
+    screenSharing=true;
+    const targets=[];
+    if(activeCall&&callPeer)targets.push(callPeer);
+    if(groupCall)groupPeers.forEach(st=>{if(st?.pc)targets.push(st.pc)});
+    let replaced=0;
+    for(const pc of targets){
+      const sender=pc.getSenders().find(s=>s.track?.kind==="video");
+      if(sender){await sender.replaceTrack(track);replaced++}
+    }
+    if(!replaced)throw new Error("کانال تصویر برای اشتراک صفحه آماده نیست.");
+    const local=document.getElementById("localVideo");
+    if(local){local.srcObject=stream;local.style.display="block";local.play().catch(()=>{})}
+    const btn=document.getElementById("callShareBtn");
+    if(btn)btn.textContent="⏹️";
+    const state=document.getElementById("callState");
+    if(state)state.textContent="در حال اشتراک گذاری صفحه";
+    track.onended=()=>{if(screenSharing)stopScreenShare()};
+  }catch(e){
+    if(screenShareStream){screenShareStream.getTracks().forEach(t=>t.stop());screenShareStream=null}
+    screenSharing=false;
+    alert(e.name==="NotAllowedError"?"اشتراک صفحه لغو شد.":(e.message||"اشتراک صفحه شروع نشد."));
+  }
+}
+async function stopScreenShare(){
+  const cameraTrack=groupCall?groupLocalStream?.getVideoTracks?.()[0]:callLocalStream?.getVideoTracks?.()[0];
+  const targets=[];
+  if(activeCall&&callPeer)targets.push(callPeer);
+  if(groupCall)groupPeers.forEach(st=>{if(st?.pc)targets.push(st.pc)});
+  if(cameraTrack)for(const pc of targets){
+    const sender=pc.getSenders().find(s=>s.track?.kind==="video");
+    if(sender)await sender.replaceTrack(cameraTrack).catch(()=>{});
+  }
+  if(screenShareStream){screenShareStream.getTracks().forEach(t=>t.stop());screenShareStream=null}
+  screenSharing=false;
+  const local=document.getElementById("localVideo");
+  const cameraStream=groupCall?groupLocalStream:callLocalStream;
+  if(local&&cameraStream){local.srcObject=cameraStream;local.style.display="block";local.play().catch(()=>{})}
+  const btn=document.getElementById("callShareBtn");
+  if(btn)btn.textContent="🖥️";
+  const state=document.getElementById("callState");
+  if(state)state.textContent=groupCall?"تماس گروهی برقرار است":"تماس تصویری برقرار است";
+}
 function updateCallTimer(){if(groupCall){if(!callStartedAt)return;const n=Math.floor((Date.now()-callStartedAt)/1000),m=String(Math.floor(n/60)).padStart(2,"0"),ss=String(n%60).padStart(2,"0");const e=document.getElementById("callTimer");if(e)e.textContent=m+":"+ss;return}if(!activeCall||!callPeer||callPeer.connectionState!=="connected")return;if(!callStartedAt)callStartedAt=Date.now();const n=Math.floor((Date.now()-callStartedAt)/1000),m=String(Math.floor(n/60)).padStart(2,"0"),s=String(n%60).padStart(2,"0");const e=document.getElementById("callTimer");if(e)e.textContent=m+":"+s;}
 function handleCallLink(){const match=location.hash.match(/^#call=([A-Za-z0-9-]+)$/);if(match&&profile)joinCallFromLink(decodeURIComponent(match[1]));const gm=location.hash.match(/^#groupcall=([A-Za-z0-9-]+)$/);if(gm&&profile)joinGroupCallFromLink(decodeURIComponent(gm[1]));}
 window.addEventListener("hashchange",handleCallLink);
