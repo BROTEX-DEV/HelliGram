@@ -39,7 +39,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.33</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.34</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -112,7 +112,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.33</div>
+  <div class="version">v0.5.34</div>
 </section>
 </div>
 
@@ -145,7 +145,7 @@ async function api(action,body={}){
 const $=id=>document.getElementById(id);
 function setMode(m){mode=m;$("studentForm").classList.toggle("hidden",m!=="student");$("staffForm").classList.toggle("hidden",m!=="staff");$("studentTab").classList.toggle("active",m==="student");$("staffTab").classList.toggle("active",m==="staff");$("error").textContent=""}
 function busy(text){$("error").textContent=text}
-async async function loginStudent(){
+async function loginStudent(){
   const rawId=$("nationalId").value.trim(); const id=rawId.replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-1776)).replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-1632)); if(!/^\d{10}$/.test(id)) return busy("کد ملی باید ۱۰ رقم باشد.");
   busy("در حال ورود...");
   try{const d=await api("login",{type:"student",national_id:id}); token=d.token;profile=d.profile;localStorage.setItem("helligram_token",token);openApp()}catch(e){busy(e.message)}
