@@ -38,7 +38,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.22</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.23</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -102,12 +102,13 @@
       <div class="field"><label>انتخاب گروه</label><select id="manageGroupSelect" onchange="loadGroupMembers()"></select></div>
       <div class="field"><label>دانش آموز</label><select id="manageStudentSelect"></select></div>
       <div class="row"><button class="btn" onclick="changeGroupMember(true)">افزودن به گروه</button><button class="btn" onclick="changeGroupMember(false)">حذف از گروه</button></div>
+      <button class="btn primary" type="button" onclick="addAllStudentsToGroup()">➕ افزودن همه دانش آموزان</button>
       <div id="groupMemberStatus" class="status muted"></div>
     </div>
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.22</div>
+  <div class="version">v0.5.23</div>
 </section>
 </div>
 
@@ -459,6 +460,19 @@ async function changeGroupMember(member){
   const studentId=document.getElementById("manageStudentSelect").value;
   if(!groupId||!studentId)return alert("گروه و دانش آموز را انتخاب کنید.");
   try{await api("set_group_member",{group_id:groupId,student_id:studentId,member});await loadGroupMembers()}catch(e){alert(e.message)}
+}
+async function addAllStudentsToGroup(){
+  const groupId=document.getElementById("manageGroupSelect").value;
+  if(!groupId)return alert("ابتدا یک گروه را انتخاب کنید.");
+  if(!students.length)return alert("دانش آموزی ثبت نشده است.");
+  if(!confirm("همه دانش آموزان فعال به این گروه اضافه شوند؟"))return;
+  try{
+    for(const student of students){
+      await api("set_group_member",{group_id:groupId,student_id:student.id,member:true});
+    }
+    await refreshAll();
+    alert("همه دانش آموزان به گروه اضافه شدند.");
+  }catch(e){alert(e.message)}
 }
 function renderMessages(){renderChatList();if(selectedChat)renderConversation()}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
