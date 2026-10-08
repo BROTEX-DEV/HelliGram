@@ -16,14 +16,14 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حلی گرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.2</div>
+  <div class="version">v0.5.3</div>
 </section>
 
 <section id="app" class="app">
   <div class="appHeader">
     <button class="iconBtn" onclick="toggleMenu()" aria-label="منو">☰</button>
     <div class="appBrand"><div class="appLogo"><img src="logo.png" alt="حلی گرام"></div><div class="appBrandText"><b>حلی گرام</b><small id="who"></small></div></div>
-    <button class="iconBtn plusBtn" onclick="openNewChat()" aria-label="گفتگوی جدید">＋</button>
+    
   </div>
   <div id="menuOverlay" class="menuOverlay" onclick="toggleMenu(false)"></div>
   <div class="grid">
@@ -47,7 +47,7 @@
       <div class="chathead">
         <button id="backChats" class="chatBack" onclick="showChatList()">‹</button>
         <div id="chatHeaderAvatar" class="chatHeaderAvatar">👥</div><div class="chatTitleWrap"><b id="chatTitle">گفتگوها</b><div class="muted" id="chatStatus">پیام های شما</div></div>
-        <button class="chatNew" onclick="openNewChat()">＋</button>
+        
       </div>
       <div id="chatList" class="chatList"></div>
       <div id="conversation" class="conversation hidden">
@@ -85,7 +85,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.2</div>
+  <div class="version">v0.5.3</div>
 </section>
 </div>
 
@@ -290,7 +290,7 @@ function renderChatList(){
   });
   const rows=[...map.entries()].sort((a,b)=>new Date(b[1].created_at)-new Date(a[1].created_at));
   if(!rows.length){
-    el.innerHTML='<div class="chatEmpty"><strong>هنوز گفتگویی ندارید</strong>برای شروع، روی ＋ بزنید و یک مقصد را انتخاب کنید.</div>';
+    el.innerHTML='<div class="chatEmpty"><strong>هنوز گفتگویی ندارید</strong>برای شروع، یک گفتگوی جدید را از منوی برنامه انتخاب کنید.</div>';
     return;
   }
   el.innerHTML=rows.map(([key,last])=>{
