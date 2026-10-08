@@ -420,7 +420,7 @@ function showChatList(){
   document.getElementById("conversation").classList.add("hidden");
   document.getElementById("backChats").classList.add("hidden");
   document.getElementById("chatTitle").textContent="گفتگوها";
-  document.getElementById("chatStatus").textContent="پیام های شما";
+  document.getElementById("chatStatus").textContent="پیام های شما";updateCallButton();
   renderChatList();
   renderPinnedHeader();
   updateComposerState();
@@ -439,8 +439,7 @@ function openChat(key){
   document.getElementById("chatStatus").textContent=meta.kind==="group"?faNum(meta.memberCount)+" عضو":"گفتگوی خصوصی";
   renderTargets();
   renderConversation();
-  renderPinnedHeader();
-  updateComposerState();
+  renderPinnedHeader();updateComposerState();updateCallButton();
 }
 function openNewChat(){
   setChatVisualMode("");
@@ -623,7 +622,114 @@ function processIncomingNotifications(){
 }
 function renderMessages(){renderChatList();updateUnreadIndicator();processIncomingNotifications();if(selectedChat){renderConversation();renderPinnedHeader()}}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+let callSocket=null,callSocketRef=1,callHeartbeat=null,callMyTopic="",callStartedAt=0;
+function callTopic(type,id){return "realtime:helligram-call-"+type+"-"+id;}
+function callSend(topic,payload){
+  if(!callSocket||callSocket.readyState!==WebSocket.OPEN)return false;
+  const ref=String(callSocketRef++);
+  callSocket.send(JSON.stringify({topic,event:"broadcast",payload:{type:"broadcast",event:"helligram-call",payload},ref,join_ref:payload.join_ref||null}));
+  return true;
+}
+function connectCallSocket(){
+  if(!profile)return;
+  if(callSocket){try{callSocket.close()}catch{}}
+  callMyTopic=callTopic(profile.type,profile.id);
+  const url=SUPABASE_URL+"/realtime/v1/websocket?apikey="+encodeURIComponent(SUPABASE_KEY)+"&vsn=1.0.0";
+  callSocket=new WebSocket(url);
+  callSocket.onopen=()=>{
+    const ref=String(callSocketRef++);
+    callSocket.send(JSON.stringify({topic:callMyTopic,event:"phx_join",payload:{config:{broadcast:{ack:false,self:false},presence:{enabled:false},private:false}},ref,join_ref:ref}));
+    if(callHeartbeat)clearInterval(callHeartbeat);
+    callHeartbeat=setInterval(()=>{if(callSocket?.readyState===WebSocket.OPEN)callSocket.send(JSON.stringify({topic:"phoenix",event:"heartbeat",payload:{},ref:String(callSocketRef++)}))},20000);
+  };
+  callSocket.onmessage=e=>{try{const m=JSON.parse(e.data);if(m.event==="broadcast"&&m.payload?.payload)handleCallSignal(m.payload.payload)}catch{}};
+  callSocket.onclose=()=>{if(callHeartbeat)clearInterval(callHeartbeat);if(profile&&!activeCall)setTimeout(connectCallSocket,2500)};
+}
+function sendCallSignal(peerType,peerId,data){return callSend(callTopic(peerType,peerId),{...data,to_type:peerType,to_id:peerId,from_type:profile.type,from_id:profile.id});}
+async function handleCallSignal(data){
+  if(!profile||data.to_type!==profile.type||data.to_id!==profile.id)return;
+  if(data.kind==="invite"){
+    if(activeCall)return;
+    activeCall={id:data.call_id,peerType:data.from_type,peerId:data.from_id,role:"callee"};
+    const meta=callPeerMeta({type:data.from_type,id:data.from_id});
+    document.getElementById("callName").textContent=meta.name;
+    document.getElementById("callState").textContent="تماس صوتی ورودی";
+    callAvatar(meta);resetCallUi();
+    document.getElementById("callAcceptBtn")?.classList.remove("hidden");
+    callUi(true);
+    activeCall.offer=data.offer;
+    return;
+  }
+  if(!activeCall||data.call_id!==activeCall.id)return;
+  if(data.kind==="answer"&&callPeer){
+    await callPeer.setRemoteDescription(data.answer).catch(()=>{});
+    document.getElementById("callState").textContent="در حال اتصال...";
+  }
+  if(data.kind==="ice"&&callPeer?.remoteDescription){await callPeer.addIceCandidate(data.candidate).catch(()=>{});}
+  if(data.kind==="end"){await finishCallUi();}
+}
+function callPeerMeta(ref){
+  const a=ref?.type==="student"?students.find(x=>x.id===ref.id):staff.find(x=>x.id===ref.id);
+  return {name:a?.full_name||(ref?.type==="student"?"دانش آموز":"مسئول"),avatarUrl:a?.avatar_url||null};
+}
 function updateCallButton(){const b=document.getElementById("callBtn");if(!b)return;const m=selectedChat?chatMeta(selectedChat):null;b.classList.toggle("hidden",!(profile&&m&&m.kind!=="group"&&m.id));}
+function callUi(show){document.getElementById("callOverlay")?.classList.toggle("show",show);}
+function callAvatar(m){const e=document.getElementById("callAvatar");if(e)e.innerHTML=m?.avatarUrl?'<img src="'+escapeHtml(m.avatarUrl)+'" alt="">':escapeHtml((m?.name||"؟").slice(0,1));}
+function closeCallMedia(){if(callPeer){try{callPeer.close()}catch{};callPeer=null}if(callLocalStream){callLocalStream.getTracks().forEach(t=>t.stop());callLocalStream=null}const a=document.getElementById("remoteAudio");if(a)a.srcObject=null}
+function resetCallUi(){document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.add("hidden");document.getElementById("callTimer").textContent="";callMuted=false}
+async function prepareCallPeer(){
+  if(!navigator.mediaDevices?.getUserMedia||!window.RTCPeerConnection)throw new Error("مرورگر شما از تماس صوتی پشتیبانی نمی کند.");
+  callPeer=new RTCPeerConnection({iceServers:[{urls:"stun:stun.l.google.com:19302"}]});
+  callPeer.onicecandidate=e=>{if(e.candidate&&activeCall)sendCallSignal(activeCall.peerType,activeCall.peerId,{kind:"ice",call_id:activeCall.id,candidate:e.candidate.toJSON()})};
+  callPeer.ontrack=e=>{const a=document.getElementById("remoteAudio");if(a&&e.streams[0]){a.srcObject=e.streams[0];a.play().catch(()=>{})}};
+  callPeer.onconnectionstatechange=()=>{if(callPeer&&["failed","closed"].includes(callPeer.connectionState))finishCallUi()};
+  callLocalStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+  callLocalStream.getTracks().forEach(t=>callPeer.addTrack(t,callLocalStream));
+}
+async function startVoiceCall(){
+  if(!selectedChat||activeCall)return;
+  const m=chatMeta(selectedChat);if(m.kind==="group"||!m.id)return;
+  if(!callSocket||callSocket.readyState!==WebSocket.OPEN){alert("اتصال تماس آماده نیست. یک لحظه صبر کنید.");connectCallSocket();return}
+  try{
+    activeCall={id:crypto.randomUUID(),peerType:m.kind,peerId:m.id,role:"caller"};
+    const pm=callPeerMeta({type:m.kind,id:m.id});
+    document.getElementById("callName").textContent=pm.name;document.getElementById("callState").textContent="در حال تماس...";
+    callAvatar(pm);resetCallUi();document.getElementById("callMuteBtn")?.classList.remove("hidden");callUi(true);
+    await prepareCallPeer();
+    const offer=await callPeer.createOffer();await callPeer.setLocalDescription(offer);
+    sendCallSignal(m.kind,m.id,{kind:"invite",call_id:activeCall.id,offer:callPeer.localDescription});
+  }catch(e){finishCallUi();alert(e.message||"برقراری تماس انجام نشد.")}
+}
+async function acceptIncomingCall(){
+  if(!activeCall||activeCall.role!=="callee")return;
+  try{
+    await prepareCallPeer();
+    await callPeer.setRemoteDescription(activeCall.offer);
+    const answer=await callPeer.createAnswer();await callPeer.setLocalDescription(answer);
+    sendCallSignal(activeCall.peerType,activeCall.peerId,{kind:"answer",call_id:activeCall.id,answer:callPeer.localDescription});
+    document.getElementById("callState").textContent="در حال اتصال...";
+    document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.remove("hidden");
+  }catch(e){alert(e.message||"پذیرش تماس انجام نشد.");finishCallUi()}
+}
+function rejectOrHangupCall(){
+  if(activeCall)sendCallSignal(activeCall.peerType,activeCall.peerId,{kind:"end",call_id:activeCall.id});
+  finishCallUi();
+}
+function finishCallUi(){
+  closeCallMedia();activeCall=null;callUi(false);resetCallUi();
+}
+function toggleCallMute(){
+  if(!callLocalStream)return;
+  callMuted=!callMuted;callLocalStream.getAudioTracks().forEach(t=>t.enabled=!callMuted);
+  const b=document.getElementById("callMuteBtn");if(b)b.textContent=callMuted?"🔇":"🎙️";
+}
+function updateCallTimer(){
+  if(!activeCall||!callPeer||callPeer.connectionState!=="connected")return;
+  if(!callStartedAt)callStartedAt=Date.now();
+  const n=Math.floor((Date.now()-callStartedAt)/1000),m=String(Math.floor(n/60)).padStart(2,"0"),s=String(n%60).padStart(2,"0");
+  const e=document.getElementById("callTimer");if(e)e.textContent=m+":"+s;
+}
+
 async function sendMessage(){
   const input=document.getElementById("messageInput");
   const btn=document.getElementById("sendBtn");
@@ -677,6 +783,8 @@ async function restore(){
 }
 let messagesEl=null,messagesBox=null;
 updateNotificationButton();
+connectCallSocket();
+setInterval(updateCallTimer,1000);
 restore();
 setInterval(()=>{if(profile)refreshAll()},4000);
 </script>
