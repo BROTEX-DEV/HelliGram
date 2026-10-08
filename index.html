@@ -39,7 +39,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.43</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.44</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -111,7 +111,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.43</div>
+  <div class="version">v0.5.44</div>
 </section>
 <div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس</div><div id="callState" class="callState">در حال برقراری تماس...</div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()">🎙️</button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
@@ -367,7 +367,16 @@ function renderChatList(){
     const key=chatKey(m);
     if(key)map.set(key,m);
   });
-  const rows=[...map.entries()].sort((a,b)=>new Date(b[1].created_at)-new Date(a[1].created_at));
+  // گروه های فعال باید حتی قبل از ارسال اولین پیام هم در بخش گفتگوها دیده شوند.
+  groups.forEach(g=>{
+    const key="group:"+g.id;
+    if(!map.has(key)) map.set(key,{created_at:g.created_at||new Date(0).toISOString(),content:""});
+  });
+  const rows=[...map.entries()].sort((a,b)=>{
+    const ag=a[0].startsWith("group:")&&!messages.some(m=>chatKey(m)===a[0])?new Date(0):new Date(a[1].created_at);
+    const bg=b[0].startsWith("group:")&&!messages.some(m=>chatKey(m)===b[0])?new Date(0):new Date(b[1].created_at);
+    return bg-ag;
+  });
   if(!rows.length){
     el.innerHTML='<div class="chatEmpty"><strong>هنوز گفتگویی ندارید</strong>برای شروع، یک گفتگوی جدید را از منوی برنامه انتخاب کنید.</div>';
     return;
@@ -381,8 +390,8 @@ function renderChatList(){
         : '<div class="chatAvatar">'+escapeHtml((meta.name||"?").trim().slice(0,1))+'</div>')
       : '<div class="chatAvatar">'+meta.icon+'</div>';
     return '<div class="chatItem" onclick="openChat(\''+escapeHtml(key)+'\')">'+avatar+
-      '<div class="chatInfo"><div class="chatTopLine"><span class="chatName">'+escapeHtml(meta.name)+'</span><span class="chatTime">'+formatChatTime(last.created_at)+'</span></div>'+
-      (meta.kind==="group" ? '<div class="groupMemberCount">'+faNum(meta.memberCount)+' عضو</div>' : '<div class="chatPreview">'+escapeHtml(preview)+'</div>')+'</div>'+(getUnreadCount(key)>0?'<span class="unreadBadge">'+faNum(getUnreadCount(key))+'</span>':'')+'</div>';
+      '<div class="chatInfo"><div class="chatTopLine"><span class="chatName">'+escapeHtml(meta.name)+'</span><span class="chatTime">'+(last.content?formatChatTime(last.created_at):"")+'</span></div>'+
+      (meta.kind==="group" ? '<div class="groupMemberCount">'+faNum(meta.memberCount)+' عضو'+(last.content?'':' • آماده گفتگو')+'</div>' : '<div class="chatPreview">'+escapeHtml(preview)+'</div>')+'</div>'+(getUnreadCount(key)>0?'<span class="unreadBadge">'+faNum(getUnreadCount(key))+'</span>':'')+'</div>';
   }).join("");
 }
 function setChatVisualMode(kind,avatarUrl){
