@@ -31,7 +31,8 @@
 
 .callMembers{margin:10px 0 16px;color:#c7d4e5;font-size:12px;max-height:120px;overflow:auto;text-align:right}.callMembers div{padding:4px 0;border-bottom:1px solid #263b55}
 
-/* BROTEX visual refresh v0.5.58 — neon glass */
+.voiceBtn{flex:0 0 44px;background:rgba(70,105,210,.16);border:1px solid rgba(84,231,255,.25);font-size:21px}.voiceBtn.recording{background:#c82e52;color:#fff;animation:voicePulse 1s infinite}.voiceStatus{font-size:11px;color:#ff9bb0;align-self:center;white-space:nowrap}.voiceStatus.hidden{display:none}.voiceMessage{display:flex;align-items:center;gap:9px;min-width:min(270px,65vw);padding:5px 0}.voiceMessage audio{width:100%;height:38px;max-width:260px}.voiceMessage .voiceGlyph{font-size:22px}@keyframes voicePulse{50%{box-shadow:0 0 0 5px #c82e5233}}
+/* BROTEX visual refresh v0.5.59 — voice messages */
 :root{color-scheme:dark;--bg:#070916;--panel:rgba(17,22,47,.78);--line:rgba(126,147,255,.20);--cyan:#54e7ff;--violet:#a879ff;--blue:#6688ff;--muted:#a2abc9}
 html{background:#070916;scroll-behavior:smooth}
 body{background:radial-gradient(ellipse at 8% 5%,rgba(74,75,255,.20),transparent 34%),radial-gradient(ellipse at 92% 18%,rgba(0,220,255,.13),transparent 32%),linear-gradient(145deg,#070916,#0b1024 52%,#090b19)!important;color:#f5f7ff}
@@ -101,7 +102,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-s
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
 
 
-/* v0.5.58 — fix mobile hamburger menu stacking */
+/* v0.5.59 — fix mobile hamburger menu stacking */
 .grid{isolation:auto!important}
 #menuOverlay.menuOverlay{z-index:45}
 #sideMenu.side{z-index:50;position:fixed;top:0;right:0;bottom:0;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain}
@@ -144,7 +145,7 @@ body:before{display:none!important}
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.58</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.59</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -187,6 +188,7 @@ body:before{display:none!important}
         <div class="composer">
           
           <textarea id="messageInput" placeholder="پیام خود را بنویسید..." maxlength="5000"></textarea>
+          <button id="voiceBtn" class="iconBtn voiceBtn" type="button" onclick="toggleVoiceRecording()" aria-label="ضبط پیام صوتی" title="ضبط پیام صوتی">🎙️</button><span id="voiceStatus" class="voiceStatus hidden" aria-live="polite"></span>
           <button id="emojiBtn" class="iconBtn" type="button" onclick="toggleEmojiPicker()" aria-label="ایموجی">☺</button><div id="emojiPicker" class="emojiPicker hidden"></div><button id="sendBtn" class="btn primary" onclick="sendMessage()">ارسال</button>
         </div>
       </div>
@@ -615,7 +617,8 @@ function renderConversation(){
         ? '<div class="messageAvatar"><img src="'+escapeHtml(m.sender_avatar_url)+'" alt=""></div>'
         : '<div class="messageAvatar">'+avatarLetter+'</div>')
       : "";
-    return '<div class="messageLine '+(mine?"me":"")+'">'+avatarHtml+'<div id="msg-'+m.id+'" class="msg '+(mine?"me":"")+'"><strong class="sender-name">'+escapeHtml(senderName)+'</strong><div>'+callMessageHtml(m.content)+'</div><small>'+new Date(m.created_at).toLocaleString("fa-IR")+'</small><div class="messageActions">'+pinButton+deleteButton+'</div></div></div>';
+    const voiceHtml=m.voice_url?'<div class="voiceMessage"><span class="voiceGlyph">🎙️</span><audio controls preload="none" src="'+escapeHtml(m.voice_url)+'">پخش پیام صوتی</audio></div>':callMessageHtml(m.content);
+    return '<div class="messageLine '+(mine?"me":"")+'">'+avatarHtml+'<div id="msg-'+m.id+'" class="msg '+(mine?"me":"")+'"><strong class="sender-name">'+escapeHtml(senderName)+'</strong><div>'+voiceHtml+'</div><small>'+new Date(m.created_at).toLocaleString("fa-IR")+'</small><div class="messageActions">'+pinButton+deleteButton+'</div></div></div>';
   }).join("");
 }
 function setTarget(value){
@@ -836,6 +839,71 @@ async function stopScreenShare(){
 function updateCallTimer(){if(!activeCall||!callPeer||callPeer.connectionState!=="connected")return;if(!callStartedAt)callStartedAt=Date.now();const n=Math.floor((Date.now()-callStartedAt)/1000),m=String(Math.floor(n/60)).padStart(2,"0"),ss=String(n%60).padStart(2,"0");const e=document.getElementById("callTimer");if(e)e.textContent=m+":"+ss;}
 function handleCallLink(){const match=location.hash.match(/^#call=([A-Za-z0-9-]+)$/);if(match&&profile)joinCallFromLink(decodeURIComponent(match[1]));}
 window.addEventListener("hashchange",handleCallLink);
+
+let voiceRecorder=null,voiceChunks=[],voiceStartedAt=0,voiceClock=null;
+function voiceMimeType(){
+  return ["audio/webm;codecs=opus","audio/webm","audio/ogg;codecs=opus","audio/mp4"].find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported(t))||"";
+}
+function voiceNotice(text,show=true){
+  const el=document.getElementById("voiceStatus");if(!el)return;
+  el.textContent=text;el.classList.toggle("hidden",!show);
+}
+async function toggleVoiceRecording(){
+  if(voiceRecorder&&voiceRecorder.state==="recording"){voiceRecorder.stop();return}
+  if(!profile||!selectedChat||!sendTarget.id){alert("ابتدا یک گفتگو را باز کنید.");return}
+  if(profile.type==="student"&&!profile.canWrite){alert("ارسال پیام برای شما بسته شده است.");return}
+  if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){alert("ضبط صدا در این مرورگر پشتیبانی نمی‌شود. از مرورگر به‌روز و HTTPS استفاده کنید.");return}
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    const mimeType=voiceMimeType();
+    voiceChunks=[];
+    voiceRecorder=new MediaRecorder(stream,mimeType?{mimeType}:undefined);
+    voiceStartedAt=Date.now();
+    const btn=document.getElementById("voiceBtn");
+    btn.classList.add("recording");btn.textContent="■";btn.setAttribute("aria-label","پایان ضبط و ارسال");
+    voiceNotice("در حال ضبط 00:00");
+    voiceClock=setInterval(()=>{
+      if(!voiceRecorder||voiceRecorder.state!=="recording")return;
+      const sec=Math.floor((Date.now()-voiceStartedAt)/1000);
+      voiceNotice("در حال ضبط "+String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0"));
+      if(sec>=60)voiceRecorder.stop();
+    },250);
+    voiceRecorder.ondataavailable=e=>{if(e.data&&e.data.size)voiceChunks.push(e.data)};
+    voiceRecorder.onerror=()=>{stream.getTracks().forEach(t=>t.stop());resetVoiceRecorder();alert("ضبط صدا با خطا مواجه شد.")};
+    voiceRecorder.onstop=async()=>{
+      clearInterval(voiceClock);voiceClock=null;
+      stream.getTracks().forEach(t=>t.stop());
+      const recorder=voiceRecorder;
+      const blob=new Blob(voiceChunks,{type:recorder?.mimeType||mimeType||"audio/webm"});
+      resetVoiceRecorder();
+      if(!blob.size){voiceNotice("",false);return}
+      if(blob.size>1_500_000){voiceNotice("",false);alert("حجم پیام صوتی زیاد است. یک پیام کوتاه‌تر ضبط کنید.");return}
+      try{
+        voiceNotice("در حال ارسال پیام صوتی…");
+        const dataUrl=await new Promise((resolve,reject)=>{
+          const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error("خواندن فایل صوتی انجام نشد."));reader.readAsDataURL(blob);
+        });
+        const uploaded=await api("upload_voice",{data_url:dataUrl});
+        const body={content:"[[voice:"+uploaded.path+"]]"};
+        if(sendTarget.kind==="staff")body.recipient_staff_id=sendTarget.id;
+        else if(sendTarget.kind==="student")body.recipient_student_id=sendTarget.id;
+        else if(sendTarget.kind==="group")body.group_id=sendTarget.id;
+        else throw new Error("مقصد پیام معتبر نیست.");
+        await api("send",body);
+        await refreshAll();openChat(selectedChat);
+        voiceNotice("پیام صوتی ارسال شد.");setTimeout(()=>voiceNotice("",false),1800);
+      }catch(e){voiceNotice("",false);alert(e.message||"ارسال پیام صوتی انجام نشد.")}
+    };
+    voiceRecorder.start(250);
+  }catch(e){resetVoiceRecorder();alert(e.name==="NotAllowedError"?"اجازه استفاده از میکروفون داده نشد.":(e.message||"میکروفون در دسترس نیست."))}
+}
+function resetVoiceRecorder(){
+  clearInterval(voiceClock);voiceClock=null;
+  const btn=document.getElementById("voiceBtn");
+  if(btn){btn.classList.remove("recording");btn.textContent="🎙️";btn.setAttribute("aria-label","ضبط پیام صوتی")}
+  voiceRecorder=null;voiceChunks=[];
+}
+
 async function sendMessage(){
   const input=document.getElementById("messageInput");
   const btn=document.getElementById("sendBtn");
