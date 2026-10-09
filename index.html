@@ -31,7 +31,7 @@
 
 .callMembers{margin:10px 0 16px;color:#c7d4e5;font-size:12px;max-height:120px;overflow:auto;text-align:right}.callMembers div{padding:4px 0;border-bottom:1px solid #263b55}
 
-/* BROTEX visual refresh v0.5.53 — neon glass */
+/* BROTEX visual refresh v0.5.54 — neon glass */
 :root{color-scheme:dark;--bg:#070916;--panel:rgba(17,22,47,.78);--line:rgba(126,147,255,.20);--cyan:#54e7ff;--violet:#a879ff;--blue:#6688ff;--muted:#a2abc9}
 html{background:#070916;scroll-behavior:smooth}
 body{background:radial-gradient(ellipse at 8% 5%,rgba(74,75,255,.20),transparent 34%),radial-gradient(ellipse at 92% 18%,rgba(0,220,255,.13),transparent 32%),linear-gradient(145deg,#070916,#0b1024 52%,#090b19)!important;color:#f5f7ff}
@@ -101,7 +101,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-s
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
 
 
-/* v0.5.53 — fix mobile hamburger menu stacking */
+/* v0.5.54 — fix mobile hamburger menu stacking */
 .grid{isolation:auto!important}
 #menuOverlay.menuOverlay{z-index:45}
 #sideMenu.side{z-index:50;position:fixed;top:0;right:0;bottom:0;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain}
@@ -109,6 +109,29 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-s
 #sideMenu.side:not(.open){pointer-events:none}
 #menuOverlay.menuOverlay.show{display:block;pointer-events:auto}
 .appHeader{z-index:20}
+
+
+/* v0.5.54 — balanced login layout + uniform background */
+html,body{min-height:100%;background:#090d1b!important}
+body{background:#090d1b!important}
+body:before{display:none!important}
+.wrap{width:100%;max-width:none!important;min-height:100vh;margin:0 auto;padding:1px 16px 24px!important;background:#090d1b!important}
+#login.login{position:relative;width:100%;max-width:440px;min-width:0;margin:clamp(22px,7vh,64px) auto 28px!important;padding:clamp(22px,5vw,36px)!important;box-sizing:border-box;overflow:hidden;border-radius:24px!important;background:#10162b!important;border:1px solid rgba(126,147,255,.2)!important;box-shadow:0 18px 55px rgba(0,0,0,.28)!important}
+#login .brand{width:100%;margin:0 auto;text-align:center}
+#login .logo{width:82px;height:82px;margin:0 auto 14px;flex:none}
+#login .brand h1{margin:10px 0 6px;font-size:clamp(22px,5vw,29px);line-height:1.45;overflow-wrap:anywhere}
+#login .brand p{margin:0;line-height:1.7}
+#login .tabs{width:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin:24px 0 20px;padding:5px;box-sizing:border-box}
+#login .tabs button{width:100%;min-width:0;min-height:44px;padding:10px 6px;white-space:normal;line-height:1.5}
+#login #studentForm,#login #staffForm{width:100%;min-width:0}
+#login .field{width:100%;margin:14px 0}
+#login .field label{display:block;margin-bottom:8px;line-height:1.6}
+#login input{display:block;width:100%;min-width:0;min-height:47px;padding:12px 14px;box-sizing:border-box}
+#login .btn{display:block;width:100%;min-height:47px;margin-top:12px;padding:12px 14px;line-height:1.6;box-sizing:border-box}
+#login .error{min-height:22px;overflow-wrap:anywhere}
+#login .version,#login .deployedBy{text-align:center;overflow-wrap:anywhere}
+#login .version{margin-top:14px}
+@media(max-width:480px){.wrap{padding:1px 12px 20px!important}#login.login{max-width:440px;margin:22px auto 18px!important;padding:24px 19px!important;border-radius:22px!important}#login .logo{width:74px;height:74px}#login .tabs{margin:20px 0 18px}}
 
 </style>
 </head>
@@ -120,7 +143,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-s
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.53</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.54</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
