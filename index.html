@@ -32,7 +32,7 @@
 .callMembers{margin:10px 0 16px;color:#c7d4e5;font-size:12px;max-height:120px;overflow:auto;text-align:right}.callMembers div{padding:4px 0;border-bottom:1px solid #263b55}
 
 .voiceBtn{flex:0 0 44px;background:rgba(70,105,210,.16);border:1px solid rgba(84,231,255,.25);font-size:21px}.voiceBtn.recording{background:#c82e52;color:#fff;animation:voicePulse 1s infinite}.voiceStatus{font-size:11px;color:#ff9bb0;align-self:center;white-space:nowrap}.voiceStatus.hidden{display:none}.voiceMessage{display:flex;align-items:center;gap:9px;min-width:min(270px,65vw);padding:5px 0}.voiceMessage audio{width:100%;height:38px;max-width:260px}.voiceMessage .voiceGlyph{font-size:22px}@keyframes voicePulse{50%{box-shadow:0 0 0 5px #c82e5233}}
-/* BROTEX visual refresh v0.5.61 — voice messages */
+/* BROTEX visual refresh v0.5.62 — voice messages */
 :root{color-scheme:dark;--bg:#070916;--panel:rgba(17,22,47,.78);--line:rgba(126,147,255,.20);--cyan:#54e7ff;--violet:#a879ff;--blue:#6688ff;--muted:#a2abc9}
 html{background:#070916;scroll-behavior:smooth}
 body{background:radial-gradient(ellipse at 8% 5%,rgba(74,75,255,.20),transparent 34%),radial-gradient(ellipse at 92% 18%,rgba(0,220,255,.13),transparent 32%),linear-gradient(145deg,#070916,#0b1024 52%,#090b19)!important;color:#f5f7ff}
@@ -102,7 +102,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-s
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
 
 
-/* v0.5.61 — fix mobile hamburger menu stacking */
+/* v0.5.62 — fix mobile hamburger menu stacking */
 .grid{isolation:auto!important}
 #menuOverlay.menuOverlay{z-index:45}
 #sideMenu.side{z-index:50;position:fixed;top:0;right:0;bottom:0;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain}
@@ -145,7 +145,7 @@ body:before{display:none!important}
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.61</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.62</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -617,7 +617,7 @@ function renderConversation(){
         ? '<div class="messageAvatar"><img src="'+escapeHtml(m.sender_avatar_url)+'" alt=""></div>'
         : '<div class="messageAvatar">'+avatarLetter+'</div>')
       : "";
-    const voiceHtml=m.voice_url?'<div class="voiceMessage"><span class="voiceGlyph">🎙️</span><audio controls preload="none" src="'+escapeHtml(m.voice_url)+'">پخش پیام صوتی</audio></div>':callMessageHtml(m.content);
+    const voiceHtml=m.voice_url?'<div class="voiceMessage"><span class="voiceGlyph">🎙️</span><audio controls preload="metadata" onloadedmetadata="fixVoiceDuration(this)" onerror="voicePlaybackError(this)" src="'+escapeHtml(m.voice_url)+'">پخش پیام صوتی</audio><span class="voicePlayStatus" aria-live="polite"></span></div>':callMessageHtml(m.content);
     return '<div class="messageLine '+(mine?"me":"")+'">'+avatarHtml+'<div id="msg-'+m.id+'" class="msg '+(mine?"me":"")+'"><strong class="sender-name">'+escapeHtml(senderName)+'</strong><div>'+voiceHtml+'</div><small>'+new Date(m.created_at).toLocaleString("fa-IR")+'</small><div class="messageActions">'+pinButton+deleteButton+'</div></div></div>';
   }).join("");
 }
@@ -765,6 +765,23 @@ function callAvatar(m){const e=document.getElementById("callAvatar");if(e)e.inne
 function closeCallMedia(){if(callPeer){try{callPeer.close()}catch{}callPeer=null}if(callLocalStream){callLocalStream.getTracks().forEach(t=>t.stop());callLocalStream=null}const a=document.getElementById("remoteAudio"),v=document.getElementById("remoteVideo"),lv=document.getElementById("localVideo");if(a)a.srcObject=null;if(v){v.srcObject=null;v.style.display="none"}if(lv){lv.srcObject=null;lv.style.display="none"}}
 function resetCallUi(){screenSharing=false;screenShareStream=null;const sb=document.getElementById("callShareBtn");if(sb){sb.textContent="🖥️";sb.classList.add("hidden");}document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.add("hidden");document.getElementById("callCameraBtn")?.classList.add("hidden");document.getElementById("callTimer").textContent="";callMuted=false;callCameraOff=false;const b=document.getElementById("callMuteBtn"),c=document.getElementById("callCameraBtn");if(b)b.textContent="🎙️";if(c)c.textContent="📹";const rv=document.getElementById("remoteVideo"),lv=document.getElementById("localVideo");if(rv){rv.srcObject=null;rv.style.display="none"}if(lv){lv.srcObject=null;lv.style.display="none"}}
 function callLink(callId){return location.origin+location.pathname+"#call="+encodeURIComponent(callId);}
+function fixVoiceDuration(audio){
+  if(Number.isFinite(audio.duration)&&audio.duration>0)return;
+  // Chromium can report zero/infinite duration for MediaRecorder WebM files.
+  const status=audio.parentElement?.querySelector(".voicePlayStatus");
+  let seeking=true;
+  const onTime=()=>{
+    if(!seeking)return;
+    seeking=false;audio.removeEventListener("timeupdate",onTime);
+    try{audio.currentTime=0}catch{}
+  };
+  audio.addEventListener("timeupdate",onTime);
+  try{audio.currentTime=1e101;setTimeout(()=>{if(seeking){seeking=false;audio.removeEventListener("timeupdate",onTime);if(status)status.textContent="";}},1800)}catch{seeking=false}
+}
+function voicePlaybackError(audio){
+  const status=audio.parentElement?.querySelector(".voicePlayStatus");
+  if(status)status.textContent="فایل صوتی قابل پخش نیست";
+}
 function callMessageHtml(content){const raw=String(content||"");const match=raw.match(/(https?:\/\/[^\s]+#call=([A-Za-z0-9-]+))/i);if(!match)return escapeHtml(raw);const url=match[1];const label=raw.replace(match[1],"").trim()||"📞 ورود به تماس";return escapeHtml(label).replace(/\n/g,"<br>")+"<br><a href=\""+escapeHtml(url)+"\" class=\"callJoinLink\">📞 ورود به تماس</a>";}
 async function waitForIceGathering(){if(!callPeer||callPeer.iceGatheringState==="complete")return;await new Promise(resolve=>{const done=()=>{if(callPeer?.iceGatheringState==="complete"){callPeer.removeEventListener("icegatheringstatechange",done);resolve()}};callPeer.addEventListener("icegatheringstatechange",done);setTimeout(resolve,7000)})}
 async function prepareCallPeer(mode=callMode){callMode=mode==="audio"?"audio":"video";if(!navigator.mediaDevices?.getUserMedia||!window.RTCPeerConnection)throw new Error("مرورگر شما از تماس تصویری پشتیبانی نمی کند.");callPeer=new RTCPeerConnection({iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"},{urls:"stun:stun.cloudflare.com:3478"},{urls:"turn:openrelay.metered.ca:80",username:"openrelayproject",credential:"openrelayproject"},{urls:"turn:openrelay.metered.ca:80?transport=tcp",username:"openrelayproject",credential:"openrelayproject"},{urls:"turn:openrelay.metered.ca:443",username:"openrelayproject",credential:"openrelayproject"},{urls:"turns:openrelay.metered.ca:443?transport=tcp",username:"openrelayproject",credential:"openrelayproject"}]});callPeer.onicecandidate=e=>{if(e.candidate&&activeCall)api("call_ice",{call_id:activeCall.id,candidate:e.candidate.toJSON()}).catch(()=>{})};callPeer.ontrack=e=>{const s=e.streams?.[0];if(!s)return;const a=document.getElementById("remoteAudio"),v=document.getElementById("remoteVideo");if(a){a.srcObject=s;a.play().catch(()=>{})}if(v&&callMode==="video"){v.srcObject=s;v.style.display="block";v.play().catch(()=>{})}};callPeer.onconnectionstatechange=()=>{if(!callPeer)return;const st=callPeer.connectionState;if(st==="connected"){document.getElementById("callState").textContent=callMode==="audio"?"تماس صوتی برقرار است":"تماس تصویری برقرار است";if(!callStartedAt)callStartedAt=Date.now()}else if(st==="connecting"){document.getElementById("callState").textContent="در حال اتصال به شبکه تماس..."}else if(["failed","closed"].includes(st)){document.getElementById("callState").textContent="اتصال شبکه تماس ناموفق بود.";setTimeout(()=>{if(activeCall)finishCallUi(false)},1200)}};callPeer.oniceconnectionstatechange=()=>{if(!callPeer)return;const st=callPeer.iceConnectionState;if(st==="checking")document.getElementById("callState").textContent="در حال بررسی مسیر اتصال...";if(st==="connected"||st==="completed")document.getElementById("callState").textContent=callMode==="audio"?"تماس صوتی برقرار است":"تماس تصویری برقرار است";if(st==="failed"||st==="disconnected")document.getElementById("callState").textContent="مسیر مستقیم برقرار نشد؛ در حال تلاش با سرور واسط..."};callPeer.onicecandidateerror=e=>{console.warn("HelliGram ICE candidate error",e.errorCode,e.url,e.errorText)};callLocalStream=await navigator.mediaDevices.getUserMedia({audio:true,video:callMode==="video"?{facingMode:"user",width:{ideal:720},height:{ideal:1280}}:false});callLocalStream.getTracks().forEach(t=>callPeer.addTrack(t,callLocalStream));const lv=document.getElementById("localVideo");if(lv&&callMode==="video"){lv.srcObject=callLocalStream;lv.style.display="block";lv.play().catch(()=>{})}}
@@ -851,6 +868,7 @@ function voiceNotice(text,show=true){
 async function toggleVoiceRecording(){
   if(voiceRecorder&&voiceRecorder.state==="recording"){voiceRecorder.stop();return}
   if(!profile||!selectedChat||!sendTarget.id){alert("ابتدا یک گفتگو را باز کنید.");return}
+  const voiceTarget={...sendTarget}; const voiceChat=selectedChat;
   if(profile.type==="student"&&!profile.canWrite){alert("ارسال پیام برای شما بسته شده است.");return}
   if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){alert("ضبط صدا در این مرورگر پشتیبانی نمی‌شود. از مرورگر به‌روز و HTTPS استفاده کنید.");return}
   try{
@@ -885,12 +903,12 @@ async function toggleVoiceRecording(){
         });
         const uploaded=await api("upload_voice",{data_url:dataUrl});
         const body={content:"[[voice:"+uploaded.path+"]]"};
-        if(sendTarget.kind==="staff")body.recipient_staff_id=sendTarget.id;
-        else if(sendTarget.kind==="student")body.recipient_student_id=sendTarget.id;
-        else if(sendTarget.kind==="group")body.group_id=sendTarget.id;
+        if(voiceTarget.kind==="staff")body.recipient_staff_id=voiceTarget.id;
+        else if(voiceTarget.kind==="student")body.recipient_student_id=voiceTarget.id;
+        else if(voiceTarget.kind==="group")body.group_id=voiceTarget.id;
         else throw new Error("مقصد پیام معتبر نیست.");
         await api("send",body);
-        await refreshAll();openChat(selectedChat);
+        await refreshAll();openChat(voiceChat);
         voiceNotice("پیام صوتی ارسال شد.");setTimeout(()=>voiceNotice("",false),1800);
       }catch(e){voiceNotice("",false);alert(e.message||"ارسال پیام صوتی انجام نشد.")}
     };
