@@ -30,6 +30,76 @@
 @media(max-width:760px){.grid{display:block}.chat{height:calc(100vh - 74px);min-height:0}.chatList{flex:1;min-height:0;height:auto;overflow:auto}.messages{min-height:350px}.adminGrid{grid-template-columns:1fr}.msg{max-width:92%}.wrap{padding:0}.chatItem{padding:13px 12px}.chatAvatar{width:53px;height:53px;flex-basis:53px}.chatName{font-size:15px}.appHeader{height:74px}.chat{height:calc(100vh - 74px);min-height:0}}
 
 .callMembers{margin:10px 0 16px;color:#c7d4e5;font-size:12px;max-height:120px;overflow:auto;text-align:right}.callMembers div{padding:4px 0;border-bottom:1px solid #263b55}
+
+/* BROTEX visual refresh v0.5.52 — neon glass */
+:root{color-scheme:dark;--bg:#070916;--panel:rgba(17,22,47,.78);--line:rgba(126,147,255,.20);--cyan:#54e7ff;--violet:#a879ff;--blue:#6688ff;--muted:#a2abc9}
+html{background:#070916;scroll-behavior:smooth}
+body{background:radial-gradient(ellipse at 8% 5%,rgba(74,75,255,.20),transparent 34%),radial-gradient(ellipse at 92% 18%,rgba(0,220,255,.13),transparent 32%),linear-gradient(145deg,#070916,#0b1024 52%,#090b19)!important;color:#f5f7ff}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.22;background-image:linear-gradient(rgba(120,140,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(120,140,255,.045) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,#000,transparent 88%)}
+.wrap,.login,.app,.appHeader,.grid,.side,.chat,.chathead,.chatList,.conversation,.messages,.composer,.admin,.callOverlay{isolation:isolate}
+.card,.login,.appHeader,.side,.chat,.chathead,.composer,.admin,.callCard{background:rgba(13,18,39,.82)!important;border:1px solid var(--line)!important;box-shadow:0 18px 55px rgba(0,0,0,.26),inset 0 1px rgba(255,255,255,.035)!important;backdrop-filter:blur(20px)}
+.login{position:relative;overflow:hidden;border-radius:28px!important;margin:5vh auto;padding:32px!important}
+.login:before{content:"";position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:270px;height:180px;background:rgba(86,100,255,.22);filter:blur(60px);pointer-events:none}
+.brand,.tabs,.field,.error{position:relative}
+.brand h1{letter-spacing:.4px;text-shadow:0 0 28px rgba(103,143,255,.34)}
+.logo,.appLogo{background:linear-gradient(135deg,rgba(77,221,255,.18),rgba(149,99,255,.24))!important;border:1px solid rgba(131,160,255,.42);box-shadow:0 0 28px rgba(87,121,255,.18),inset 0 0 18px rgba(255,255,255,.05)}
+.tabs{padding:5px;background:rgba(5,9,25,.62);border:1px solid var(--line);border-radius:16px}
+.tabs button,.btn{transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease}
+.tabs button{border-radius:12px}
+.tabs button.active,.btn.primary,.chatNew{background:linear-gradient(120deg,#537cff,#8c63f7)!important;color:#fff!important;box-shadow:0 7px 24px rgba(103,102,255,.28),inset 0 1px rgba(255,255,255,.24)}
+.btn{border:1px solid rgba(134,153,255,.17);background:rgba(28,35,72,.78);border-radius:14px}
+.btn:hover,.tabs button:hover{transform:translateY(-2px);border-color:rgba(84,231,255,.48);box-shadow:0 8px 24px rgba(67,107,255,.15)}
+input,textarea,select{background:rgba(5,9,25,.82)!important;border:1px solid rgba(126,147,255,.25)!important;border-radius:14px!important;transition:border-color .2s,box-shadow .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-shadow:0 0 0 3px rgba(84,231,255,.10),0 0 22px rgba(84,231,255,.08);outline:none}
+.appHeader{position:sticky;top:0;z-index:20;border-radius:0 0 18px 18px!important;border-top:0!important}
+.appBrandText b{letter-spacing:.2px;text-shadow:0 0 22px rgba(109,140,255,.23)}
+.iconBtn{border:1px solid transparent;transition:.18s}
+.iconBtn:hover{background:rgba(85,108,255,.15);border-color:var(--line);box-shadow:0 0 20px rgba(85,108,255,.13)}
+.side{background:rgba(10,14,32,.96)!important;border-radius:0 0 0 24px!important}
+.profileBox{border-bottom-color:var(--line)}
+.profileAvatar,.chatAvatar,.callAvatar{border:1px solid rgba(115,153,255,.48);box-shadow:0 0 22px rgba(77,113,255,.16);background:linear-gradient(135deg,#527bff,#9b60ee)}
+.notice{background:rgba(71,92,177,.12);border:1px solid var(--line);border-radius:14px}
+.chat{overflow:hidden}
+.chathead{border-radius:0!important;border-width:0 0 1px!important;background:rgba(16,22,48,.9)!important}
+.chatTitleWrap b{letter-spacing:.1px}
+.chatItem{border-bottom-color:rgba(126,147,255,.10);transition:background .18s,transform .18s}
+.chatItem:hover{background:rgba(89,113,255,.09);transform:translateX(-2px)}
+.chatAvatar{border:1px solid rgba(112,160,255,.34);box-shadow:0 4px 18px rgba(54,86,220,.15)}
+.chatPreview,.muted{color:var(--muted)!important}
+.chatTime,.chatPreview{opacity:.88}
+.chatBadge,.unreadBadge{box-shadow:0 0 16px rgba(84,231,255,.16)}
+.messages{background-color:transparent}
+.msg{background:linear-gradient(145deg,rgba(30,42,79,.96),rgba(20,28,56,.96));border:1px solid rgba(128,151,255,.14);border-radius:18px 18px 18px 5px;box-shadow:0 7px 22px rgba(0,0,0,.13)}
+.msg.me{background:linear-gradient(135deg,#365fca,#684bc3);border:1px solid rgba(168,151,255,.28);border-radius:18px 18px 5px 18px;box-shadow:0 8px 24px rgba(69,80,200,.20)}
+.msg .sender-name{color:#9cecff}
+.msg small{color:#bdc8eb}
+.composer{border-radius:20px 20px 0 0!important;border-bottom:0!important}
+.composer textarea{background:rgba(5,9,25,.72)!important}
+.callBtn{border:1px solid rgba(255,255,255,.13);background:linear-gradient(135deg,#4f8cff,#815df0);box-shadow:0 6px 20px rgba(85,103,255,.23);transition:transform .18s,filter .18s}
+.callBtn:hover{transform:translateY(-2px) scale(1.04);filter:brightness(1.15)}
+.callOverlay{background:rgba(3,5,17,.88)!important;backdrop-filter:blur(18px)}
+.callCard{border-radius:26px!important}
+.callState{color:#b2bddc}
+.callAccept{background:linear-gradient(135deg,#14c98a,#1c9d8d)}
+.callReject{background:linear-gradient(135deg,#ff647f,#d93768)}
+.callMute{background:linear-gradient(135deg,#33456d,#4d5c8b)}
+.groupChat .messages{background-color:#080a17;background-image:radial-gradient(circle at 15px 15px,rgba(111,132,255,.14) 1px,transparent 1.5px),radial-gradient(circle at 55px 45px,rgba(84,231,255,.07) 1px,transparent 1.5px)}
+.groupChat .chathead,.groupChat .composer{background:rgba(12,16,34,.95)!important;border-color:var(--line)!important}
+.groupChat .msg{background:rgba(19,25,49,.96);border-color:rgba(128,151,255,.16)}
+.groupChat .msg.me{background:linear-gradient(135deg,#365fca,#684bc3)}
+.groupChat .composer textarea{background:rgba(28,33,58,.94)!important}
+.emojiPicker{background:rgba(10,15,33,.98);border-color:var(--line);backdrop-filter:blur(20px)}
+.emojiItem{background:rgba(36,45,82,.86)}
+.admin{border-radius:20px!important}
+.row{border-bottom-color:rgba(126,147,255,.13)}
+.version{color:#7383b7}
+.deployedBy{color:#53618d}
+@keyframes neonFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.appLogo{animation:neonFloat 5s ease-in-out infinite}
+@media(min-width:761px){.grid{gap:12px;padding:12px;background:transparent}.chat{border-radius:22px!important;overflow:hidden}.appHeader{border-radius:0 0 22px 22px!important}.side{border-radius:22px!important;margin:0 0 0 12px}.chatItem{padding:16px 22px}.messages{padding:22px 30px}.composer{padding:14px 30px 18px}}
+@media(max-width:760px){.login{margin:3vh 12px;padding:26px 20px!important;border-radius:24px!important}.appHeader{padding:0 13px;border-radius:0 0 15px 15px!important}.side{border-radius:0 0 0 22px!important}.chat{border-radius:0!important}.chathead{padding:10px 9px}.callBtn{width:39px;height:39px;font-size:19px}.composer{padding:10px 9px 15px}.msg{max-width:88%}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+
 </style>
 </head>
 <body>
@@ -40,7 +110,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.51</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.52</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
