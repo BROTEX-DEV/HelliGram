@@ -31,7 +31,7 @@
 
 .callMembers{margin:10px 0 16px;color:#c7d4e5;font-size:12px;max-height:120px;overflow:auto;text-align:right}.callMembers div{padding:4px 0;border-bottom:1px solid #263b55}
 
-/* BROTEX visual refresh v0.5.52 — neon glass */
+/* BROTEX visual refresh v0.5.53 — neon glass */
 :root{color-scheme:dark;--bg:#070916;--panel:rgba(17,22,47,.78);--line:rgba(126,147,255,.20);--cyan:#54e7ff;--violet:#a879ff;--blue:#6688ff;--muted:#a2abc9}
 html{background:#070916;scroll-behavior:smooth}
 body{background:radial-gradient(ellipse at 8% 5%,rgba(74,75,255,.20),transparent 34%),radial-gradient(ellipse at 92% 18%,rgba(0,220,255,.13),transparent 32%),linear-gradient(145deg,#070916,#0b1024 52%,#090b19)!important;color:#f5f7ff}
@@ -100,6 +100,16 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-s
 @media(max-width:760px){.login{margin:3vh 12px;padding:26px 20px!important;border-radius:24px!important}.appHeader{padding:0 13px;border-radius:0 0 15px 15px!important}.side{border-radius:0 0 0 22px!important}.chat{border-radius:0!important}.chathead{padding:10px 9px}.callBtn{width:39px;height:39px;font-size:19px}.composer{padding:10px 9px 15px}.msg{max-width:88%}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
 
+
+/* v0.5.53 — fix mobile hamburger menu stacking */
+.grid{isolation:auto!important}
+#menuOverlay.menuOverlay{z-index:45}
+#sideMenu.side{z-index:50;position:fixed;top:0;right:0;bottom:0;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain}
+#sideMenu.side.open{transform:translateX(0)!important;visibility:visible;pointer-events:auto}
+#sideMenu.side:not(.open){pointer-events:none}
+#menuOverlay.menuOverlay.show{display:block;pointer-events:auto}
+.appHeader{z-index:20}
+
 </style>
 </head>
 <body>
@@ -110,7 +120,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-s
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.52</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.53</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
