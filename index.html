@@ -226,7 +226,7 @@ body:before{display:none!important}
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.63</div>
+  <div class="version">v0.5.64</div>
 </section>
 <div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس تصویری</div><div id="callState" class="callState">در حال برقراری تماس...</div><div id="videoStage" class="videoStage"><video id="remoteVideo" class="remoteVideo" autoplay playsinline></video><video id="localVideo" class="localVideo" autoplay playsinline muted></video></div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()">🎙️</button><button id="callCameraBtn" class="callAction callMute hidden" type="button" onclick="toggleCallCamera()">📹</button><button id="callShareBtn" class="callAction callMute hidden" type="button" onclick="toggleScreenShare()" aria-label="اشتراک صفحه">🖥️</button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
@@ -421,7 +421,7 @@ function chatMeta(key){
   const [kind,id]=String(key).split(":");
   if(kind==="group"){
     const g=groups.find(x=>x.id===id);
-    return {kind,id,name:g?.name||"گروه",icon:"👥",avatarUrl:g?.avatar_url||"",memberCount:g?.member_count||0,writeDisabled:!!g?.write_disabled};
+    return {kind,id,name:g?.name||"گروه",icon:"👥",avatarUrl:g?.avatar_url||"",memberCount:g?.member_count||0,writeDisabled:!!g?.write_disabled,voiceDisabled:!!g?.voice_disabled};
   }
   if(kind==="student"){
     const x=students.find(x=>x.id===id);
@@ -554,7 +554,7 @@ function showChatList(){
   renderPinnedHeader();
   updateComposerState();
 }
-function updateComposerState(){const comp=document.querySelector(".composer"),input=document.getElementById("messageInput"),btn=document.getElementById("sendBtn"),emoji=document.getElementById("emojiBtn"),st=document.getElementById("chatWriteStatus");if(!comp||!input||!btn||!st)return;const meta=selectedChat?chatMeta(selectedChat):null;const blocked=profile?.type==="student"&&(!profile.canWrite||(meta?.kind==="group"&&meta.writeDisabled));comp.classList.toggle("blocked",blocked);input.disabled=blocked;btn.disabled=blocked;if(emoji)emoji.disabled=blocked;st.classList.toggle("hidden",!blocked);st.textContent=blocked?(meta?.kind==="group"&&meta.writeDisabled?"نوشتن در این گروه بسته است.":"ارسال پیام برای شما بسته است."): "";}
+function updateComposerState(){const comp=document.querySelector(".composer"),input=document.getElementById("messageInput"),btn=document.getElementById("sendBtn"),emoji=document.getElementById("emojiBtn"),voice=document.getElementById("voiceBtn"),st=document.getElementById("chatWriteStatus");if(!comp||!input||!btn||!st)return;const meta=selectedChat?chatMeta(selectedChat):null;const blocked=profile?.type==="student"&&(!profile.canWrite||(meta?.kind==="group"&&meta.writeDisabled));const voiceBlocked=profile?.type==="student"&&meta?.kind==="group"&&meta.voiceDisabled;comp.classList.toggle("blocked",blocked);input.disabled=blocked;btn.disabled=blocked;if(emoji)emoji.disabled=blocked;if(voice)voice.disabled=blocked||voiceBlocked;st.classList.toggle("hidden",!blocked&&!voiceBlocked);st.textContent=blocked?(meta?.kind==="group"&&meta.writeDisabled?"نوشتن در این گروه بسته است.":"ارسال پیام برای شما بسته است."):voiceBlocked?"ارسال پیام صوتی در این گروه بسته است.":"";}
 function openChat(key){
   selectedChat=key;
   markChatRead(key);
@@ -955,7 +955,7 @@ async function sendMessage(){
 function toggleAdmin(){adminPanel.style.display=adminPanel.style.display==="none"?"block":"none";if(adminPanel.style.display==="block")renderAdmin()}
 function renderAdmin(){
   studentList.innerHTML=students.map(s=>'<div class="row"><span>'+escapeHtml(s.full_name)+'<br><small class="muted">'+escapeHtml(s.class_name||"")+'</small></span><button class="btn" onclick="setStudentWrite(\''+s.id+'\','+s.can_write+')">'+(s.can_write?"بستن ارسال":"باز کردن ارسال")+'</button></div>').join("")||'<div class="notice">دانش آموزی ثبت نشده است.</div>';
-  groupList.innerHTML=groups.map(g=>'<div class="row"><div style="display:flex;align-items:center;gap:8px;min-width:0"><div class="groupAvatarPreview">'+(g.avatar_url?'<img src="'+escapeHtml(g.avatar_url)+'" alt="">':'👥')+'</div><span>'+escapeHtml(g.name)+'</span></div><div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><input id="groupAvatarInput_'+g.id+'" class="groupAvatarInput" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadGroupAvatar(\''+g.id+'\',this)"><button class="btn groupAvatarBtn" onclick="document.getElementById(\'groupAvatarInput_'+g.id+'\').click()" type="button">📷 عکس</button><button class="btn" onclick="setGroupWrite(\''+g.id+'\','+g.write_disabled+')">'+(g.write_disabled?"باز کردن گروه":"بستن گروه")+'</button></div></div>').join("")||'<div class="notice">گروهی ثبت نشده است.</div>';
+  groupList.innerHTML=groups.map(g=>'<div class="row"><div style="display:flex;align-items:center;gap:8px;min-width:0"><div class="groupAvatarPreview">'+(g.avatar_url?'<img src="'+escapeHtml(g.avatar_url)+'" alt="">':'👥')+'</div><span>'+escapeHtml(g.name)+'</span></div><div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><input id="groupAvatarInput_'+g.id+'" data-group-id="'+g.id+'" class="groupAvatarInput" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadGroupAvatar(this.dataset.groupId,this)"><button class="btn groupAvatarBtn" data-input-id="groupAvatarInput_'+g.id+'" onclick="document.getElementById(this.dataset.inputId).click()" type="button">📷 عکس</button><button class="btn" data-group-id="'+g.id+'" data-disabled="'+(g.write_disabled?1:0)+'" onclick="setGroupWrite(this.dataset.groupId,this.dataset.disabled==1)">'+(g.write_disabled?"باز کردن گروه":"بستن گروه")+'</button><button class="btn" data-group-id="'+g.id+'" data-disabled="'+(g.voice_disabled?1:0)+'" onclick="setGroupVoice(this.dataset.groupId,this.dataset.disabled==1)">'+(g.voice_disabled?"باز کردن ویس":"بستن ویس")+'</button></div></div>').join("")||'<div class="notice">گروهی ثبت نشده است.</div>';
   const gs=document.getElementById("manageGroupSelect");
   const ss=document.getElementById("manageStudentSelect");
   if(gs){gs.innerHTML=groups.map(g=>'<option value="'+g.id+'">'+escapeHtml(g.name)+'</option>').join("")||'<option value="">گروهی نیست</option>';}
@@ -965,6 +965,7 @@ function renderAdmin(){
 }
 async function setStudentWrite(id,canWrite){try{await api("set_student_write",{id,disabled:canWrite});await refreshAll()}catch(e){alert(e.message)}}
 async function setGroupWrite(id,disabled){try{await api("set_group_write",{id,disabled:!disabled});await refreshAll()}catch(e){alert(e.message)}}
+async function setGroupVoice(id,disabled){try{await api("set_group_voice",{id,disabled:!disabled});await refreshAll();if(selectedChat==="group:"+id)updateComposerState()}catch(e){alert(e.message)}}
 async function deleteMessage(id){try{await api("delete_message",{id});await refreshAll()}catch(e){alert(e.message)}}
 async function deleteAllMessages(){
   if(profile?.type!=="staff"||profile.role!=="admin")return alert("فقط مدیر می تواند همه پیام ها را حذف کند.");
