@@ -31,7 +31,7 @@
 
 .callMembers{margin:10px 0 16px;color:#c7d4e5;font-size:12px;max-height:120px;overflow:auto;text-align:right}.callMembers div{padding:4px 0;border-bottom:1px solid #263b55}
 
-/* BROTEX visual refresh v0.5.55 — neon glass */
+/* BROTEX visual refresh v0.5.56 — neon glass */
 :root{color-scheme:dark;--bg:#070916;--panel:rgba(17,22,47,.78);--line:rgba(126,147,255,.20);--cyan:#54e7ff;--violet:#a879ff;--blue:#6688ff;--muted:#a2abc9}
 html{background:#070916;scroll-behavior:smooth}
 body{background:radial-gradient(ellipse at 8% 5%,rgba(74,75,255,.20),transparent 34%),radial-gradient(ellipse at 92% 18%,rgba(0,220,255,.13),transparent 32%),linear-gradient(145deg,#070916,#0b1024 52%,#090b19)!important;color:#f5f7ff}
@@ -101,7 +101,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-s
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
 
 
-/* v0.5.55 — fix mobile hamburger menu stacking */
+/* v0.5.56 — fix mobile hamburger menu stacking */
 .grid{isolation:auto!important}
 #menuOverlay.menuOverlay{z-index:45}
 #sideMenu.side{z-index:50;position:fixed;top:0;right:0;bottom:0;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain}
@@ -111,7 +111,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-s
 .appHeader{z-index:20}
 
 
-/* v0.5.55 — balanced login layout + uniform background */
+/* v0.5.56 — balanced login layout + uniform background */
 html,body{min-height:100%;background:#090d1b!important}
 body{background:#090d1b!important}
 body:before{display:none!important}
@@ -134,54 +134,6 @@ body:before{display:none!important}
 @media(max-width:480px){.wrap{padding:1px 12px 20px!important}#login.login{max-width:440px;margin:22px auto 18px!important;padding:24px 19px!important;border-radius:22px!important}#login .logo{width:74px;height:74px}#login .tabs{margin:20px 0 18px}}
 
 
-/* v0.5.55 — Telegram-inspired messaging UI */
-.chat{background:#0e1621!important}
-.chathead{background:#17212b!important;border-color:#263442!important;box-shadow:none!important;backdrop-filter:none!important}
-.chatTitleWrap b{font-size:17px!important;font-weight:700}
-#chatStatus{font-size:12px;color:#8fa7bb!important}
-.chatHeaderAvatar{width:44px;height:44px;border:0;background:#2b5278;box-shadow:none}
-.chatBack,.chatNew{width:40px;height:40px;border-radius:50%;color:#d6e5f2}
-.chatNew{background:#263b4d!important;box-shadow:none!important}
-.messages{background-color:#0e1621!important;background-image:radial-gradient(circle at 20px 20px,rgba(130,157,181,.07) 1px,transparent 1.4px),radial-gradient(circle at 60px 55px,rgba(130,157,181,.045) 1px,transparent 1.4px)!important;background-size:100px 100px!important;padding:18px clamp(10px,3vw,30px) 22px!important;gap:7px!important}
-.messageLine{width:100%;gap:6px;align-items:flex-end}
-.chat:not(.groupChat) .messageAvatar{display:none}
-.chat:not(.groupChat) .msg{max-width:min(78%,620px);padding:9px 12px 7px;background:#182533;border:0;border-radius:14px 14px 14px 4px;box-shadow:0 1px 1px #0003;color:#edf5fb}
-.chat:not(.groupChat) .msg.me{background:#2b5278;border-radius:14px 14px 4px 14px;color:#fff}
-.chat:not(.groupChat) .msg small{display:inline-block;margin:5px 0 0 10px;color:#a9bdce;font-size:10px}
-.chat:not(.groupChat) .msg.me small{color:#c2d9ea}
-.chat:not(.groupChat) .msg .sender-name{color:#79c5f5}
-.chat:not(.groupChat) .msg.me .sender-name{color:#d7eaff}
-.chatList{background:#0e1621}
-.chatItem{padding:13px 16px!important;border-bottom:1px solid rgba(137,164,185,.12)!important}
-.chatItem:hover{background:#172633!important;transform:none!important}
-.chatAvatar{width:54px;height:54px;flex:0 0 54px;background:#2b5278!important;border:0!important;box-shadow:none!important}
-.chatName{font-size:15px!important;color:#f1f5f8}
-.chatTime{color:#8197a8!important}
-.chatPreview{color:#9eb0be!important;font-size:13px}
-.chatBadge,.unreadBadge{background:#3390ec!important;box-shadow:none!important}
-.composer{gap:8px;padding:10px 12px max(12px,env(safe-area-inset-bottom))!important;background:#17212b!important;border-top:1px solid #263442!important;border-radius:0!important;align-items:flex-end}
-.composer textarea{min-height:44px!important;max-height:130px;border:1px solid #304354!important;border-radius:22px!important;background:#0e1621!important;color:#eef6fc!important;padding:11px 15px!important;resize:none}
-.composer textarea:focus{border-color:#3390ec!important}
-.composer .iconBtn{width:42px;height:42px;flex:0 0 42px;color:#9db2c2;font-size:25px}
-.composer .btn{width:auto!important;min-width:68px;min-height:42px;border-radius:22px!important;padding:10px 16px!important;background:#3390ec!important;box-shadow:none!important;color:#fff!important}
-.emojiPicker{background:#17212b;border-color:#304354}
-.emojiItem{background:#223242}
-.pinnedHeader{background:#17212b;border-color:#263442;color:#e6f0f7}
-.groupChat .chathead{background:#17212b!important;border-color:#263442!important}
-.groupChat .messages{background-color:#0e1621!important;background-image:radial-gradient(circle at 20px 20px,rgba(130,157,181,.07) 1px,transparent 1.4px)!important;background-size:100px 100px!important}
-.groupChat .msg{background:#182533;border:0;border-radius:14px 14px 14px 4px;box-shadow:none}
-.groupChat .msg.me{background:#2b5278;border-radius:14px 14px 4px 14px;box-shadow:none}
-.groupChat .composer{background:#17212b!important;border-color:#263442!important}
-.groupChat .composer textarea{background:#0e1621!important;border:1px solid #304354!important}
-@media(max-width:760px){
- .chathead{min-height:64px;padding:8px 10px!important}
- .messages{padding:14px 9px 18px!important}
- .chat:not(.groupChat) .msg{max-width:88%;padding:8px 11px 7px}
- .composer{padding:8px 8px max(10px,env(safe-area-inset-bottom))!important}
- .composer .btn{min-width:58px;padding:10px 12px!important}
- .chatItem{padding:12px 12px!important}
-}
-
 </style>
 </head>
 <body>
@@ -192,7 +144,7 @@ body:before{display:none!important}
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.55</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.56</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -272,7 +224,7 @@ body:before{display:none!important}
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.55</div>
+  <div class="version">v0.5.56</div>
 </section>
 <div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس تصویری</div><div id="callState" class="callState">در حال برقراری تماس...</div><div id="videoStage" class="videoStage"><video id="remoteVideo" class="remoteVideo" autoplay playsinline></video><video id="localVideo" class="localVideo" autoplay playsinline muted></video></div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()">🎙️</button><button id="callCameraBtn" class="callAction callMute hidden" type="button" onclick="toggleCallCamera()">📹</button><button id="callShareBtn" class="callAction callMute hidden" type="button" onclick="toggleScreenShare()" aria-label="اشتراک صفحه">🖥️</button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
