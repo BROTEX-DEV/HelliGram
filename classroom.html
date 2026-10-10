@@ -48,6 +48,56 @@ body{background:radial-gradient(ellipse at 50% -15%,#102744 0%,#07101d 54%);colo
 @media(max-width:850px){.shell{padding:10px}.top{border-radius:14px;border:1px solid #263c59}.stage{min-height:260px}.panelTitle{padding:13px 14px}}
 @media(max-width:480px){.shell{padding:7px}.controls{gap:9px;padding:12px}.controls .iconControl{flex-basis:50px;width:50px;height:50px;min-width:50px}.top{gap:10px}.brand{font-size:15px}.brand:before{width:36px;height:36px;flex-basis:36px}}
 
+
+/* HelliGram main-site visual system sync v0.5.69 */
+:root{color-scheme:dark;--bg:#070916;--panel:rgba(13,18,39,.88);--line:rgba(126,147,255,.20);--cyan:#54e7ff;--violet:#a879ff;--blue:#6688ff;--muted:#a2abc9}
+html{background:#070916;scroll-behavior:smooth}
+body{position:relative;background:radial-gradient(ellipse at 8% 5%,rgba(74,75,255,.20),transparent 34%),radial-gradient(ellipse at 92% 18%,rgba(0,220,255,.13),transparent 32%),linear-gradient(145deg,#070916,#0b1024 52%,#090b19)!important;color:#f5f7ff}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.22;background-image:linear-gradient(rgba(120,140,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(120,140,255,.045) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,#000,transparent 88%)}
+.shell{position:relative;isolation:isolate}
+.top,.panel,.loginCard{background:rgba(13,18,39,.84)!important;border:1px solid var(--line)!important;box-shadow:0 18px 55px rgba(0,0,0,.26),inset 0 1px rgba(255,255,255,.035)!important;backdrop-filter:blur(20px)}
+.top{border-radius:20px!important;padding:15px 18px;border-bottom:1px solid var(--line)!important}
+.brand{letter-spacing:.2px;text-shadow:0 0 22px rgba(109,140,255,.23)}
+.brand:before,.loginLogo{background:linear-gradient(135deg,rgba(77,221,255,.18),rgba(149,99,255,.24))!important;border:1px solid rgba(131,160,255,.42)!important;box-shadow:0 0 28px rgba(87,121,255,.18),inset 0 0 18px rgba(255,255,255,.05)}
+.top button,button{transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease}
+.top button{background:rgba(28,35,72,.78);border:1px solid rgba(134,153,255,.17)}
+.top button:hover{transform:translateY(-2px);border-color:rgba(84,231,255,.48);box-shadow:0 8px 24px rgba(67,107,255,.15)}
+button.primary{background:linear-gradient(120deg,#537cff,#8c63f7)!important;color:#fff!important;box-shadow:0 7px 24px rgba(103,102,255,.28),inset 0 1px rgba(255,255,255,.24)}
+button.danger{background:linear-gradient(135deg,#ff647f,#d93768)!important}
+.panel{border-radius:20px!important;overflow:hidden}
+.panelTitle{background:rgba(16,22,48,.9);border-bottom:1px solid var(--line);padding:16px 18px}
+.stage{background-color:#080a17;background-image:linear-gradient(rgba(120,140,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(120,140,255,.035) 1px,transparent 1px),radial-gradient(circle at 20px 20px,rgba(111,132,255,.14) 1px,transparent 1.5px);background-size:34px 34px,34px 34px,34px 34px;padding:16px}
+.tile{border:1px solid rgba(128,151,255,.2);border-radius:18px;box-shadow:0 8px 22px rgba(0,0,0,.28)}
+.tile .name,.tile .state{background:rgba(7,9,22,.88);border:1px solid var(--line);backdrop-filter:blur(12px)}
+.controls{background:rgba(12,16,34,.95);border-top:1px solid var(--line);gap:12px;padding:14px}
+.controls .iconControl{flex:0 0 54px;width:54px;height:54px;border-radius:50%;background:rgba(36,45,82,.86);border:1px solid var(--line);box-shadow:0 5px 18px rgba(0,0,0,.16)}
+.controls .iconControl:hover:not(:disabled){background:rgba(85,108,255,.2);border-color:rgba(84,231,255,.48);transform:translateY(-2px);box-shadow:0 0 20px rgba(85,108,255,.13)}
+.controls .iconControl.danger{background:linear-gradient(135deg,#ff647f,#d93768);border-color:rgba(255,120,155,.3)}
+.chat{background:#080a17}
+.chatBody{background-color:#080a17;background-image:radial-gradient(circle at 15px 15px,rgba(111,132,255,.14) 1px,transparent 1.5px),radial-gradient(circle at 55px 45px,rgba(84,231,255,.07) 1px,transparent 1.5px);background-size:80px 80px;padding:16px}
+.bubble{background:linear-gradient(145deg,rgba(30,42,79,.96),rgba(20,28,56,.96));border:1px solid rgba(128,151,255,.14);border-radius:18px 18px 18px 5px;box-shadow:0 7px 22px rgba(0,0,0,.13)}
+.bubble.mine{background:linear-gradient(135deg,#365fca,#684bc3);border:1px solid rgba(168,151,255,.28);border-radius:18px 18px 5px 18px;box-shadow:0 8px 24px rgba(69,80,200,.2)}
+.bubble small{color:#bdc8eb}
+.chatForm{background:rgba(12,16,34,.95);border-top:1px solid var(--line)}
+.chatForm input,.loginField input{background:rgba(5,9,25,.82)!important;border:1px solid rgba(126,147,255,.25)!important;border-radius:14px!important;transition:border-color .2s,box-shadow .2s}
+.chatForm input:focus,.loginField input:focus{border-color:var(--cyan)!important;box-shadow:0 0 0 3px rgba(84,231,255,.10),0 0 22px rgba(84,231,255,.08);outline:none}
+.chatForm button{background:linear-gradient(120deg,#537cff,#8c63f7)!important}
+.participants{background:rgba(12,16,34,.95);border-top:1px solid var(--line)}
+.pill{background:rgba(36,45,82,.65);border-color:var(--line);color:#dce8f8}
+.notice{background:rgba(71,92,177,.12);border-color:var(--line);border-radius:14px}
+.loginCard{position:relative;overflow:hidden;border-radius:28px!important;margin:5vh auto 22px;padding:32px!important}
+.loginCard:before{content:"";position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:270px;height:180px;background:rgba(86,100,255,.22);filter:blur(60px);pointer-events:none}
+.loginBrand,.loginTabs,.loginField,.loginError{position:relative}
+.loginBrand h1{letter-spacing:.4px;text-shadow:0 0 28px rgba(103,143,255,.34)}
+.loginTabs{padding:5px;background:rgba(5,9,25,.62);border:1px solid var(--line);border-radius:16px}
+.loginTabs button{border-radius:12px}
+.loginTabs button.active{background:linear-gradient(120deg,#537cff,#8c63f7)!important;box-shadow:0 7px 24px rgba(103,102,255,.28)}
+.loginField input{min-height:47px}
+.footer,.loginVersion{color:#7383b7}
+@media(max-width:850px){.shell{padding:10px}.top{border-radius:16px!important}.stage{min-height:260px}.panelTitle{padding:13px 14px}}
+@media(max-width:480px){.shell{padding:7px}.controls{gap:9px;padding:12px}.controls .iconControl{flex-basis:50px;width:50px;height:50px;min-width:50px}.top{gap:10px}.brand{font-size:15px}.brand:before{width:36px;height:36px;flex-basis:36px}.loginCard{margin:3vh 5px 18px!important;padding:24px 19px!important;border-radius:24px!important}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+
 </style>
 </head>
 <body>
@@ -57,7 +107,7 @@ body{background:radial-gradient(ellipse at 50% -15%,#102744 0%,#07101d 54%);colo
 <div class="loginTabs"><button id="studentTab" class="active" type="button" onclick="setLoginMode('student')">دانش آموز</button><button id="staffTab" type="button" onclick="setLoginMode('staff')">مسئولین</button></div>
 <form id="studentForm" onsubmit="loginStudent(event)"><div class="loginField"><label for="nationalId">کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" autocomplete="username" placeholder="کد ملی را وارد کنید" required></div><button class="primary" id="studentLoginBtn" style="width:100%" type="submit">ورود به حلی‌گرام</button></form>
 <form id="staffForm" class="hidden" onsubmit="loginStaff(event)"><div class="loginField"><label for="staffCode">کد ورود مسئول</label><input id="staffCode" autocomplete="username" placeholder="کد اختصاصی مسئول" required></div><div class="loginField"><label for="staffPass">رمز عبور</label><input id="staffPass" type="password" autocomplete="current-password" placeholder="رمز مسئولین" required></div><button class="primary" id="staffLoginBtn" style="width:100%" type="submit">ورود مسئول</button></form>
-<div id="loginError" class="loginError"></div><div class="loginVersion">حلی‌گرام · کلاس آنلاین · v0.5.68</div>
+<div id="loginError" class="loginError"></div><div class="loginVersion">حلی‌گرام · کلاس آنلاین · v0.5.69</div>
 </section>
 <header id="roomHeader" class="top hidden"><div><div class="brand">🎓 کلاس آنلاین حلی‌گرام</div><div class="muted" id="roomSubtitle">در حال بررسی لینک جلسه...</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" onclick="copyRoomLink()">کپی لینک</button><button type="button" onclick="location.href='index.html'">بازگشت به حلی‌گرام</button></div></header>
 <div id="notice" class="notice hidden">در حال اتصال به سامانه...</div>
@@ -68,7 +118,7 @@ body{background:radial-gradient(ellipse at 50% -15%,#102744 0%,#07101d 54%);colo
 <div id="roomFeedback" class="status"></div><div class="participants" id="participants"></div></section>
 <section class="panel chat"><div class="panelTitle">💬 گفت و گوی کلاس</div><div id="chatBody" class="chatBody"><div class="muted">پس از ورود به جلسه، پیام ها نمایش داده می شوند.</div></div><form class="chatForm" onsubmit="sendChat(event)"><input id="chatInput" maxlength="2000" placeholder="پیام خود را بنویسید..." autocomplete="off" disabled><button class="primary" id="chatSend" disabled>ارسال</button></form></section>
 </div>
-<div class="footer">HelliGram · کلاس آنلاین · v0.5.68</div>
+<div class="footer">HelliGram · کلاس آنلاین · v0.5.69</div>
 </div>
 <script>
 const SUPABASE_URL="https://pwwicgyrycaexjnnhseb.supabase.co";
