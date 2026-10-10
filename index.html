@@ -32,7 +32,7 @@
 .callMembers{margin:10px 0 16px;color:#c7d4e5;font-size:12px;max-height:120px;overflow:auto;text-align:right}.callMembers div{padding:4px 0;border-bottom:1px solid #263b55}
 
 .voiceBtn{flex:0 0 44px;background:rgba(70,105,210,.16);border:1px solid rgba(84,231,255,.25);font-size:21px}.voiceBtn.recording{background:#c82e52;color:#fff;animation:voicePulse 1s infinite}.voiceStatus{font-size:11px;color:#ff9bb0;align-self:center;white-space:nowrap}.voiceStatus.hidden{display:none}.voiceMessage{display:flex;align-items:center;gap:9px;min-width:min(270px,65vw);padding:5px 0}.voiceMessage audio{width:100%;height:38px;max-width:260px}.voiceMessage .voiceGlyph{font-size:22px}@keyframes voicePulse{50%{box-shadow:0 0 0 5px #c82e5233}}
-/* BROTEX visual refresh v0.5.62 — voice messages */
+/* BROTEX visual refresh v0.5.65 — voice messages */
 :root{color-scheme:dark;--bg:#070916;--panel:rgba(17,22,47,.78);--line:rgba(126,147,255,.20);--cyan:#54e7ff;--violet:#a879ff;--blue:#6688ff;--muted:#a2abc9}
 html{background:#070916;scroll-behavior:smooth}
 body{background:radial-gradient(ellipse at 8% 5%,rgba(74,75,255,.20),transparent 34%),radial-gradient(ellipse at 92% 18%,rgba(0,220,255,.13),transparent 32%),linear-gradient(145deg,#070916,#0b1024 52%,#090b19)!important;color:#f5f7ff}
@@ -102,7 +102,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-s
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
 
 
-/* v0.5.62 — fix mobile hamburger menu stacking */
+/* v0.5.65 — fix mobile hamburger menu stacking */
 .grid{isolation:auto!important}
 #menuOverlay.menuOverlay{z-index:45}
 #sideMenu.side{z-index:50;position:fixed;top:0;right:0;bottom:0;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain}
@@ -112,7 +112,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-s
 .appHeader{z-index:20}
 
 
-/* v0.5.58 — call signaling fixes + release */
+/* v0.5.65 — call signaling fixes + release */
 html,body{min-height:100%;background:#090d1b!important}
 body{background:#090d1b!important}
 body:before{display:none!important}
@@ -145,7 +145,7 @@ body:before{display:none!important}
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.62</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.65</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -219,6 +219,17 @@ body:before{display:none!important}
       <button class="btn" type="button" onclick="deleteSelectedGroup()">🗑️ حذف گروه</button>
       <div id="groupMemberStatus" class="status muted"></div>
     </div>
+    <div class="groupTools">
+      <h4>🎓 کلاس آنلاین</h4>
+      <p class="muted" style="font-size:12px;line-height:1.8">جلسه بسازید و لینک اختصاصی آن را برای دانش آموزان و مسئولین بفرستید.</p>
+      <div class="field"><label>عنوان جلسه</label><input id="meetingTitleInput" maxlength="100" placeholder="مثلا کلاس ریاضی"></div>
+      <div class="field"><label>توضیحات (اختیاری)</label><textarea id="meetingDescriptionInput" maxlength="500" rows="2" placeholder="موضوع جلسه..."></textarea></div>
+      <button class="btn primary" type="button" onclick="createOnlineMeeting()">➕ ساخت جلسه و دریافت لینک</button>
+      <div id="meetingCreateStatus" class="status muted"></div>
+      <div id="meetingCreatedLink" class="notice hidden"></div>
+      <h4 style="margin-top:18px">جلسات اخیر</h4>
+      <div id="meetingAdminList" class="list"><div class="notice">در حال دریافت جلسات...</div></div>
+    </div>
     <div class="row" style="margin-top:14px;align-items:center;justify-content:space-between;gap:8px">
       <h4 style="margin:0">مدیریت پیام ها</h4>
       <button class="btn" type="button" onclick="deleteAllMessages()">🗑️ پاک کردن تمام پیام ها</button>
@@ -226,7 +237,7 @@ body:before{display:none!important}
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.64</div>
+  <div class="version">v0.5.65</div>
 </section>
 <div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس تصویری</div><div id="callState" class="callState">در حال برقراری تماس...</div><div id="videoStage" class="videoStage"><video id="remoteVideo" class="remoteVideo" autoplay playsinline></video><video id="localVideo" class="localVideo" autoplay playsinline muted></video></div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()">🎙️</button><button id="callCameraBtn" class="callAction callMute hidden" type="button" onclick="toggleCallCamera()">📹</button><button id="callShareBtn" class="callAction callMute hidden" type="button" onclick="toggleScreenShare()" aria-label="اشتراک صفحه">🖥️</button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
@@ -289,7 +300,7 @@ function openApp(){
   $("adminBtn").classList.toggle("hidden",profile.type!=="staff");
   setProfileAvatar();
   showChat();refreshAll();
-  setTimeout(handleCallLink,300);
+  setTimeout(()=>{handleCallLink();const room=new URLSearchParams(location.search).get("room");if(room)location.href="classroom.html?room="+encodeURIComponent(room)},300);
 }
 async function uploadAvatar(input){
   const file=input.files?.[0];
@@ -962,7 +973,42 @@ function renderAdmin(){
   if(ss){ss.innerHTML=students.map(x=>'<option value="'+x.id+'">'+escapeHtml(x.full_name)+'</option>').join("")||'<option value="">دانش آموزی نیست</option>';}
   if(groups.length&&students.length)loadGroupMembers();
   adminMessages.innerHTML=messages.slice(-30).reverse().map(m=>'<div class="row"><span>'+escapeHtml(m.content)+'</span><button class="btn" onclick="deleteMessage(\''+m.id+'\')">حذف</button></div>').join("")||'<div class="notice">پیامی نیست.</div>';
+  loadMeetingsAdmin();
 }
+
+function meetingLink(id){return new URL("classroom.html?room="+encodeURIComponent(id),location.href).href}
+async function createOnlineMeeting(){
+  if(profile?.type!=="staff")return alert("فقط مسئولین می توانند جلسه بسازند.");
+  const title=$("meetingTitleInput").value.trim(),description=$("meetingDescriptionInput").value.trim();
+  if(!title){$("meetingCreateStatus").textContent="عنوان جلسه را وارد کنید.";return}
+  $("meetingCreateStatus").textContent="در حال ساخت جلسه...";
+  $("meetingCreatedLink").classList.add("hidden");
+  try{
+    const d=await api("meeting_create",{title,description});
+    const link=meetingLink(d.meeting.id);
+    $("meetingCreatedLink").classList.remove("hidden");
+    $("meetingCreatedLink").innerHTML='<b>جلسه ساخته شد: '+escapeHtml(d.meeting.title)+'</b><div style="direction:ltr;word-break:break-all;margin:9px 0;font-size:12px">'+escapeHtml(link)+'</div><button class="btn primary" type="button" onclick="copyMeetingLink(\''+d.meeting.id+'\')">📋 کپی لینک جلسه</button><a class="btn" style="display:block;text-align:center;text-decoration:none" href="'+escapeHtml(link)+'" target="_blank" rel="noopener">ورود به جلسه</a>';
+    $("meetingCreateStatus").textContent="لینک اختصاصی آماده است؛ آن را برای شرکت کنندگان بفرستید.";
+    $("meetingTitleInput").value="";$("meetingDescriptionInput").value="";
+    loadMeetingsAdmin();
+  }catch(e){$("meetingCreateStatus").textContent=e.message}
+}
+async function copyMeetingLink(id){
+  const link=meetingLink(id);
+  try{await navigator.clipboard.writeText(link);alert("لینک جلسه کپی شد.")}catch{prompt("لینک جلسه را کپی کنید:",link)}
+}
+async function loadMeetingsAdmin(){
+  const el=$("meetingAdminList");if(!el||profile?.type!=="staff")return;
+  try{
+    const d=await api("meetings_list");
+    el.innerHTML=(d.meetings||[]).map(m=>'<div class="row" style="align-items:flex-start"><div style="min-width:0;flex:1"><b>'+escapeHtml(m.title)+'</b><div class="muted" style="font-size:11px;margin-top:5px">'+(m.status==="active"?"🟢 فعال":"⚫ پایان یافته")+' · '+escapeHtml(new Date(m.created_at).toLocaleString("fa-IR"))+'</div><div style="direction:ltr;word-break:break-all;font-size:10px;margin-top:5px">'+escapeHtml(meetingLink(m.id))+'</div><button class="btn" type="button" onclick="copyMeetingLink(\''+m.id+'\')">کپی لینک</button>'+(m.status==="active"?'<button class="btn" type="button" onclick="endOnlineMeeting(\''+m.id+'\')">پایان جلسه</button>':'')+'</div></div>').join("")||'<div class="notice">هنوز جلسه ای ساخته نشده است.</div>';
+  }catch(e){el.innerHTML='<div class="notice">دریافت جلسات ناموفق بود: '+escapeHtml(e.message)+'</div>'}
+}
+async function endOnlineMeeting(id){
+  if(!confirm("جلسه پایان یابد؟ شرکت کنندگان از کلاس خارج می شوند."))return;
+  try{await api("meeting_end",{meeting_id:id});await loadMeetingsAdmin();alert("جلسه پایان یافت.")}catch(e){alert(e.message)}
+}
+
 async function setStudentWrite(id,canWrite){try{await api("set_student_write",{id,disabled:canWrite});await refreshAll()}catch(e){alert(e.message)}}
 async function setGroupWrite(id,disabled){try{await api("set_group_write",{id,disabled:!disabled});await refreshAll()}catch(e){alert(e.message)}}
 async function setGroupVoice(id,disabled){try{await api("set_group_voice",{id,disabled:!disabled});await refreshAll();if(selectedChat==="group:"+id)updateComposerState()}catch(e){alert(e.message)}}
