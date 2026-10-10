@@ -24,7 +24,7 @@
 </div>
 <script>
 const SUPABASE_URL="https://pwwicgyrycaexjnnhseb.supabase.co";
-const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3d2ljZ3lyY2FleGpubmhzZWIiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc5MTAzNzMyOCwiZXhwIjoyMTA2NjEzMzI4fQ.860RskDmycONZUHyOloN8AmKqRkzU5YNXUUze2DuPdM";
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3d2ljZ3lyeWNhZXhqbm5oc2ViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwMzczMjgsImV4cCI6MjEwNjYxMzMyOH0.860RskDmycONZUHyOloN8AmKqRkzU5YNXUUze2DuPdM";
 const API=SUPABASE_URL+"/functions/v1/helligram-api";
 const roomId=new URLSearchParams(location.search).get("room")||"";
 let token=localStorage.getItem("helligram_token")||"",profile=null,meeting=null,joined=false,localStream=null,pollTimer=null,chatTimer=null,pollBusy=false,chatBusy=false,micOn=true,camOn=true;
