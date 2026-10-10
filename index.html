@@ -139,7 +139,7 @@ body:before{display:none!important}
 
 
 
-/* HelliGram typography update v0.5.70 */
+/* HelliGram typography update v0.5.71 */
 html,body,button,input,textarea,select{font-family:"Vazirmatn",Tahoma,Arial,sans-serif!important}
 </style>
 </head>
@@ -422,10 +422,15 @@ function renderTargets(){
 function chatKey(m){
   if(m.group_id)return "group:"+m.group_id;
   if(profile.type==="student"){
-    if(m.recipient_student_id===profile.id)return "student:"+m.sender_student_id;
-    if(m.sender_student_id===profile.id&&m.recipient_student_id)return "student:"+m.recipient_student_id;
-    if(m.recipient_staff_id===profile.id)return "staff:"+m.sender_staff_id;
-    if(m.sender_student_id===profile.id&&m.recipient_staff_id)return "staff:"+m.recipient_staff_id;
+    // پیام ورودی مسئول به دانش آموز باید به گفتگوی همان مسئول متصل شود؛
+    // قبلا sender_student_id در این حالت خالی بود و عنوان/عکس گفتگو پیدا نمی شد.
+    if(String(m.recipient_student_id||"")===String(profile.id||"")){
+      if(m.sender_staff_id)return "staff:"+m.sender_staff_id;
+      if(m.sender_student_id)return "student:"+m.sender_student_id;
+    }
+    if(String(m.sender_student_id||"")===String(profile.id||"")&&m.recipient_student_id)return "student:"+m.recipient_student_id;
+    if(String(m.recipient_staff_id||"")===String(profile.id||"")&&m.sender_staff_id)return "staff:"+m.sender_staff_id;
+    if(String(m.sender_student_id||"")===String(profile.id||"")&&m.recipient_staff_id)return "staff:"+m.recipient_staff_id;
   }else{
     if(m.sender_staff_id===profile.id&&m.recipient_student_id)return "student:"+m.recipient_student_id;
     if(m.recipient_staff_id===profile.id&&m.sender_staff_id)return "staff:"+m.sender_staff_id;
