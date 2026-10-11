@@ -170,6 +170,26 @@ html,body,button,input,textarea,select{font-family:"Vazirmatn",Tahoma,Arial,sans
 #login .btn,#login .error,#login .version,#login .deployedBy{text-align:center}
 @media(max-width:480px){#login.login{width:calc(100% - 24px)}#login .introSubtitle{max-width:100%}}
 
+
+/* Custom HelliGram voice player v0.5.81 */
+.voiceMessage{width:min(330px,70vw);min-width:220px;display:flex;direction:ltr;align-items:center;gap:11px;padding:10px 12px;border-radius:18px;background:linear-gradient(135deg,rgba(45,63,119,.52),rgba(19,29,59,.82));border:1px solid rgba(120,151,255,.26);box-shadow:inset 0 1px rgba(255,255,255,.055)}
+.msg.me .voiceMessage{background:linear-gradient(135deg,rgba(80,92,224,.38),rgba(29,53,112,.76));border-color:rgba(126,167,255,.34)}
+.voiceAudio{display:none!important}
+.voicePlayButton{width:43px;height:43px;flex:0 0 43px;border:1px solid rgba(124,218,255,.38);border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#55dfff,#7582ff 68%,#a477ff);color:#071020;font-size:17px;font-weight:900;cursor:pointer;box-shadow:0 0 20px rgba(84,185,255,.22),inset 0 1px rgba(255,255,255,.7);transition:transform .18s,box-shadow .18s}
+.voicePlayButton:active{transform:scale(.93)}
+.voiceMessage.is-playing .voicePlayButton{box-shadow:0 0 0 5px rgba(84,231,255,.09),0 0 24px rgba(84,185,255,.34)}
+.voiceTrack{min-width:0;flex:1}
+.voiceWave{height:31px;display:flex;align-items:center;justify-content:space-between;gap:3px;cursor:pointer;position:relative;outline:none;touch-action:manipulation}
+.voiceWave i{display:block;flex:1;max-width:4px;min-width:2px;border-radius:8px;background:rgba(170,190,236,.48);transition:background .12s,transform .12s}
+.voiceWave i.heard{background:linear-gradient(180deg,#54e7ff,#8b7bff);box-shadow:0 0 7px rgba(84,231,255,.22)}
+.voiceMessage.is-playing .voiceWave i:nth-child(3n){animation:voiceWaveGlow .7s ease-in-out infinite alternate}
+.voiceMessage.is-playing .voiceWave i:nth-child(3n + 1){animation:voiceWaveGlow .9s ease-in-out infinite alternate-reverse}
+.voiceMeta{display:flex;align-items:center;gap:9px;margin-top:4px;direction:ltr;font-size:10px;color:#c6d3f2}
+.voiceDuration{font-variant-numeric:tabular-nums;font-weight:800;color:#f5f8ff;min-width:35px}
+.voiceCaption{opacity:.75;white-space:nowrap}
+.voicePlayStatus{display:none}
+@keyframes voiceWaveGlow{to{filter:brightness(1.5);transform:scaleY(.76)}}
+@media(max-width:480px){.voiceMessage{width:min(300px,72vw);min-width:190px;padding:9px;gap:9px}.voicePlayButton{width:39px;height:39px;flex-basis:39px}.voiceWave{gap:2px}.voiceWave i{max-width:3px}}
 </style>
 </head>
 <body>
@@ -180,7 +200,7 @@ html,body,button,input,textarea,select{font-family:"Vazirmatn",Tahoma,Arial,sans
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.80</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.81</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -669,7 +689,7 @@ function renderConversation(){
         ? '<div class="messageAvatar"><img src="'+escapeHtml(m.sender_avatar_url)+'" alt=""></div>'
         : '<div class="messageAvatar">'+avatarLetter+'</div>')
       : "";
-    const voiceHtml=m.voice_url?'<div class="voiceMessage"><span class="voiceGlyph">🎙️</span><audio controls preload="metadata" onloadedmetadata="fixVoiceDuration(this)" onended="voicePlaybackEnded(this)" onerror="voicePlaybackError(this)" src="'+escapeHtml(m.voice_url)+'">پخش پیام صوتی</audio><span class="voicePlayStatus" aria-live="polite"></span></div>':callMessageHtml(m.content);
+    const voiceHtml=m.voice_url?'<div class="voiceMessage"><audio class="voiceAudio" preload="metadata" onloadedmetadata="updateVoicePlayer(this)" ontimeupdate="updateVoicePlayer(this)" onended="voicePlaybackEnded(this)" onerror="voicePlaybackError(this)" src="'+escapeHtml(m.voice_url)+'">پخش پیام صوتی</audio><button class="voicePlayButton" type="button" aria-label="پخش ویس" onclick="toggleVoicePlayback(this)">▶</button><div class="voiceTrack"><div class="voiceWave" role="slider" aria-label="موقعیت پخش ویس" tabindex="0" onclick="seekVoice(event,this)" onkeydown="seekVoiceKey(event,this)">'+Array.from({length:30},(_,i)=>'<i style="height:'+(9+((i*17+i*i*3)%23))+'px"></i>').join("")+'</div><div class="voiceMeta"><span class="voiceDuration">00:00</span><span class="voiceCaption">پیام صوتی</span></div></div><span class="voicePlayStatus" aria-live="polite"></span></div>':callMessageHtml(m.content);
     return '<div class="messageLine '+(mine?"me":"")+'">'+avatarHtml+'<div id="msg-'+m.id+'" class="msg '+(mine?"me":"")+'"><strong class="sender-name">'+escapeHtml(senderName)+'</strong><div>'+voiceHtml+'</div><small>'+new Date(m.created_at).toLocaleString("fa-IR")+'</small><div class="messageActions">'+pinButton+deleteButton+'</div></div></div>';
   }).join("");
 }
@@ -817,17 +837,40 @@ function callAvatar(m){const e=document.getElementById("callAvatar");if(e)e.inne
 function closeCallMedia(){if(callPeer){try{callPeer.close()}catch{}callPeer=null}if(callLocalStream){callLocalStream.getTracks().forEach(t=>t.stop());callLocalStream=null}const a=document.getElementById("remoteAudio"),v=document.getElementById("remoteVideo"),lv=document.getElementById("localVideo");if(a)a.srcObject=null;if(v){v.srcObject=null;v.style.display="none"}if(lv){lv.srcObject=null;lv.style.display="none"}}
 function resetCallUi(){screenSharing=false;screenShareStream=null;const sb=document.getElementById("callShareBtn");if(sb){sb.textContent="🖥️";sb.classList.add("hidden");}document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.add("hidden");document.getElementById("callCameraBtn")?.classList.add("hidden");document.getElementById("callTimer").textContent="";callMuted=false;callCameraOff=false;const b=document.getElementById("callMuteBtn"),c=document.getElementById("callCameraBtn");if(b)b.textContent="🎙️";if(c)c.textContent="📹";const rv=document.getElementById("remoteVideo"),lv=document.getElementById("localVideo");if(rv){rv.srcObject=null;rv.style.display="none"}if(lv){lv.srcObject=null;lv.style.display="none"}}
 function callLink(callId){return location.origin+location.pathname+"#call="+encodeURIComponent(callId);}
-function fixVoiceDuration(audio){
-  // Avoid artificial seeks to an enormous timestamp: on some mobile Chromium
-  // builds this can leave the audio decoder in a bad state for replay.
-  const status=audio.parentElement?.querySelector(".voicePlayStatus");
-  if(status)status.textContent="";
+function voiceTimeLabel(value){
+  if(!Number.isFinite(value)||value<0)return "00:00";
+  const sec=Math.floor(value);
+  return String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0");
 }
+function updateVoicePlayer(audio){
+  const wrap=audio.closest(".voiceMessage");if(!wrap)return;
+  const duration=wrap.querySelector(".voiceDuration");
+  const wave=wrap.querySelector(".voiceWave");
+  const button=wrap.querySelector(".voicePlayButton");
+  if(duration)duration.textContent=voiceTimeLabel(audio.currentTime||0);
+  if(audio.duration&&Number.isFinite(audio.duration)&&duration)duration.textContent=voiceTimeLabel(audio.currentTime||0)+" / "+voiceTimeLabel(audio.duration);
+  if(button){const playing=!audio.paused&&!audio.ended;button.textContent=playing?"Ⅱ":"▶";button.setAttribute("aria-label",playing?"توقف موقت ویس":"پخش ویس");wrap.classList.toggle("is-playing",playing)}
+  if(wave){const bars=wave.querySelectorAll("i");const ratio=audio.duration&&Number.isFinite(audio.duration)?audio.currentTime/audio.duration:0;bars.forEach((bar,i)=>bar.classList.toggle("heard",i<Math.round(ratio*bars.length)))}
+}
+async function toggleVoicePlayback(button){
+  const wrap=button.closest(".voiceMessage"),audio=wrap?.querySelector(".voiceAudio");if(!audio)return;
+  document.querySelectorAll(".voiceAudio").forEach(other=>{if(other!==audio&&!other.paused){other.pause();updateVoicePlayer(other)}});
+  try{if(audio.paused){if(audio.ended||audio.currentTime>=audio.duration)audio.currentTime=0;await audio.play()}else audio.pause();updateVoicePlayer(audio)}
+  catch(e){const status=wrap.querySelector(".voicePlayStatus");if(status)status.textContent="پخش ویس شروع نشد";}
+}
+function seekVoice(event,wave){
+  const audio=wave.closest(".voiceMessage")?.querySelector(".voiceAudio");if(!audio||!Number.isFinite(audio.duration)||!audio.duration)return;
+  const rect=wave.getBoundingClientRect();const ratio=Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width));audio.currentTime=ratio*audio.duration;updateVoicePlayer(audio);
+}
+function seekVoiceKey(event,wave){
+  if(event.key!=="ArrowLeft"&&event.key!=="ArrowRight"&&event.key!=="Home"&&event.key!=="End")return;
+  event.preventDefault();const audio=wave.closest(".voiceMessage")?.querySelector(".voiceAudio");if(!audio||!Number.isFinite(audio.duration))return;
+  if(event.key==="Home")audio.currentTime=0;else if(event.key==="End")audio.currentTime=audio.duration;else audio.currentTime=Math.max(0,Math.min(audio.duration,audio.currentTime+(event.key==="ArrowRight"?5:-5)));updateVoicePlayer(audio);
+}
+function fixVoiceDuration(audio){updateVoicePlayer(audio)}
 function voicePlaybackEnded(audio){
-  // Reset the media element so replay begins from the start with a fresh load.
-  try{audio.pause();audio.currentTime=0;audio.load()}catch{}
-  const status=audio.parentElement?.querySelector(".voicePlayStatus");
-  if(status)status.textContent="";
+  try{audio.currentTime=0}catch{}
+  updateVoicePlayer(audio);
 }
 function voicePlaybackError(audio){
   const status=audio.parentElement?.querySelector(".voicePlayStatus");
