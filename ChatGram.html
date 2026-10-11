@@ -30,6 +30,44 @@
 @media(max-width:760px){.grid{display:block}.chat{height:calc(100vh - 74px);min-height:0}.chatList{flex:1;min-height:0;height:auto;overflow:auto}.messages{min-height:350px}.adminGrid{grid-template-columns:1fr}.msg{max-width:92%}.wrap{padding:0}.chatItem{padding:13px 12px}.chatAvatar{width:53px;height:53px;flex-basis:53px}.chatName{font-size:15px}.appHeader{height:74px}.chat{height:calc(100vh - 74px);min-height:0}}
 
 .callMembers{margin:10px 0 16px;color:#c7d4e5;font-size:12px;max-height:120px;overflow:auto;text-align:right}.callMembers div{padding:4px 0;border-bottom:1px solid #263b55}
+
+/* HelliGram unified vector UI refresh — v0.5.82 */
+:root{--hg-bg:#070b19;--hg-panel:rgba(17,25,49,.94);--hg-panel2:rgba(23,34,65,.88);--hg-line:rgba(132,157,232,.2);--hg-cyan:#55e7ff;--hg-blue:#7285ff;--hg-violet:#a078ff;--hg-text:#f4f6ff;--hg-muted:#9eacd0;--hg-glow:0 14px 38px rgba(0,0,0,.24)}
+html{scroll-behavior:smooth;scrollbar-color:#354573 #080d1c}
+body{background-color:var(--hg-bg)!important;background-image:radial-gradient(ellipse at 12% 0%,rgba(79,102,221,.14),transparent 34%),radial-gradient(ellipse at 90% 18%,rgba(63,214,255,.075),transparent 30%)!important;color:var(--hg-text)}
+button,.btn,.iconBtn{transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+button:not(:disabled):hover,.btn:not(:disabled):hover{filter:brightness(1.08)}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--hg-cyan)!important;outline-offset:3px}
+input,textarea,select{border-color:var(--hg-line)!important;background-color:rgba(7,12,28,.86)!important;color:var(--hg-text)!important;transition:border-color .18s,box-shadow .18s}
+input:focus,textarea:focus,select:focus{border-color:rgba(85,231,255,.72)!important;box-shadow:0 0 0 3px rgba(85,231,255,.09)}
+.appHeader,.top,.chathead,.panelTitle,.loginCard,.login,.card,.panel,.admin,.chatList,.side,.notice{background-color:var(--hg-panel)!important;border-color:var(--hg-line)!important}
+.appHeader,.top,.chathead,.panelTitle,.loginCard,.login,.admin{background-image:radial-gradient(circle at 90% 0%,rgba(105,127,255,.12),transparent 38%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%237d98ff' stroke-opacity='.12'%3E%3Cpath d='M14 8l2 5 5 2-5 2-2 5-2-5-5-2 5-2zM78 54l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5z'/%3E%3Ccircle cx='51' cy='18' r='2'/%3E%3Ccircle cx='28' cy='69' r='1.5'/%3E%3Cpath d='M70 9l4 4m0-4l-4 4'/%3E%3C/g%3E%3C/svg%3E")!important}
+.appHeader,.top{box-shadow:0 8px 30px rgba(0,0,0,.16)}
+.appBrandText b,.brand,.loginBrand h1{background:linear-gradient(100deg,#fff 15%,#b9eaff 52%,#c8b5ff 90%);background-clip:text;-webkit-background-clip:text;color:transparent}
+.appLogo,.logo,.loginLogo,.chatAvatar,.profileAvatar,.chatHeaderAvatar,.groupAvatarPreview{border:1px solid rgba(111,204,255,.3)!important;box-shadow:0 0 0 4px rgba(95,126,255,.07),0 0 22px rgba(85,231,255,.08)}
+.btn,.tabs button,.side .btn,button.primary,.btn.primary{border:1px solid rgba(127,154,255,.19)!important;border-radius:13px!important}
+.btn.primary,button.primary,.tabs button.active,.side .btn.primary{background:linear-gradient(115deg,#596df0,#7c6bff 65%,#5bcff8)!important;color:#fff!important;box-shadow:0 7px 20px rgba(91,111,240,.2)}
+.iconBtn{border:1px solid transparent!important;border-radius:14px!important;color:#dfeaff!important}
+.iconBtn:hover{border-color:var(--hg-line)!important;background:rgba(92,116,215,.14)!important}
+.chat,.messages,.chatBody{background-color:rgba(6,11,25,.78)!important}
+.chatItem,.bubble,.msg,.message,.conversationItem{border-color:var(--hg-line)}
+.chatItem{transition:background .18s,border-color .18s}
+.chatItem:hover{background:rgba(91,115,208,.11)!important}
+.bubble{box-shadow:0 6px 20px rgba(0,0,0,.1)}
+.bubble.mine,.msg.me{border:1px solid rgba(106,135,255,.22)!important}
+.composer,.chatForm,.controls,.participants,.classTools,.boardActions{background-color:rgba(12,18,37,.92)!important;border-color:var(--hg-line)!important}
+.pill,.badge,.permissionBtn{border-color:rgba(95,216,255,.24)!important;background:rgba(75,133,255,.1)!important}
+.panel,.loginCard,.card,.admin{border:1px solid var(--hg-line)!important;border-radius:20px!important;box-shadow:var(--hg-glow)}
+.tile{border-color:rgba(125,153,245,.25)!important;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+#whiteboard{border-color:var(--hg-line)!important;box-shadow:inset 0 0 28px rgba(83,110,230,.07)}
+.iconControl svg,.iconBtn svg,button svg,.btn svg{width:1.25em;height:1.25em;vertical-align:middle;flex-shrink:0}
+.iconControl svg,.iconBtn svg{stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+.muted,.mutedText,.status,.footer{color:var(--hg-muted)!important}
+.error{color:#ff9eb8!important}
+hr{border:0;border-top:1px solid var(--hg-line)}
+::selection{background:rgba(91,221,255,.28);color:#fff}
+@media(max-width:760px){.appHeader{box-shadow:0 5px 22px rgba(0,0,0,.24)}.loginCard,.login{margin-left:12px!important;margin-right:12px!important}.panel,.card,.admin{border-radius:16px!important}}
+
 </style>
 </head>
 <body>

@@ -171,7 +171,7 @@ html,body,button,input,textarea,select{font-family:"Vazirmatn",Tahoma,Arial,sans
 @media(max-width:480px){#login.login{width:calc(100% - 24px)}#login .introSubtitle{max-width:100%}}
 
 
-/* Custom HelliGram voice player v0.5.81 */
+/* Custom HelliGram voice player v0.5.82 */
 .voiceMessage{width:min(330px,70vw);min-width:220px;display:flex;direction:ltr;align-items:center;gap:11px;padding:10px 12px;border-radius:18px;background:linear-gradient(135deg,rgba(45,63,119,.52),rgba(19,29,59,.82));border:1px solid rgba(120,151,255,.26);box-shadow:inset 0 1px rgba(255,255,255,.055)}
 .msg.me .voiceMessage{background:linear-gradient(135deg,rgba(80,92,224,.38),rgba(29,53,112,.76));border-color:rgba(126,167,255,.34)}
 .voiceAudio{display:none!important}
@@ -190,6 +190,44 @@ html,body,button,input,textarea,select{font-family:"Vazirmatn",Tahoma,Arial,sans
 .voicePlayStatus{display:none}
 @keyframes voiceWaveGlow{to{filter:brightness(1.5);transform:scaleY(.76)}}
 @media(max-width:480px){.voiceMessage{width:min(300px,72vw);min-width:190px;padding:9px;gap:9px}.voicePlayButton{width:39px;height:39px;flex-basis:39px}.voiceWave{gap:2px}.voiceWave i{max-width:3px}}
+
+/* HelliGram unified vector UI refresh — v0.5.82 */
+:root{--hg-bg:#070b19;--hg-panel:rgba(17,25,49,.94);--hg-panel2:rgba(23,34,65,.88);--hg-line:rgba(132,157,232,.2);--hg-cyan:#55e7ff;--hg-blue:#7285ff;--hg-violet:#a078ff;--hg-text:#f4f6ff;--hg-muted:#9eacd0;--hg-glow:0 14px 38px rgba(0,0,0,.24)}
+html{scroll-behavior:smooth;scrollbar-color:#354573 #080d1c}
+body{background-color:var(--hg-bg)!important;background-image:radial-gradient(ellipse at 12% 0%,rgba(79,102,221,.14),transparent 34%),radial-gradient(ellipse at 90% 18%,rgba(63,214,255,.075),transparent 30%)!important;color:var(--hg-text)}
+button,.btn,.iconBtn{transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+button:not(:disabled):hover,.btn:not(:disabled):hover{filter:brightness(1.08)}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--hg-cyan)!important;outline-offset:3px}
+input,textarea,select{border-color:var(--hg-line)!important;background-color:rgba(7,12,28,.86)!important;color:var(--hg-text)!important;transition:border-color .18s,box-shadow .18s}
+input:focus,textarea:focus,select:focus{border-color:rgba(85,231,255,.72)!important;box-shadow:0 0 0 3px rgba(85,231,255,.09)}
+.appHeader,.top,.chathead,.panelTitle,.loginCard,.login,.card,.panel,.admin,.chatList,.side,.notice{background-color:var(--hg-panel)!important;border-color:var(--hg-line)!important}
+.appHeader,.top,.chathead,.panelTitle,.loginCard,.login,.admin{background-image:radial-gradient(circle at 90% 0%,rgba(105,127,255,.12),transparent 38%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%237d98ff' stroke-opacity='.12'%3E%3Cpath d='M14 8l2 5 5 2-5 2-2 5-2-5-5-2 5-2zM78 54l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5z'/%3E%3Ccircle cx='51' cy='18' r='2'/%3E%3Ccircle cx='28' cy='69' r='1.5'/%3E%3Cpath d='M70 9l4 4m0-4l-4 4'/%3E%3C/g%3E%3C/svg%3E")!important}
+.appHeader,.top{box-shadow:0 8px 30px rgba(0,0,0,.16)}
+.appBrandText b,.brand,.loginBrand h1{background:linear-gradient(100deg,#fff 15%,#b9eaff 52%,#c8b5ff 90%);background-clip:text;-webkit-background-clip:text;color:transparent}
+.appLogo,.logo,.loginLogo,.chatAvatar,.profileAvatar,.chatHeaderAvatar,.groupAvatarPreview{border:1px solid rgba(111,204,255,.3)!important;box-shadow:0 0 0 4px rgba(95,126,255,.07),0 0 22px rgba(85,231,255,.08)}
+.btn,.tabs button,.side .btn,button.primary,.btn.primary{border:1px solid rgba(127,154,255,.19)!important;border-radius:13px!important}
+.btn.primary,button.primary,.tabs button.active,.side .btn.primary{background:linear-gradient(115deg,#596df0,#7c6bff 65%,#5bcff8)!important;color:#fff!important;box-shadow:0 7px 20px rgba(91,111,240,.2)}
+.iconBtn{border:1px solid transparent!important;border-radius:14px!important;color:#dfeaff!important}
+.iconBtn:hover{border-color:var(--hg-line)!important;background:rgba(92,116,215,.14)!important}
+.chat,.messages,.chatBody{background-color:rgba(6,11,25,.78)!important}
+.chatItem,.bubble,.msg,.message,.conversationItem{border-color:var(--hg-line)}
+.chatItem{transition:background .18s,border-color .18s}
+.chatItem:hover{background:rgba(91,115,208,.11)!important}
+.bubble{box-shadow:0 6px 20px rgba(0,0,0,.1)}
+.bubble.mine,.msg.me{border:1px solid rgba(106,135,255,.22)!important}
+.composer,.chatForm,.controls,.participants,.classTools,.boardActions{background-color:rgba(12,18,37,.92)!important;border-color:var(--hg-line)!important}
+.pill,.badge,.permissionBtn{border-color:rgba(95,216,255,.24)!important;background:rgba(75,133,255,.1)!important}
+.panel,.loginCard,.card,.admin{border:1px solid var(--hg-line)!important;border-radius:20px!important;box-shadow:var(--hg-glow)}
+.tile{border-color:rgba(125,153,245,.25)!important;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+#whiteboard{border-color:var(--hg-line)!important;box-shadow:inset 0 0 28px rgba(83,110,230,.07)}
+.iconControl svg,.iconBtn svg,button svg,.btn svg{width:1.25em;height:1.25em;vertical-align:middle;flex-shrink:0}
+.iconControl svg,.iconBtn svg{stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+.muted,.mutedText,.status,.footer{color:var(--hg-muted)!important}
+.error{color:#ff9eb8!important}
+hr{border:0;border-top:1px solid var(--hg-line)}
+::selection{background:rgba(91,221,255,.28);color:#fff}
+@media(max-width:760px){.appHeader{box-shadow:0 5px 22px rgba(0,0,0,.24)}.loginCard,.login{margin-left:12px!important;margin-right:12px!important}.panel,.card,.admin{border-radius:16px!important}}
+
 </style>
 </head>
 <body>
@@ -200,7 +238,7 @@ html,body,button,input,textarea,select{font-family:"Vazirmatn",Tahoma,Arial,sans
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.81</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.82</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
