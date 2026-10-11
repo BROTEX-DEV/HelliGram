@@ -35,7 +35,7 @@
 .callMembers{margin:10px 0 16px;color:#c7d4e5;font-size:12px;max-height:120px;overflow:auto;text-align:right}.callMembers div{padding:4px 0;border-bottom:1px solid #263b55}
 
 .voiceBtn{flex:0 0 44px;background:rgba(70,105,210,.16);border:1px solid rgba(84,231,255,.25);font-size:21px}.voiceBtn.recording{background:#c82e52;color:#fff;animation:voicePulse 1s infinite}.voiceStatus{font-size:11px;color:#ff9bb0;align-self:center;white-space:nowrap}.voiceStatus.hidden{display:none}.voiceMessage{display:flex;align-items:center;gap:9px;min-width:min(270px,65vw);padding:5px 0}.voiceMessage audio{width:100%;height:38px;max-width:260px}.voiceMessage .voiceGlyph{font-size:22px}@keyframes voicePulse{50%{box-shadow:0 0 0 5px #c82e5233}}
-/* BROTEX visual refresh v0.5.72 — voice messages */
+/* BROTEX visual refresh v0.5.73 — voice messages */
 :root{color-scheme:dark;--bg:#070916;--panel:rgba(17,22,47,.78);--line:rgba(126,147,255,.20);--cyan:#54e7ff;--violet:#a879ff;--blue:#6688ff;--muted:#a2abc9}
 html{background:#070916;scroll-behavior:smooth}
 body{background:radial-gradient(ellipse at 8% 5%,rgba(74,75,255,.20),transparent 34%),radial-gradient(ellipse at 92% 18%,rgba(0,220,255,.13),transparent 32%),linear-gradient(145deg,#070916,#0b1024 52%,#090b19)!important;color:#f5f7ff}
@@ -105,7 +105,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-s
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
 
 
-/* v0.5.72 — fix mobile hamburger menu stacking */
+/* v0.5.73 — fix mobile hamburger menu stacking */
 .grid{isolation:auto!important}
 #menuOverlay.menuOverlay{z-index:45}
 #sideMenu.side{z-index:50;position:fixed;top:0;right:0;bottom:0;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain}
@@ -115,7 +115,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-s
 .appHeader{z-index:20}
 
 
-/* v0.5.72 — call signaling fixes + release */
+/* v0.5.73 — call signaling fixes + release */
 html,body{min-height:100%;background:#090d1b!important}
 body{background:#090d1b!important}
 body:before{display:none!important}
@@ -151,7 +151,7 @@ html,body,button,input,textarea,select{font-family:"Vazirmatn",Tahoma,Arial,sans
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.72</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.73</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -243,7 +243,7 @@ html,body,button,input,textarea,select{font-family:"Vazirmatn",Tahoma,Arial,sans
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.72</div>
+  <div class="version">v0.5.73</div>
 </section>
 <div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس تصویری</div><div id="callState" class="callState">در حال برقراری تماس...</div><div id="videoStage" class="videoStage"><video id="remoteVideo" class="remoteVideo" autoplay playsinline></video><video id="localVideo" class="localVideo" autoplay playsinline muted></video></div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()">🎙️</button><button id="callCameraBtn" class="callAction callMute hidden" type="button" onclick="toggleCallCamera()">📹</button><button id="callShareBtn" class="callAction callMute hidden" type="button" onclick="toggleScreenShare()" aria-label="اشتراک صفحه">🖥️</button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
@@ -420,6 +420,7 @@ function renderTargets(){
   sendTarget={kind:current.kind,id:current.id};
 }
 function chatKey(m){
+  if(m._localChatKey)return m._localChatKey;
   if(m.group_id)return "group:"+m.group_id;
   if(profile.type==="student"){
     // پیام ورودی مسئول به دانش آموز باید به گفتگوی همان مسئول متصل شود؛
@@ -776,7 +777,7 @@ function processIncomingNotifications(){
   saveKnownMessageIds(current);
   knownMessageIds=current;
 }
-function renderMessages(){renderChatList();updateUnreadIndicator();processIncomingNotifications();if(selectedChat){renderConversation();renderPinnedHeader()}}
+function renderMessages(){if(selectedChat){renderConversation();renderPinnedHeader()}renderChatList();updateUnreadIndicator();processIncomingNotifications()}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 let callPollTimer=null,callStartedAt=0,activeCall=null,callPeer=null,callLocalStream=null,callMuted=false,callCameraOff=false,callIceSeen=new Set(),callIceQueue=[],callJoiningFromLink=false,screenShareStream=null,screenSharing=false;
 let callMode="video";
@@ -953,21 +954,48 @@ async function sendMessage(){
     alert("ارسال پیام برای شما بسته شده است.");
     return;
   }
+  if(!sendTarget.id)return alert("ابتدا مقصد پیام را انتخاب کنید.");
 
+  const target={...sendTarget};
+  const chatKeyNow=target.kind+":"+target.id;
+  const body={content};
+  if(target.kind==="staff")body.recipient_staff_id=target.id;
+  if(target.kind==="student")body.recipient_student_id=target.id;
+  if(target.kind==="group")body.group_id=target.id;
+
+  // نمایش خوش‌بینانه: پیام قبل از شروع درخواست شبکه روی صفحه فرستنده قرار می‌گیرد.
+  const tempId="local-"+Date.now()+"-"+Math.random().toString(36).slice(2,7);
+  const tempMessage={
+    id:tempId,content,created_at:new Date().toISOString(),
+    sender_student_id:profile.type==="student"?profile.id:null,
+    sender_staff_id:profile.type==="staff"?profile.id:null,
+    recipient_student_id:body.recipient_student_id||null,
+    recipient_staff_id:body.recipient_staff_id||null,
+    group_id:body.group_id||null,
+    sender_name:profile.full_name||profile.name||"شما",
+    _localChatKey:chatKeyNow
+  };
+  if(!selectedChat)selectedChat=chatKeyNow;
+  messages.push(tempMessage);
+  input.value="";
+  renderConversation();
+  const messageBox=document.getElementById("messages");
+  if(messageBox)messageBox.scrollTop=messageBox.scrollHeight;
   btn.disabled=true;
-  btn.textContent="...";
+  btn.textContent="ارسال…";
   try{
-    const body={content};
-    if(!sendTarget.id) return alert("ابتدا مقصد پیام را انتخاب کنید.");
-    if(sendTarget.kind==="staff") body.recipient_staff_id=sendTarget.id;
-    if(sendTarget.kind==="student") body.recipient_student_id=sendTarget.id;
-    if(sendTarget.kind==="group") body.group_id=sendTarget.id;
-    await api("send",body);
-    input.value="";
-    if(sendTarget.id) selectedChat=sendTarget.kind+":"+sendTarget.id;
-    await refreshAll();
-    openChat(selectedChat);
+    const result=await api("send",body);
+    const saved=result?.message;
+    messages=messages.filter(m=>m.id!==tempId);
+    if(saved)messages.push({...tempMessage,...saved,_localChatKey:undefined});
+    renderConversation();
+    if(messageBox)messageBox.scrollTop=messageBox.scrollHeight;
+    // همگام‌سازی در پس‌زمینه؛ ارسال را به‌خاطر رفرش کل صفحه چت معطل نمی‌کنیم.
+    refreshAll().catch(()=>{});
   }catch(e){
+    messages=messages.filter(m=>m.id!==tempId);
+    input.value=content;
+    renderConversation();
     alert(e.message);
   }finally{
     btn.disabled=false;
