@@ -35,7 +35,7 @@
 .callMembers{margin:10px 0 16px;color:#c7d4e5;font-size:12px;max-height:120px;overflow:auto;text-align:right}.callMembers div{padding:4px 0;border-bottom:1px solid #263b55}
 
 .voiceBtn{flex:0 0 44px;background:rgba(70,105,210,.16);border:1px solid rgba(84,231,255,.25);font-size:21px}.voiceBtn.recording{background:#c82e52;color:#fff;animation:voicePulse 1s infinite}.voiceStatus{font-size:11px;color:#ff9bb0;align-self:center;white-space:nowrap}.voiceStatus.hidden{display:none}.voiceMessage{display:flex;align-items:center;gap:9px;min-width:min(270px,65vw);padding:5px 0}.voiceMessage audio{width:100%;height:38px;max-width:260px}.voiceMessage .voiceGlyph{font-size:22px}@keyframes voicePulse{50%{box-shadow:0 0 0 5px #c82e5233}}
-/* BROTEX visual refresh v0.5.77 — voice messages */
+/* BROTEX visual refresh v0.5.85 — voice messages */
 :root{color-scheme:dark;--bg:#070916;--panel:rgba(17,22,47,.78);--line:rgba(126,147,255,.20);--cyan:#54e7ff;--violet:#a879ff;--blue:#6688ff;--muted:#a2abc9}
 html{background:#070916;scroll-behavior:smooth}
 body{background:radial-gradient(ellipse at 8% 5%,rgba(74,75,255,.20),transparent 34%),radial-gradient(ellipse at 92% 18%,rgba(0,220,255,.13),transparent 32%),linear-gradient(145deg,#070916,#0b1024 52%,#090b19)!important;color:#f5f7ff}
@@ -105,7 +105,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-s
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
 
 
-/* v0.5.77 — fix mobile hamburger menu stacking */
+/* v0.5.85 — fix mobile hamburger menu stacking */
 .grid{isolation:auto!important}
 #menuOverlay.menuOverlay{z-index:45}
 #sideMenu.side{z-index:50;position:fixed;top:0;right:0;bottom:0;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain}
@@ -115,7 +115,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan)!important;box-s
 .appHeader{z-index:20}
 
 
-/* v0.5.77 — call signaling fixes + release */
+/* v0.5.85 — call signaling fixes + release */
 html,body{min-height:100%;background:#090d1b!important}
 body{background:#090d1b!important}
 body:before{display:none!important}
@@ -142,7 +142,7 @@ body:before{display:none!important}
 /* HelliGram typography update v0.5.71 */
 html,body,button,input,textarea,select{font-family:"Vazirmatn",Tahoma,Arial,sans-serif!important}
 
-/* Animated login intro fix v0.5.84 — remove faulty slogan animation */
+/* Animated login intro fix v0.5.85 — remove faulty slogan animation */
 #login .brand{perspective:800px}
 #login .introTitle{margin:4px 0 10px;opacity:0;transform:translateY(18px) scale(.97);animation:helliTitleIn .8s cubic-bezier(.2,.8,.2,1) .12s forwards;letter-spacing:.02em}
 #login .introSubtitle{max-width:340px;margin:0 auto 18px;line-height:1.9;opacity:1!important;visibility:visible;transform:none!important;animation:none!important;display:block}#login .introSubtitle::before,#login .introSubtitle::after{content:none!important;display:none!important}#login .brand .introSubtitle~.introSubtitle{display:none!important}
@@ -236,9 +236,9 @@ hr{border:0;border-top:1px solid var(--hg-line)}
   <div class="brand"><div class="logo introLogo"><img src="logo.png" alt="لوگوی حــلــی‌گــــرام"></div><h1 class="introTitle">حــلــی‌گــــرام</h1><p class="muted introSubtitle">پیام رسان اختصاصی مدرسه راهنمایی علامه حلی تهران</p></div>
   <div class="tabs"><button id="studentTab" class="active" onclick="setMode('student')">دانش آموز</button><button id="staffTab" onclick="setMode('staff')">مسئولین</button></div>
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
-  <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
+  <div id="staffForm" class="hidden"><div class="field"><label>رمز اختصاصی مسئول</label><input id="staffPass" type="password" autocomplete="current-password" placeholder="رمز عبور اختصاصی شما"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.84</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.85</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -312,6 +312,14 @@ hr{border:0;border-top:1px solid var(--hg-line)}
       <button class="btn" type="button" onclick="deleteSelectedGroup()">🗑️ حذف گروه</button>
       <div id="groupMemberStatus" class="status muted"></div>
     </div>
+    <div id="staffPasswordTools" class="groupTools">
+      <h4>🔐 رمز اختصاصی مسئولین</h4>
+      <p class="muted" style="font-size:12px;line-height:1.8">برای هر مسئول یک رمز متفاوت ثبت کنید. رمزها در کد عمومی سایت ذخیره نمی‌شوند.</p>
+      <div class="field"><label>انتخاب مسئول</label><select id="staffPasswordTarget"></select></div>
+      <div class="field"><label>رمز اختصاصی جدید (حداقل ۸ نویسه)</label><input id="staffPasswordValue" type="password" autocomplete="new-password" maxlength="256" placeholder="رمز جدید مسئول"></div>
+      <button class="btn primary" type="button" onclick="setStaffPassword()">💾 ثبت رمز اختصاصی</button>
+      <div id="staffPasswordStatus" class="status muted"></div>
+    </div>
     <div class="groupTools">
       <h4>🎓 کلاس آنلاین</h4>
       <p class="muted" style="font-size:12px;line-height:1.8">جلسه بسازید و لینک اختصاصی آن را برای دانش آموزان و مسئولین بفرستید.</p>
@@ -330,7 +338,7 @@ hr{border:0;border-top:1px solid var(--hg-line)}
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.77</div>
+  <div class="version">v0.5.85</div>
 </section>
 <div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس تصویری</div><div id="callState" class="callState">در حال برقراری تماس...</div><div id="videoStage" class="videoStage"><video id="remoteVideo" class="remoteVideo" autoplay playsinline></video><video id="localVideo" class="localVideo" autoplay playsinline muted></video></div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()">🎙️</button><button id="callCameraBtn" class="callAction callMute hidden" type="button" onclick="toggleCallCamera()">📹</button><button id="callShareBtn" class="callAction callMute hidden" type="button" onclick="toggleScreenShare()" aria-label="اشتراک صفحه">🖥️</button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
@@ -370,10 +378,10 @@ async function loginStudent(){
   try{const d=await api("login",{type:"student",national_id:id}); token=d.token;profile=d.profile;localStorage.setItem("helligram_token",token);openApp()}catch(e){busy(e.message)}
 }
 async function loginStaff(){
-  const code=$("staffCode").value.trim(),pass=$("staffPass").value;
-  if(!code||!pass)return busy("کد ورود و رمز عبور را وارد کنید.");
+  const pass=$("staffPass").value;
+  if(!pass)return busy("رمز اختصاصی خود را وارد کنید.");
   busy("در حال ورود...");
-  try{const d=await api("login",{type:"staff",login_code:code,password:pass});token=d.token;profile=d.profile;localStorage.setItem("helligram_token",token);openApp()}catch(e){busy(e.message)}
+  try{const d=await api("login",{type:"staff",password:pass});token=d.token;profile=d.profile;localStorage.setItem("helligram_token",token);openApp()}catch(e){busy(e.message)}
 }
 function setProfileAvatar(){
   const el=document.getElementById("profileAvatar");
@@ -1118,6 +1126,14 @@ function toggleAdmin(){adminPanel.style.display=adminPanel.style.display==="none
 function renderAdmin(){
   studentList.innerHTML=students.map(s=>'<div class="row"><span>'+escapeHtml(s.full_name)+'<br><small class="muted">'+escapeHtml(s.class_name||"")+'</small></span><button class="btn" onclick="setStudentWrite(\''+s.id+'\','+s.can_write+')">'+(s.can_write?"بستن ارسال":"باز کردن ارسال")+'</button></div>').join("")||'<div class="notice">دانش آموزی ثبت نشده است.</div>';
   groupList.innerHTML=groups.map(g=>'<div class="row"><div style="display:flex;align-items:center;gap:8px;min-width:0"><div class="groupAvatarPreview">'+(g.avatar_url?'<img src="'+escapeHtml(g.avatar_url)+'" alt="">':'👥')+'</div><span>'+escapeHtml(g.name)+'</span></div><div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><input id="groupAvatarInput_'+g.id+'" data-group-id="'+g.id+'" class="groupAvatarInput" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadGroupAvatar(this.dataset.groupId,this)"><button class="btn groupAvatarBtn" data-input-id="groupAvatarInput_'+g.id+'" onclick="document.getElementById(this.dataset.inputId).click()" type="button">📷 عکس</button><button class="btn" data-group-id="'+g.id+'" data-disabled="'+(g.write_disabled?1:0)+'" onclick="setGroupWrite(this.dataset.groupId,this.dataset.disabled==1)">'+(g.write_disabled?"باز کردن گروه":"بستن گروه")+'</button><button class="btn" data-group-id="'+g.id+'" data-disabled="'+(g.voice_disabled?1:0)+'" onclick="setGroupVoice(this.dataset.groupId,this.dataset.disabled==1)">'+(g.voice_disabled?"باز کردن ویس":"بستن ویس")+'</button></div></div>').join("")||'<div class="notice">گروهی ثبت نشده است.</div>';
+  const staffTools=document.getElementById("staffPasswordTools");
+  if(staffTools)staffTools.style.display=profile?.type==="staff"&&profile?.role==="admin"?"block":"none";
+  const staffTarget=document.getElementById("staffPasswordTarget");
+  if(staffTarget){
+    const previous=staffTarget.value;
+    staffTarget.innerHTML=staff.map(x=>'<option value="'+x.id+'">'+escapeHtml(x.full_name)+(x.role==="admin"?" (مدیر)":"")+'</option>').join("")||'<option value="">مسئولی ثبت نشده</option>';
+    if(staff.some(x=>x.id===previous))staffTarget.value=previous;
+  }
   const gs=document.getElementById("manageGroupSelect");
   const ss=document.getElementById("manageStudentSelect");
   if(gs){gs.innerHTML=groups.map(g=>'<option value="'+g.id+'">'+escapeHtml(g.name)+'</option>').join("")||'<option value="">گروهی نیست</option>';}
@@ -1125,6 +1141,19 @@ function renderAdmin(){
   if(groups.length&&students.length)loadGroupMembers();
   adminMessages.innerHTML=messages.slice(-30).reverse().map(m=>'<div class="row"><span>'+escapeHtml(m.content)+'</span><button class="btn" onclick="deleteMessage(\''+m.id+'\')">حذف</button></div>').join("")||'<div class="notice">پیامی نیست.</div>';
   loadMeetingsAdmin();
+}
+
+async function setStaffPassword(){
+  if(profile?.type!=="staff"||profile?.role!=="admin")return alert("فقط مدیر می‌تواند رمز مسئولین را ثبت کند.");
+  const staffId=$("staffPasswordTarget").value,password=$("staffPasswordValue").value;
+  if(!staffId)return $("staffPasswordStatus").textContent="ابتدا یک مسئول انتخاب کنید.";
+  if(password.length<8)return $("staffPasswordStatus").textContent="رمز باید حداقل ۸ نویسه داشته باشد.";
+  $("staffPasswordStatus").textContent="در حال ثبت رمز امن...";
+  try{
+    const d=await api("set_staff_password",{staff_id:staffId,password});
+    $("staffPasswordValue").value="";
+    $("staffPasswordStatus").textContent=d.message||"رمز اختصاصی ثبت شد.";
+  }catch(e){$("staffPasswordStatus").textContent=e.message}
 }
 
 function meetingLink(id){return new URL("classroom.html?room="+encodeURIComponent(id),location.href).href}
@@ -1175,7 +1204,7 @@ async function deleteAllMessages(){
 }
 async function pinMessage(messageId){try{await api("pin_message",{message_id:messageId});await refreshAll();if(selectedChat){renderConversation();renderPinnedHeader()}}catch(e){alert(e.message)}}
 async function unpinMessage(messageId){try{await api("unpin_message",{message_id:messageId});await refreshAll();if(selectedChat){renderConversation();renderPinnedHeader()}}catch(e){alert(e.message)}}
-async function logout(){token="";profile=null;localStorage.removeItem("helligram_token");$("app").style.display="none";$("login").style.display="block";$("nationalId").value="";$("staffCode").value="";$("staffPass").value="";setMode("student")}
+async function logout(){token="";profile=null;localStorage.removeItem("helligram_token");$("app").style.display="none";$("login").style.display="block";$("nationalId").value="";$("staffPass").value="";setMode("student")}
 async function restore(){
   if(!token)return;
   try{const d=await api("me");profile=d.profile;openApp()}catch{token="";localStorage.removeItem("helligram_token")}
