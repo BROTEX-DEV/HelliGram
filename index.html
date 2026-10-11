@@ -154,6 +154,22 @@ html,body,button,input,textarea,select{font-family:"Vazirmatn",Tahoma,Arial,sans
 @keyframes helliFormIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){#login .introTitle,#login .introSubtitle,#login .introLogo,#login .tabs,#login #studentForm,#login #staffForm,#login #error,#login .version,#login .deployedBy{animation:none;opacity:1;transform:none}}
 
+
+/* Login alignment fix v0.5.78 — preserve original element positions */
+#login{text-align:center}
+#login .brand{width:100%;display:flex;flex-direction:column;align-items:center;text-align:center}
+#login .introLogo{flex:0 0 auto;margin-left:auto;margin-right:auto}
+#login .introTitle,#login .introSubtitle{width:100%;text-align:center}
+#login .introSubtitle{max-width:340px;margin-left:auto;margin-right:auto}
+#login .tabs{width:100%;justify-items:stretch;text-align:center}
+#login .tabs button{text-align:center}
+#login #studentForm,#login #staffForm{width:100%;margin-left:auto;margin-right:auto;text-align:center}
+#login .field{width:100%;text-align:center}
+#login .field label{width:100%;text-align:center}
+#login input{text-align:center}
+#login .btn,#login .error,#login .version,#login .deployedBy{text-align:center}
+@media(max-width:480px){#login.login{width:calc(100% - 24px)}#login .introSubtitle{max-width:100%}}
+
 </style>
 </head>
 <body>
@@ -164,7 +180,7 @@ html,body,button,input,textarea,select{font-family:"Vazirmatn",Tahoma,Arial,sans
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.77</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.78</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
