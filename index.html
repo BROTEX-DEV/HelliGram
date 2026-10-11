@@ -180,7 +180,7 @@ html,body,button,input,textarea,select{font-family:"Vazirmatn",Tahoma,Arial,sans
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.79</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.80</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -669,7 +669,7 @@ function renderConversation(){
         ? '<div class="messageAvatar"><img src="'+escapeHtml(m.sender_avatar_url)+'" alt=""></div>'
         : '<div class="messageAvatar">'+avatarLetter+'</div>')
       : "";
-    const voiceHtml=m.voice_url?'<div class="voiceMessage"><span class="voiceGlyph">🎙️</span><audio controls preload="metadata" onloadedmetadata="fixVoiceDuration(this)" onerror="voicePlaybackError(this)" src="'+escapeHtml(m.voice_url)+'">پخش پیام صوتی</audio><span class="voicePlayStatus" aria-live="polite"></span></div>':callMessageHtml(m.content);
+    const voiceHtml=m.voice_url?'<div class="voiceMessage"><span class="voiceGlyph">🎙️</span><audio controls preload="metadata" onloadedmetadata="fixVoiceDuration(this)" onended="voicePlaybackEnded(this)" onerror="voicePlaybackError(this)" src="'+escapeHtml(m.voice_url)+'">پخش پیام صوتی</audio><span class="voicePlayStatus" aria-live="polite"></span></div>':callMessageHtml(m.content);
     return '<div class="messageLine '+(mine?"me":"")+'">'+avatarHtml+'<div id="msg-'+m.id+'" class="msg '+(mine?"me":"")+'"><strong class="sender-name">'+escapeHtml(senderName)+'</strong><div>'+voiceHtml+'</div><small>'+new Date(m.created_at).toLocaleString("fa-IR")+'</small><div class="messageActions">'+pinButton+deleteButton+'</div></div></div>';
   }).join("");
 }
@@ -818,17 +818,16 @@ function closeCallMedia(){if(callPeer){try{callPeer.close()}catch{}callPeer=null
 function resetCallUi(){screenSharing=false;screenShareStream=null;const sb=document.getElementById("callShareBtn");if(sb){sb.textContent="🖥️";sb.classList.add("hidden");}document.getElementById("callAcceptBtn")?.classList.add("hidden");document.getElementById("callMuteBtn")?.classList.add("hidden");document.getElementById("callCameraBtn")?.classList.add("hidden");document.getElementById("callTimer").textContent="";callMuted=false;callCameraOff=false;const b=document.getElementById("callMuteBtn"),c=document.getElementById("callCameraBtn");if(b)b.textContent="🎙️";if(c)c.textContent="📹";const rv=document.getElementById("remoteVideo"),lv=document.getElementById("localVideo");if(rv){rv.srcObject=null;rv.style.display="none"}if(lv){lv.srcObject=null;lv.style.display="none"}}
 function callLink(callId){return location.origin+location.pathname+"#call="+encodeURIComponent(callId);}
 function fixVoiceDuration(audio){
-  if(Number.isFinite(audio.duration)&&audio.duration>0)return;
-  // Chromium can report zero/infinite duration for MediaRecorder WebM files.
+  // Avoid artificial seeks to an enormous timestamp: on some mobile Chromium
+  // builds this can leave the audio decoder in a bad state for replay.
   const status=audio.parentElement?.querySelector(".voicePlayStatus");
-  let seeking=true;
-  const onTime=()=>{
-    if(!seeking)return;
-    seeking=false;audio.removeEventListener("timeupdate",onTime);
-    try{audio.currentTime=0}catch{}
-  };
-  audio.addEventListener("timeupdate",onTime);
-  try{audio.currentTime=1e101;setTimeout(()=>{if(seeking){seeking=false;audio.removeEventListener("timeupdate",onTime);if(status)status.textContent="";}},1800)}catch{seeking=false}
+  if(status)status.textContent="";
+}
+function voicePlaybackEnded(audio){
+  // Reset the media element so replay begins from the start with a fresh load.
+  try{audio.pause();audio.currentTime=0;audio.load()}catch{}
+  const status=audio.parentElement?.querySelector(".voicePlayStatus");
+  if(status)status.textContent="";
 }
 function voicePlaybackError(audio){
   const status=audio.parentElement?.querySelector(".voicePlayStatus");
