@@ -40,7 +40,7 @@
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.51</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.52</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -117,7 +117,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.50</div>
+  <div class="version">v0.5.52</div>
 </section>
 <div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس تصویری</div><div id="callState" class="callState">در حال برقراری تماس...</div><div id="videoStage" class="videoStage"><video id="remoteVideo" class="remoteVideo" autoplay playsinline></video><video id="localVideo" class="localVideo" autoplay playsinline muted></video></div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()">🎙️</button><button id="callCameraBtn" class="callAction callMute hidden" type="button" onclick="toggleCallCamera()">📹</button><button id="callShareBtn" class="callAction callMute hidden" type="button" onclick="toggleScreenShare()" aria-label="اشتراک صفحه">🖥️</button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
@@ -143,7 +143,7 @@ async function api(action,body={}){
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),10000);
   let r;
-  try{r=await fetch(API,{signal:controller.signal,method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY,...(token?{"x-ChatGram-token":token}:{})},body:JSON.stringify({action,...body})});}catch(e){throw new Error(e.name==="AbortError"?"پاسخ سرور بیش از ۱۰ ثانیه طول کشید. اتصال Supabase را بررسی کنید.":e.message)}finally{clearTimeout(timer)}
+  try{r=await fetch(API,{signal:controller.signal,method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY,...(token?{"x-helligram-token":token}:{})},body:JSON.stringify({action,...body})});}catch(e){throw new Error(e.name==="AbortError"?"پاسخ سرور بیش از ۱۰ ثانیه طول کشید. اتصال Supabase را بررسی کنید.":e.message)}finally{clearTimeout(timer)}
   let data={};try{data=await r.json()}catch{}
   if(!r.ok)throw new Error(data.error||"خطا در ارتباط با سرور");
   return data;
@@ -739,21 +739,52 @@ async function sendMessage(){
     alert("ارسال پیام برای شما بسته شده است.");
     return;
   }
+  if(!sendTarget.id)return alert("ابتدا مقصد پیام را انتخاب کنید.");
+  const target={...sendTarget};
+  const chatKeyNow=target.kind+":"+target.id;
+  const body={content};
+  if(target.kind==="staff")body.recipient_staff_id=target.id;
+  if(target.kind==="student")body.recipient_student_id=target.id;
+  if(target.kind==="group")body.group_id=target.id;
 
+  const tempId="pending-"+Date.now()+"-"+Math.random().toString(36).slice(2,7);
+  const optimistic={
+    id:tempId,
+    sender_student_id:profile.type==="student"?profile.id:null,
+    sender_staff_id:profile.type==="staff"?profile.id:null,
+    recipient_student_id:target.kind==="student"?target.id:null,
+    recipient_staff_id:target.kind==="staff"?target.id:null,
+    group_id:target.kind==="group"?target.id:null,
+    content,
+    created_at:new Date().toISOString(),
+    sender_name:profile.name||"شما",
+    sender_avatar_url:profile.avatarUrl||null,
+    reactions:[],
+    pinned:false
+  };
+  const previousValue=input.value;
   btn.disabled=true;
-  btn.textContent="...";
+  btn.textContent="ارسال...";
+  messages.push(optimistic);
+  selectedChat=chatKeyNow;
+  renderMessages();
+  const messageBox=document.getElementById("messages");
+  if(messageBox)messageBox.scrollTop=messageBox.scrollHeight;
   try{
-    const body={content};
-    if(!sendTarget.id) return alert("ابتدا مقصد پیام را انتخاب کنید.");
-    if(sendTarget.kind==="staff") body.recipient_staff_id=sendTarget.id;
-    if(sendTarget.kind==="student") body.recipient_student_id=sendTarget.id;
-    if(sendTarget.kind==="group") body.group_id=sendTarget.id;
-    await api("send",body);
+    const result=await api("send",body);
+    const saved=result.message;
+    if(!saved?.id)throw new Error("پاسخ سرور برای پیام معتبر نبود.");
+    messages=messages.filter(m=>m.id!==tempId);
+    messages.push({...saved,sender_name:profile.name||"شما",sender_avatar_url:profile.avatarUrl||null,reactions:[],pinned:false});
     input.value="";
-    if(sendTarget.id) selectedChat=sendTarget.kind+":"+sendTarget.id;
-    await refreshAll();
-    openChat(selectedChat);
+    renderMessages();
+    if(messageBox)messageBox.scrollTop=messageBox.scrollHeight;
+    // Refresh the other lists in the background; don't block the just-sent message on four extra requests.
+    refreshAll();
   }catch(e){
+    messages=messages.filter(m=>m.id!==tempId);
+    renderMessages();
+    input.value=previousValue;
     alert(e.message);
   }finally{
     btn.disabled=false;
