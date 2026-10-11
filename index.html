@@ -228,7 +228,7 @@ hr{border:0;border-top:1px solid var(--hg-line)}
 ::selection{background:rgba(91,221,255,.28);color:#fff}
 @media(max-width:760px){.appHeader{box-shadow:0 5px 22px rgba(0,0,0,.24)}.loginCard,.login{margin-left:12px!important;margin-right:12px!important}.panel,.card,.admin{border-radius:16px!important}}
 
-.hg-icon{width:21px;height:21px;display:block;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.callBtn .hg-icon,.voiceBtn .hg-icon,.callAction .hg-icon{width:23px;height:23px}.classTools .hg-icon{width:17px;height:17px;display:inline-block;vertical-align:middle;margin-left:6px}</style>
+.hg-icon{width:21px;height:21px;display:block;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.callBtn .hg-icon,.voiceBtn .hg-icon,.callAction .hg-icon{width:23px;height:23px}.classTools .hg-icon{width:17px;height:17px;display:inline-block;vertical-align:middle;margin-left:6px}.composer .send-icon{width:18px;height:18px;display:inline-block;vertical-align:middle;flex:0 0 auto}.composer #sendBtn{display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}.composer #sendBtn .sendLabel{display:inline-block}</style>
 </head>
 <body>
 <div class="wrap">
@@ -238,7 +238,7 @@ hr{border:0;border-top:1px solid var(--hg-line)}
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>رمز اختصاصی مسئول</label><input id="staffPass" type="password" autocomplete="current-password" placeholder="رمز عبور اختصاصی شما"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.86</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.87</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -282,7 +282,7 @@ hr{border:0;border-top:1px solid var(--hg-line)}
           
           <textarea id="messageInput" placeholder="پیام خود را بنویسید..." maxlength="5000"></textarea>
           <button id="voiceBtn" class="iconBtn voiceBtn" type="button" onclick="toggleVoiceRecording()" aria-label="ضبط پیام صوتی" title="ضبط پیام صوتی"><svg class="hg-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg></button><span id="voiceStatus" class="voiceStatus hidden" aria-live="polite"></span>
-          <button id="emojiBtn" class="iconBtn" type="button" onclick="toggleEmojiPicker()" aria-label="ایموجی">☺</button><div id="emojiPicker" class="emojiPicker hidden"></div><button id="sendBtn" class="btn primary" onclick="sendMessage()">ارسال</button>
+          <button id="emojiBtn" class="iconBtn" type="button" onclick="toggleEmojiPicker()" aria-label="ایموجی">☺</button><div id="emojiPicker" class="emojiPicker hidden"></div><button id="sendBtn" class="btn primary" onclick="sendMessage()" aria-label="ارسال پیام" title="ارسال پیام"><svg class="send-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg><span class="sendLabel">ارسال</span></button>
         </div>
       </div>
     </main>
@@ -1103,7 +1103,7 @@ async function sendMessage(){
   const messageBox=document.getElementById("messages");
   if(messageBox)messageBox.scrollTop=messageBox.scrollHeight;
   btn.disabled=true;
-  btn.textContent="ارسال…";
+  btn.querySelector(".sendLabel").textContent="در حال ارسال…";
   try{
     const result=await api("send",body);
     const saved=result?.message;
@@ -1120,7 +1120,7 @@ async function sendMessage(){
     alert(e.message);
   }finally{
     btn.disabled=false;
-    btn.textContent="ارسال";
+    btn.querySelector(".sendLabel").textContent="ارسال";
   }
 }
 function toggleAdmin(){adminPanel.style.display=adminPanel.style.display==="none"?"block":"none";if(adminPanel.style.display==="block")renderAdmin()}
