@@ -180,7 +180,7 @@ html,body,button,input,textarea,select{font-family:"Vazirmatn",Tahoma,Arial,sans
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.78</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.79</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -926,32 +926,35 @@ async function toggleVoiceRecording(){
   try{
     const stream=await navigator.mediaDevices.getUserMedia({audio:true});
     const mimeType=voiceMimeType();
-    voiceChunks=[];
-    voiceRecorder=new MediaRecorder(stream,mimeType?{mimeType}:undefined);
+    // Keep chunks local to this recording and let MediaRecorder finalize one complete file on stop.
+    // Timesliced WebM chunks can be mis-handled by some mobile browsers when reassembled.
+    const chunks=[];
+    const recorder=new MediaRecorder(stream,mimeType?{mimeType}:undefined);
+    voiceChunks=chunks;
+    voiceRecorder=recorder;
     voiceStartedAt=Date.now();
     const btn=document.getElementById("voiceBtn");
     btn.classList.add("recording");btn.textContent="■";btn.setAttribute("aria-label","پایان ضبط و ارسال");
     voiceNotice("در حال ضبط 00:00");
     voiceClock=setInterval(()=>{
-      if(!voiceRecorder||voiceRecorder.state!=="recording")return;
+      if(recorder.state!=="recording")return;
       const sec=Math.floor((Date.now()-voiceStartedAt)/1000);
       voiceNotice("در حال ضبط "+String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0"));
-      if(sec>=60)voiceRecorder.stop();
+      if(sec>=60)recorder.stop();
     },250);
-    voiceRecorder.ondataavailable=e=>{if(e.data&&e.data.size)voiceChunks.push(e.data)};
-    voiceRecorder.onerror=()=>{stream.getTracks().forEach(t=>t.stop());resetVoiceRecorder();alert("ضبط صدا با خطا مواجه شد.")};
-    voiceRecorder.onstop=async()=>{
+    recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+    recorder.onerror=()=>{stream.getTracks().forEach(t=>t.stop());resetVoiceRecorder();alert("ضبط صدا با خطا مواجه شد.")};
+    recorder.onstop=async()=>{
       clearInterval(voiceClock);voiceClock=null;
       stream.getTracks().forEach(t=>t.stop());
-      const recorder=voiceRecorder;
-      const blob=new Blob(voiceChunks,{type:recorder?.mimeType||mimeType||"audio/webm"});
+      const blob=new Blob(chunks,{type:recorder.mimeType||mimeType||"audio/webm"});
       resetVoiceRecorder();
       if(!blob.size){voiceNotice("",false);return}
       if(blob.size>1_500_000){voiceNotice("",false);alert("حجم پیام صوتی زیاد است. یک پیام کوتاه‌تر ضبط کنید.");return}
       try{
         voiceNotice("در حال ارسال پیام صوتی…");
         const dataUrl=await new Promise((resolve,reject)=>{
-          const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).replace(";codecs=opus;base64,",";base64,"));reader.onerror=()=>reject(new Error("خواندن فایل صوتی انجام نشد."));reader.readAsDataURL(blob);
+          const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).replace(/;codecs=[^;]+;base64,/i,";base64,"));reader.onerror=()=>reject(new Error("خواندن فایل صوتی انجام نشد."));reader.readAsDataURL(blob);
         });
         const uploaded=await api("upload_voice",{data_url:dataUrl});
         const body={content:"[[voice:"+uploaded.path+"]]"};
@@ -964,7 +967,7 @@ async function toggleVoiceRecording(){
         voiceNotice("پیام صوتی ارسال شد.");setTimeout(()=>voiceNotice("",false),1800);
       }catch(e){voiceNotice("",false);alert(e.message||"ارسال پیام صوتی انجام نشد.")}
     };
-    voiceRecorder.start(250);
+    voiceRecorder.start();
   }catch(e){resetVoiceRecorder();alert(e.name==="NotAllowedError"?"اجازه استفاده از میکروفون داده نشد.":(e.message||"میکروفون در دسترس نیست."))}
 }
 function resetVoiceRecorder(){
