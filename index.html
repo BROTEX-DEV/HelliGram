@@ -228,7 +228,7 @@ hr{border:0;border-top:1px solid var(--hg-line)}
 ::selection{background:rgba(91,221,255,.28);color:#fff}
 @media(max-width:760px){.appHeader{box-shadow:0 5px 22px rgba(0,0,0,.24)}.loginCard,.login{margin-left:12px!important;margin-right:12px!important}.panel,.card,.admin{border-radius:16px!important}}
 
-.hg-icon{width:21px;height:21px;display:block;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.callBtn .hg-icon,.voiceBtn .hg-icon,.callAction .hg-icon{width:23px;height:23px}.classTools .hg-icon{width:17px;height:17px;display:inline-block;vertical-align:middle;margin-left:6px}.composer .send-icon{width:18px;height:18px;display:inline-block;vertical-align:middle;flex:0 0 auto}.composer #sendBtn{display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}.composer #sendBtn .sendLabel{display:inline-block}</style>
+.hg-icon{width:21px;height:21px;display:block;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.callBtn .hg-icon,.voiceBtn .hg-icon,.callAction .hg-icon{width:23px;height:23px}.classTools .hg-icon{width:17px;height:17px;display:inline-block;vertical-align:middle;margin-left:6px}.composer .send-icon{width:18px;height:18px;display:inline-block;vertical-align:middle;flex:0 0 auto}.composer #sendBtn{display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}.composer #sendBtn .sendLabel{display:inline-block}.mediaBtn{flex:0 0 44px}.mediaStatus{font-size:10px;color:#8fc3ff;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;align-self:center}.chatMediaImage{display:block;max-width:min(100%,280px);max-height:340px;object-fit:contain;border-radius:12px}.chatMediaVideo{display:block;width:min(100%,320px);max-height:360px;border-radius:12px;background:#000}.mediaMessageName{display:block;font-size:11px;color:#b8cbe1;margin-top:5px;overflow-wrap:anywhere}.composer .mediaBtn:disabled{opacity:.5;cursor:wait}@media(max-width:420px){.composer{gap:4px;padding-left:6px;padding-right:6px}.composer .mediaBtn,.composer .voiceBtn,.composer #emojiBtn{width:38px;flex-basis:38px}.composer #sendBtn{padding:10px;gap:4px}.composer #sendBtn .sendLabel{display:none}.mediaStatus{max-width:62px}}</style>
 </head>
 <body>
 <div class="wrap">
@@ -238,7 +238,7 @@ hr{border:0;border-top:1px solid var(--hg-line)}
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>رمز اختصاصی مسئول</label><input id="staffPass" type="password" autocomplete="current-password" placeholder="رمز عبور اختصاصی شما"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.87</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.88</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -279,7 +279,7 @@ hr{border:0;border-top:1px solid var(--hg-line)}
         </div>
         <div id="messages" class="messages"></div>
         <div class="composer">
-          
+          <input id="mediaFileInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" multiple hidden onchange="handleMediaSelection(this.files)"><button id="mediaBtn" class="iconBtn mediaBtn" type="button" onclick="chooseMediaFiles()" aria-label="ارسال عکس یا ویدیو" title="ارسال عکس یا ویدیو"><svg class="hg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.4 11.05 12.25 20.2a6 6 0 0 1-8.49-8.49l9.2-9.2a4 4 0 0 1 5.66 5.66l-9.2 9.2a2 2 0 0 1-2.83-2.83l8.49-8.49"/></svg></button><span id="mediaStatus" class="mediaStatus hidden" aria-live="polite"></span>
           <textarea id="messageInput" placeholder="پیام خود را بنویسید..." maxlength="5000"></textarea>
           <button id="voiceBtn" class="iconBtn voiceBtn" type="button" onclick="toggleVoiceRecording()" aria-label="ضبط پیام صوتی" title="ضبط پیام صوتی"><svg class="hg-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg></button><span id="voiceStatus" class="voiceStatus hidden" aria-live="polite"></span>
           <button id="emojiBtn" class="iconBtn" type="button" onclick="toggleEmojiPicker()" aria-label="ایموجی">☺</button><div id="emojiPicker" class="emojiPicker hidden"></div><button id="sendBtn" class="btn primary" onclick="sendMessage()" aria-label="ارسال پیام" title="ارسال پیام"><svg class="send-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg><span class="sendLabel">ارسال</span></button>
@@ -619,7 +619,7 @@ function renderChatList(){
   }
   el.innerHTML=rows.map(([key,last])=>{
     const meta=chatMeta(key);
-    const preview=(last.sender_name?last.sender_name+" : ":"")+last.content;
+    const preview=(last.sender_name?last.sender_name+" : ":"")+messagePreviewText(last);
     const avatar=meta.kind==="student"||meta.kind==="staff"||meta.kind==="group"
       ? (meta.avatarUrl
         ? '<div class="chatAvatar"><img src="'+escapeHtml(meta.avatarUrl)+'" alt=""></div>'
@@ -736,7 +736,7 @@ function renderConversation(){
         ? '<div class="messageAvatar"><img src="'+escapeHtml(m.sender_avatar_url)+'" alt=""></div>'
         : '<div class="messageAvatar">'+avatarLetter+'</div>')
       : "";
-    const voiceHtml=m.voice_url?'<div class="voiceMessage"><audio class="voiceAudio" preload="metadata" onloadedmetadata="updateVoicePlayer(this)" ontimeupdate="updateVoicePlayer(this)" onended="voicePlaybackEnded(this)" onerror="voicePlaybackError(this)" src="'+escapeHtml(m.voice_url)+'">پخش پیام صوتی</audio><button class="voicePlayButton" type="button" aria-label="پخش ویس" onclick="toggleVoicePlayback(this)">▶</button><div class="voiceTrack"><div class="voiceWave" role="slider" aria-label="موقعیت پخش ویس" tabindex="0" onclick="seekVoice(event,this)" onkeydown="seekVoiceKey(event,this)">'+Array.from({length:30},(_,i)=>'<i style="height:'+(9+((i*17+i*i*3)%23))+'px"></i>').join("")+'</div><div class="voiceMeta"><span class="voiceDuration">00:00</span><span class="voiceCaption">پیام صوتی</span></div></div><span class="voicePlayStatus" aria-live="polite"></span></div>':callMessageHtml(m.content);
+    const voiceHtml=(m.media_url||String(m.content||"").startsWith("[[media:"))?renderMediaHtml(m):(m.voice_url?'<div class="voiceMessage"><audio class="voiceAudio" preload="metadata" onloadedmetadata="updateVoicePlayer(this)" ontimeupdate="updateVoicePlayer(this)" onended="voicePlaybackEnded(this)" onerror="voicePlaybackError(this)" src="'+escapeHtml(m.voice_url)+'">پخش پیام صوتی</audio><button class="voicePlayButton" type="button" aria-label="پخش ویس" onclick="toggleVoicePlayback(this)">▶</button><div class="voiceTrack"><div class="voiceWave" role="slider" aria-label="موقعیت پخش ویس" tabindex="0" onclick="seekVoice(event,this)" onkeydown="seekVoiceKey(event,this)">'+Array.from({length:30},(_,i)=>'<i style="height:'+(9+((i*17+i*i*3)%23))+'px"></i>').join("")+'</div><div class="voiceMeta"><span class="voiceDuration">00:00</span><span class="voiceCaption">پیام صوتی</span></div></div><span class="voicePlayStatus" aria-live="polite"></span></div>':callMessageHtml(m.content));
     return '<div class="messageLine '+(mine?"me":"")+'">'+avatarHtml+'<div id="msg-'+m.id+'" class="msg '+(mine?"me":"")+'"><strong class="sender-name">'+escapeHtml(senderName)+'</strong><div>'+voiceHtml+'</div><small>'+new Date(m.created_at).toLocaleString("fa-IR")+'</small><div class="messageActions">'+pinButton+deleteButton+'</div></div></div>';
   }).join("");
 }
@@ -1066,6 +1066,50 @@ function resetVoiceRecorder(){
   voiceRecorder=null;voiceChunks=[];
 }
 
+function chooseMediaFiles(){if(!profile)return alert("ابتدا وارد HelliGram شوید.");if(profile.type==="student"&&!profile.canWrite)return alert("ارسال پیام برای شما بسته شده است.");if(!sendTarget.id)return alert("ابتدا مقصد پیام را انتخاب کنید.");document.getElementById("mediaFileInput")?.click();}
+function handleMediaSelection(files){if(!files||!files.length)return;uploadAndSendMedia(Array.from(files));}
+async function uploadAndSendMedia(files){
+  const input=document.getElementById("mediaFileInput"),btn=document.getElementById("mediaBtn"),status=document.getElementById("mediaStatus");
+  const target={...sendTarget};
+  if(!target.id){alert("ابتدا مقصد پیام را انتخاب کنید.");if(input)input.value="";return;}
+  const allowed=["image/jpeg","image/png","image/webp","image/gif","video/mp4","video/webm","video/quicktime"];
+  const max=10*1024*1024;
+  if(status){status.classList.remove("hidden");status.textContent="آماده سازی...";}
+  if(btn)btn.disabled=true;
+  try{
+    const {createClient}=await import("https://esm.sh/@supabase/supabase-js@2.117.2");
+    const storageClient=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+    for(let i=0;i<files.length;i++){
+      const file=files[i];
+      if(file.size<1||file.size>max)throw new Error("حجم هر عکس یا ویدیو باید حداکثر ۱۰ مگابایت باشد: "+file.name);
+      if(!allowed.includes(file.type))throw new Error("نوع فایل پشتیبانی نمی‌شود: "+file.name);
+      if(status)status.textContent="در حال آماده سازی "+(i+1)+"/"+files.length;
+      const signed=await api("upload_media",{content_type:file.type,file_size:file.size});
+      if(!signed?.path||!signed?.token)throw new Error("آماده سازی آپلود ناموفق بود.");
+      if(status)status.textContent="در حال بارگذاری "+(i+1)+"/"+files.length;
+      const {error:uploadError}=await storageClient.storage.from("helligram-media").uploadToSignedUrl(signed.path,signed.token,file,{contentType:file.type,upsert:false});
+      if(uploadError)throw new Error("بارگذاری فایل انجام نشد: "+(uploadError.message||file.name));
+      const body={content:"[[media:"+signed.path+"|"+file.type+"|"+encodeURIComponent(file.name)+"]]"};
+      if(target.kind==="staff")body.recipient_staff_id=target.id;
+      if(target.kind==="student")body.recipient_student_id=target.id;
+      if(target.kind==="group")body.group_id=target.id;
+      await api("send",body);
+      if(status)status.textContent="ارسال شد "+(i+1)+"/"+files.length;
+    }
+    selectedChat=target.kind+":"+target.id;
+    await refreshAll();
+    if(status)status.textContent="ارسال کامل شد";
+  }catch(e){alert(e.message||"ارسال عکس یا ویدیو ناموفق بود.");if(status)status.textContent="ارسال ناموفق";}
+  finally{if(btn)btn.disabled=false;if(input)input.value="";setTimeout(()=>status?.classList.add("hidden"),2600);}
+}
+function renderMediaHtml(m){
+  if(!m.media_url)return '<span>رسانه در دسترس نیست</span>';
+  const url=escapeHtml(m.media_url),name=escapeHtml(m.media_name||"رسانه");
+  if(String(m.media_type||"").startsWith("image/"))return '<a href="'+url+'" target="_blank" rel="noopener noreferrer"><img class="chatMediaImage" src="'+url+'" alt="'+name+'" loading="lazy"></a><span class="mediaMessageName">'+name+'</span>';
+  if(String(m.media_type||"").startsWith("video/"))return '<video class="chatMediaVideo" controls playsinline preload="metadata" src="'+url+'">پخش ویدیو پشتیبانی نمی‌شود.</video><span class="mediaMessageName">'+name+'</span>';
+  return '<span>رسانه در دسترس نیست</span>';
+}
+function messagePreviewText(m){const c=String(m?.content||"");if(c.startsWith("[[media:"))return c.includes("|video/")?"ویدیو":"عکس";if(c.startsWith("[[voice:"))return "پیام صوتی";return c;}
 async function sendMessage(){
   const input=document.getElementById("messageInput");
   const btn=document.getElementById("sendBtn");
