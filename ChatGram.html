@@ -525,7 +525,7 @@ function renderPinnedHeader(){
   const pinned=meta?.kind==="group"?messages.filter(m=>chatKey(m)===selectedChat&&m.pinned).slice(-1)[0]:null;
   if(!pinned){el.classList.add("hidden");el.innerHTML="";return;}
   el.classList.remove("hidden");
-  el.innerHTML='<strong>📌 سنجاق شده</strong><span class="pinText">'+escapeHtml((pinned.sender_name?pinned.sender_name+" : ":"")+pinned.content)+'</span>';
+  el.innerHTML='<strong>📌 سنجاق شده</strong><span class="pinText">'+escapeHtml((pinned.sender_name?pinned.sender_name+" : ":"")+messagePreviewText(pinned))+'</span>';
   el.onclick=()=>{const msg=document.getElementById("msg-"+pinned.id);if(msg)msg.scrollIntoView({behavior:"smooth",block:"center"})};
 }
 function renderConversation(){
@@ -677,7 +677,7 @@ function processIncomingNotifications(){
       const key=chatKey(m);
       const meta=chatMeta(key);
       try{
-        new Notification("پیام جدید در حــلــی‌گــــرام",{body:(m.sender_name?m.sender_name+" : ":"")+String(m.content||"").slice(0,120),tag:"ChatGram-"+key});
+        new Notification("پیام جدید در حــلــی‌گــــرام",{body:(m.sender_name?m.sender_name+" : ":"")+messagePreviewText(m).slice(0,120),tag:"ChatGram-"+key});
       }catch{}
     }
   });
