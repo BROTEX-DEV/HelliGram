@@ -68,7 +68,7 @@ hr{border:0;border-top:1px solid var(--hg-line)}
 ::selection{background:rgba(91,221,255,.28);color:#fff}
 @media(max-width:760px){.appHeader{box-shadow:0 5px 22px rgba(0,0,0,.24)}.loginCard,.login{margin-left:12px!important;margin-right:12px!important}.panel,.card,.admin{border-radius:16px!important}}
 
-.hg-icon{width:21px;height:21px;display:block;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.callBtn .hg-icon,.voiceBtn .hg-icon,.callAction .hg-icon{width:23px;height:23px}.classTools .hg-icon{width:17px;height:17px;display:inline-block;vertical-align:middle;margin-left:6px}.composer .send-icon{width:18px;height:18px;display:inline-block;vertical-align:middle;flex:0 0 auto}.composer #sendBtn{display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}.composer #sendBtn .sendLabel{display:inline-block}.mediaBtn{flex:0 0 44px}.mediaStatus{font-size:10px;color:#8fc3ff;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;align-self:center}.chatMediaImage{display:block;max-width:min(100%,280px);max-height:340px;object-fit:contain;border-radius:12px}.chatMediaVideo{display:block;width:min(100%,320px);max-height:360px;border-radius:12px;background:#000}.mediaMessageName{display:block;font-size:11px;color:#b8cbe1;margin-top:5px;overflow-wrap:anywhere}.composer .mediaBtn:disabled{opacity:.5;cursor:wait}@media(max-width:420px){.composer{gap:4px;padding-left:6px;padding-right:6px}.composer .mediaBtn,.composer .voiceBtn,.composer #emojiBtn{width:38px;flex-basis:38px}.composer #sendBtn{padding:10px;gap:4px}.composer #sendBtn .sendLabel{display:none}.mediaStatus{max-width:62px}}</style>
+.hg-icon{width:21px;height:21px;display:block;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.callBtn .hg-icon,.voiceBtn .hg-icon,.callAction .hg-icon{width:23px;height:23px}.classTools .hg-icon{width:17px;height:17px;display:inline-block;vertical-align:middle;margin-left:6px}.attachmentWrap{position:relative;display:flex;align-items:center;flex:0 0 auto}.attachmentMenu{position:absolute;z-index:80;bottom:calc(100% + 10px);inset-inline-start:0;min-width:210px;padding:7px;border:1px solid var(--border,rgba(255,255,255,.14));border-radius:14px;background:var(--card,#17202c);box-shadow:0 12px 35px rgba(0,0,0,.32);display:flex;flex-direction:column;gap:4px}.attachmentMenu.hidden{display:none}.attachmentMenu button{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border:0;border-radius:9px;background:transparent;color:inherit;text-align:start;cursor:pointer;font:inherit}.attachmentMenu button:hover,.attachmentMenu button:focus-visible{background:rgba(127,150,180,.16);outline:none}.attachmentMenu svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}.fileMessageCard{display:flex;align-items:center;gap:10px;max-width:100%;padding:12px;border:1px solid var(--border,rgba(255,255,255,.14));border-radius:12px;text-decoration:none;color:inherit;background:rgba(127,150,180,.08)}.fileMessageCard svg{width:28px;height:28px;flex:0 0 auto;stroke:currentColor;fill:none;stroke-width:1.7}.fileMessageDetails{display:flex;flex-direction:column;min-width:0;gap:3px}.fileMessageDetails strong{overflow-wrap:anywhere;font-size:.92rem}.fileMessageDetails small{opacity:.72;font-size:.78rem}.composer .send-icon{width:18px;height:18px;display:inline-block;vertical-align:middle;flex:0 0 auto}.composer #sendBtn{display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}.composer #sendBtn .sendLabel{display:inline-block}.mediaBtn{flex:0 0 44px}.mediaStatus{font-size:10px;color:#8fc3ff;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;align-self:center}.chatMediaImage{display:block;max-width:min(100%,280px);max-height:340px;object-fit:contain;border-radius:12px}.chatMediaVideo{display:block;width:min(100%,320px);max-height:360px;border-radius:12px;background:#000}.mediaMessageName{display:block;font-size:11px;color:#b8cbe1;margin-top:5px;overflow-wrap:anywhere}.composer .mediaBtn:disabled{opacity:.5;cursor:wait}@media(max-width:420px){.composer{gap:4px;padding-left:6px;padding-right:6px}.composer .mediaBtn,.composer .voiceBtn,.composer #emojiBtn{width:38px;flex-basis:38px}.composer #sendBtn{padding:10px;gap:4px}.composer #sendBtn .sendLabel{display:none}.mediaStatus{max-width:62px}}</style>
 </head>
 <body>
 <div class="wrap">
@@ -78,7 +78,7 @@ hr{border:0;border-top:1px solid var(--hg-line)}
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.89</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.90</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -116,7 +116,7 @@ hr{border:0;border-top:1px solid var(--hg-line)}
         <div id="newChatTarget" class="field hidden" style="padding:10px 14px 0;margin:0"><label>انتخاب مقصد پیام</label><select id="targetSelect" onchange="setTarget(this.value)"></select></div>
         <div id="messages" class="messages"></div>
         <div class="composer">
-          <input id="mediaFileInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" multiple hidden onchange="handleMediaSelection(this.files)"><button id="mediaBtn" class="iconBtn mediaBtn" type="button" onclick="chooseMediaFiles()" aria-label="ارسال عکس یا ویدیو" title="ارسال عکس یا ویدیو"><svg class="hg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.4 11.05 12.25 20.2a6 6 0 0 1-8.49-8.49l9.2-9.2a4 4 0 0 1 5.66 5.66l-9.2 9.2a2 2 0 0 1-2.83-2.83l8.49-8.49"/></svg></button><span id="mediaStatus" class="mediaStatus hidden" aria-live="polite"></span>
+          <input id="mediaFileInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" multiple hidden onchange="handleMediaSelection(this.files)"><input id="documentFileInput" type="file" accept=".pdf,.txt,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip" multiple hidden onchange="handleDocumentSelection(this.files)"><div class="attachmentWrap"><button id="mediaBtn" class="iconBtn mediaBtn" type="button" onclick="toggleAttachmentMenu()" aria-label="پیوست" title="ارسال عکس، ویدیو یا فایل"><svg class="hg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.4 11.05 12.25 20.2a6 6 0 0 1-8.49-8.49l9.2-9.2a4 4 0 0 1 5.66 5.66l-9.2 9.2a2 2 0 0 1-2.83-2.83l8.49-8.49"/></svg></button><div id="attachmentMenu" class="attachmentMenu hidden" role="menu"><button type="button" role="menuitem" onclick="chooseMediaFiles()"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="8.5" cy="9" r="1.5"></circle><path d="m21 15-5-5L5 20"></path></svg><span>ارسال عکس و ویدیو</span></button><button type="button" role="menuitem" onclick="chooseDocumentFiles()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6M8 13h8M8 17h8"></path></svg><span>ارسال فایل</span></button></div></div><span id="mediaStatus" class="mediaStatus hidden" aria-live="polite"></span>
           <textarea id="messageInput" placeholder="پیام خود را بنویسید..." maxlength="5000"></textarea>
           <button id="emojiBtn" class="iconBtn" type="button" onclick="toggleEmojiPicker()" aria-label="ایموجی">☺</button><div id="emojiPicker" class="emojiPicker hidden"></div><button id="sendBtn" class="btn primary" onclick="sendMessage()" aria-label="ارسال پیام" title="ارسال پیام"><svg class="send-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg><span class="sendLabel">ارسال</span></button>
         </div>
@@ -155,7 +155,7 @@ hr{border:0;border-top:1px solid var(--hg-line)}
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.89</div>
+  <div class="version">v0.5.90</div>
 </section>
 <div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس تصویری</div><div id="callState" class="callState">در حال برقراری تماس...</div><div id="videoStage" class="videoStage"><video id="remoteVideo" class="remoteVideo" autoplay playsinline></video><video id="localVideo" class="localVideo" autoplay playsinline muted></video></div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()" aria-label="میکروفون" title="میکروفون"><svg class="hg-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg></button><button id="callCameraBtn" class="callAction callMute hidden" type="button" onclick="toggleCallCamera()" aria-label="دوربین" title="دوربین"><svg class="hg-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3z"/></svg></button><button id="callShareBtn" class="callAction callMute hidden" type="button" onclick="toggleScreenShare()" aria-label="اشتراک صفحه" title="اشتراک صفحه"><svg class="hg-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
@@ -792,13 +792,19 @@ async function stopScreenShare(){
 function updateCallTimer(){if(!activeCall||!callPeer||callPeer.connectionState!=="connected")return;if(!callStartedAt)callStartedAt=Date.now();const n=Math.floor((Date.now()-callStartedAt)/1000),m=String(Math.floor(n/60)).padStart(2,"0"),ss=String(n%60).padStart(2,"0");const e=document.getElementById("callTimer");if(e)e.textContent=m+":"+ss;}
 function handleCallLink(){const match=location.hash.match(/^#call=([A-Za-z0-9-]+)$/);if(match&&profile)joinCallFromLink(decodeURIComponent(match[1]));}
 window.addEventListener("hashchange",handleCallLink);
-function chooseMediaFiles(){if(!profile)return alert("ابتدا وارد HelliGram شوید.");if(profile.type==="student"&&!profile.canWrite)return alert("ارسال پیام برای شما بسته شده است.");if(!sendTarget.id)return alert("ابتدا مقصد پیام را انتخاب کنید.");document.getElementById("mediaFileInput")?.click();}
-function handleMediaSelection(files){if(!files||!files.length)return;uploadAndSendMedia(Array.from(files));}
-async function uploadAndSendMedia(files){
+function toggleAttachmentMenu(force){const menu=document.getElementById("attachmentMenu");if(!menu)return;menu.classList.toggle("hidden",force===undefined?!menu.classList.contains("hidden"):!force);}
+function chooseMediaFiles(){toggleAttachmentMenu(false);if(!profile)return alert("ابتدا وارد HelliGram شوید.");if(profile.type==="student"&&!profile.canWrite)return alert("ارسال پیام برای شما بسته شده است.");if(!sendTarget.id)return alert("ابتدا مقصد پیام را انتخاب کنید.");document.getElementById("mediaFileInput")?.click();}
+function chooseDocumentFiles(){toggleAttachmentMenu(false);if(!profile)return alert("ابتدا وارد HelliGram شوید.");if(profile.type==="student"&&!profile.canWrite)return alert("ارسال پیام برای شما بسته شده است.");if(!sendTarget.id)return alert("ابتدا مقصد پیام را انتخاب کنید.");document.getElementById("documentFileInput")?.click();}
+function handleMediaSelection(files){if(!files||!files.length)return;uploadAndSendMedia(Array.from(files),"media");}
+function handleDocumentSelection(files){if(!files||!files.length)return;uploadAndSendMedia(Array.from(files),"file");}
+async function uploadAndSendMedia(files,uploadMode="media"){
   const input=document.getElementById("mediaFileInput"),btn=document.getElementById("mediaBtn"),status=document.getElementById("mediaStatus");
   const target={...sendTarget};
   if(!target.id){alert("ابتدا مقصد پیام را انتخاب کنید.");if(input)input.value="";return;}
-  const allowed=["image/jpeg","image/png","image/webp","image/gif","video/mp4","video/webm","video/quicktime"];
+  const mediaAllowed=["image/jpeg","image/png","image/webp","image/gif","video/mp4","video/webm","video/quicktime"];
+  const documentMimeByExt={"pdf":"application/pdf","txt":"text/plain","doc":"application/msword","docx":"application/vnd.openxmlformats-officedocument.wordprocessingml.document","xls":"application/vnd.ms-excel","xlsx":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","ppt":"application/vnd.ms-powerpoint","pptx":"application/vnd.openxmlformats-officedocument.presentationml.presentation","zip":"application/zip"};
+  const documentAllowed=Object.values(documentMimeByExt);
+  const allowed=uploadMode==="file"?documentAllowed:mediaAllowed;
   const max=10*1024*1024;
   if(status){status.classList.remove("hidden");status.textContent="آماده سازی...";}
   if(btn)btn.disabled=true;
@@ -806,9 +812,12 @@ async function uploadAndSendMedia(files){
     const {createClient}=await import("https://esm.sh/@supabase/supabase-js@2.117.2");
     const storageClient=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
     for(let i=0;i<files.length;i++){
-      const file=files[i];
-      if(file.size<1||file.size>max)throw new Error("حجم هر عکس یا ویدیو باید حداکثر ۱۰ مگابایت باشد: "+file.name);
-      if(!allowed.includes(file.type))throw new Error("نوع فایل پشتیبانی نمی‌شود: "+file.name);
+      let file=files[i];
+      if(file.size<1||file.size>max)throw new Error("حجم هر فایل باید حداکثر ۱۰ مگابایت باشد: "+file.name);
+      let contentType=file.type;
+      if(uploadMode==="file"){const ext=(file.name.split(".").pop()||"").toLowerCase();contentType=documentMimeByExt[ext]||contentType;if(!documentAllowed.includes(contentType))throw new Error("این نوع فایل پشتیبانی نمی‌شود: "+file.name);}
+      if(!allowed.includes(contentType))throw new Error("نوع فایل پشتیبانی نمی‌شود: "+file.name);
+      if(file.type!==contentType)file=new File([file],file.name,{type:contentType,lastModified:file.lastModified});
       if(status)status.textContent="در حال آماده سازی "+(i+1)+"/"+files.length;
       const signed=await api("upload_media",{content_type:file.type,file_size:file.size});
       if(!signed?.path||!signed?.token)throw new Error("آماده سازی آپلود ناموفق بود.");
@@ -825,7 +834,7 @@ async function uploadAndSendMedia(files){
     selectedChat=target.kind+":"+target.id;
     await refreshAll();
     if(status)status.textContent="ارسال کامل شد";
-  }catch(e){alert(e.message||"ارسال عکس یا ویدیو ناموفق بود.");if(status)status.textContent="ارسال ناموفق";}
+  }catch(e){alert(e.message|| (uploadMode==="file"?"ارسال فایل ناموفق بود.":"ارسال عکس یا ویدیو ناموفق بود."));if(status)status.textContent="ارسال ناموفق";}
   finally{if(btn)btn.disabled=false;if(input)input.value="";setTimeout(()=>status?.classList.add("hidden"),2600);}
 }
 function renderMediaHtml(m){
@@ -833,7 +842,7 @@ function renderMediaHtml(m){
   const url=escapeHtml(m.media_url),name=escapeHtml(m.media_name||"رسانه");
   if(String(m.media_type||"").startsWith("image/"))return '<a href="'+url+'" target="_blank" rel="noopener noreferrer"><img class="chatMediaImage" src="'+url+'" alt="'+name+'" loading="lazy"></a><span class="mediaMessageName">'+name+'</span>';
   if(String(m.media_type||"").startsWith("video/"))return '<video class="chatMediaVideo" controls playsinline preload="metadata" src="'+url+'">پخش ویدیو پشتیبانی نمی‌شود.</video><span class="mediaMessageName">'+name+'</span>';
-  return '<span>رسانه در دسترس نیست</span>';
+  return '<a class="fileMessageCard" href="'+url+'" target="_blank" rel="noopener noreferrer" download="'+name+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6M8 13h8M8 17h8"></path></svg><span class="fileMessageDetails"><strong>'+name+'</strong><small>فایل پیوست · برای دریافت لمس کنید</small></span></a>';
 }
 function messagePreviewText(m){const c=String(m?.content||"");if(c.startsWith("[[media:"))return c.includes("|video/")?"ویدیو":"عکس";if(c.startsWith("[[voice:"))return "پیام صوتی";return c;}
 async function sendMessage(){
