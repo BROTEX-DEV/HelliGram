@@ -241,7 +241,7 @@ hr{border:0;border-top:1px solid var(--hg-line)}
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به حــلــی‌گــــرام</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>رمز اختصاصی مسئول</label><input id="staffPass" type="password" autocomplete="current-password" placeholder="رمز عبور اختصاصی شما"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v1.4.6</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v1.4.7</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -341,7 +341,7 @@ hr{border:0;border-top:1px solid var(--hg-line)}
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v1.4.6</div>
+  <div class="version">v1.4.7</div>
 </section>
 <div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس تصویری</div><div id="callState" class="callState">در حال برقراری تماس...</div><div id="videoStage" class="videoStage"><video id="remoteVideo" class="remoteVideo" autoplay playsinline></video><video id="localVideo" class="localVideo" autoplay playsinline muted></video></div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()" aria-label="میکروفون" title="میکروفون"><svg class="hg-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg></button><button id="callCameraBtn" class="callAction callMute hidden" type="button" onclick="toggleCallCamera()" aria-label="دوربین" title="دوربین"><svg class="hg-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3z"/></svg></button><button id="callShareBtn" class="callAction callMute hidden" type="button" onclick="toggleScreenShare()" aria-label="اشتراک صفحه" title="اشتراک صفحه"><svg class="hg-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
@@ -462,6 +462,7 @@ function resizeAvatar(file){
     reader.readAsDataURL(file);
   });
 }
+const pendingLocalMedia=new Map();
 let refreshInFlight=false;
 async function refreshAll(){
   if(refreshInFlight)return;
@@ -469,7 +470,7 @@ async function refreshAll(){
   try{
     const m=await api("messages");
     const previousMessages=messages;
-    const nextMessages=m.messages||[];
+    const nextMessages=[...(m.messages||[]),...pendingLocalMedia.values()];
     const previousById=new Map(previousMessages.map(item=>[String(item.id),item]));
     nextMessages.forEach(item=>{
       const previous=previousById.get(String(item.id));
@@ -1119,18 +1120,71 @@ async function uploadAndSendMedia(files,uploadMode="media"){
       if(uploadMode==="file"){const ext=(file.name.split(".").pop()||"").toLowerCase();contentType=documentMimeByExt[ext]||contentType;if(!documentAllowed.includes(contentType))throw new Error("این نوع فایل پشتیبانی نمی‌شود: "+file.name);}
       if(!allowed.includes(contentType))throw new Error("نوع فایل پشتیبانی نمی‌شود: "+file.name);
       if(file.type!==contentType)file=new File([file],file.name,{type:contentType,lastModified:file.lastModified});
-      if(status)status.textContent="در حال آماده سازی "+(i+1)+"/"+files.length;
-      const signed=await api("upload_media",{content_type:file.type,file_size:file.size});
-      if(!signed?.path||!signed?.token)throw new Error("آماده سازی آپلود ناموفق بود.");
-      if(status)status.textContent="در حال بارگذاری "+(i+1)+"/"+files.length;
-      const {error:uploadError}=await storageClient.storage.from("helligram-media").uploadToSignedUrl(signed.path,signed.token,file,{contentType:file.type,upsert:false});
-      if(uploadError)throw new Error("بارگذاری فایل انجام نشد: "+(uploadError.message||file.name));
-      let caption="";if(uploadMode==="media"){caption=prompt("نوشتن توضیحات زیر عکس یا ویدیو (اختیاری):","")||"";caption=caption.trim().slice(0,1500);}const body={content:"[[media:"+signed.path+"|"+file.type+"|"+encodeURIComponent(file.name)+"|"+file.size+"|"+encodeURIComponent(caption)+"]]"};
-      if(target.kind==="staff")body.recipient_staff_id=target.id;
-      if(target.kind==="student")body.recipient_student_id=target.id;
-      if(target.kind==="group")body.group_id=target.id;
-      await api("send",body);
-      if(status)status.textContent="ارسال شد "+(i+1)+"/"+files.length;
+      let caption="";
+      const isPreviewMedia=uploadMode==="media"&&(file.type.startsWith("image/")||file.type.startsWith("video/"));
+      if(isPreviewMedia)caption=(prompt("نوشتن توضیحات زیر عکس یا ویدیو (اختیاری):","")||"").trim().slice(0,1500);
+      let tempId=null,localUrl=null,optimistic=null;
+      if(isPreviewMedia){
+        localUrl=URL.createObjectURL(file);
+        downloadedMediaObjects.set(localUrl,{url:localUrl,size:file.size});
+        tempId="local-media-"+Date.now()+"-"+Math.random().toString(36).slice(2,8);
+        const chatKeyNow=target.kind+":"+target.id;
+        optimistic={
+          id:tempId,content:"[[media:local|"+file.type+"|"+encodeURIComponent(file.name)+"|"+file.size+"|"+encodeURIComponent(caption)+"]]",
+          created_at:new Date().toISOString(),
+          sender_student_id:profile.type==="student"?profile.id:null,
+          sender_staff_id:profile.type==="staff"?profile.id:null,
+          recipient_student_id:target.kind==="student"?target.id:null,
+          recipient_staff_id:target.kind==="staff"?target.id:null,
+          group_id:target.kind==="group"?target.id:null,
+          sender_name:profile.full_name||profile.name||"شما",
+          media_url:localUrl,media_type:file.type,media_name:file.name,media_size:file.size,media_caption:caption,
+          _localChatKey:chatKeyNow,_pendingUpload:true
+        };
+        pendingLocalMedia.set(tempId,optimistic);
+        selectedChat=chatKeyNow;
+        messages.push(optimistic);
+        renderConversation();
+        const box=document.getElementById("messages");if(box)box.scrollTop=box.scrollHeight;
+      }
+      try{
+        if(status)status.textContent="در حال آماده سازی "+(i+1)+"/"+files.length;
+        const signed=await api("upload_media",{content_type:file.type,file_size:file.size});
+        if(!signed?.path||!signed?.token)throw new Error("آماده سازی آپلود ناموفق بود.");
+        if(status)status.textContent="در حال بارگذاری "+(i+1)+"/"+files.length+" · پیش نمایش برای شما نمایش داده شده است";
+        const {error:uploadError}=await storageClient.storage.from("helligram-media").uploadToSignedUrl(signed.path,signed.token,file,{contentType:file.type,upsert:false});
+        if(uploadError)throw new Error("بارگذاری فایل انجام نشد: "+(uploadError.message||file.name));
+        const body={content:"[[media:"+signed.path+"|"+file.type+"|"+encodeURIComponent(file.name)+"|"+file.size+"|"+encodeURIComponent(caption)+"]]"};
+        if(target.kind==="staff")body.recipient_staff_id=target.id;
+        if(target.kind==="student")body.recipient_student_id=target.id;
+        if(target.kind==="group")body.group_id=target.id;
+        const sent=await api("send",body);
+        if(optimistic){
+          pendingLocalMedia.delete(tempId);
+          messages=messages.filter(m=>m.id!==tempId);
+          const saved=sent?.message;
+          if(saved){
+            const finalMessage={...optimistic,...saved,media_url:localUrl,media_type:file.type,media_name:file.name,media_size:file.size,media_caption:caption,_localChatKey:target.kind+":"+target.id};
+            delete finalMessage._pendingUpload;
+            messages.push(finalMessage);
+          }else{
+            URL.revokeObjectURL(localUrl);
+            downloadedMediaObjects.delete(localUrl);
+          }
+          renderConversation();
+          const box=document.getElementById("messages");if(box)box.scrollTop=box.scrollHeight;
+        }
+        if(status)status.textContent="ارسال شد "+(i+1)+"/"+files.length;
+      }catch(fileError){
+        if(optimistic){
+          pendingLocalMedia.delete(tempId);
+          messages=messages.filter(m=>m.id!==tempId);
+          downloadedMediaObjects.delete(localUrl);
+          URL.revokeObjectURL(localUrl);
+          renderConversation();
+        }
+        throw fileError;
+      }
     }
     selectedChat=target.kind+":"+target.id;
     await refreshAll();
