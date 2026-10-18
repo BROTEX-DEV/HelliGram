@@ -7,18 +7,18 @@
 <style>
 :root{color-scheme:dark;--bg:#000000;--panel:#000000;--line:#202020;--text:#f4f4f4;--muted:#929292;--accent:#bdbdbd}
 *{box-sizing:border-box}body{margin:0;background:#000000;color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif}
-.shell{max-width:960px;margin:auto;padding:0 20px}header{height:72px;display:flex;align-items:center;border-bottom:1px solid #ffffff12;font-size:15px;font-weight:700;gap:8px}
+.shell{width:min(1440px,100%);margin:auto;padding:0 clamp(22px,4vw,64px)}header{height:80px;display:flex;align-items:center;border-bottom:1px solid #ffffff12;font-size:15px;font-weight:700;gap:8px}
 .brand-mark{color:#d7e7ff;margin-left:2px;background:#080808;border:1px solid #292929;border-radius:11px;padding:9px 10px;font-size:17px;cursor:pointer;touch-action:manipulation;box-shadow:inset 0 1px #ffffff18,0 5px 18px #ffffff12}
-.hero{padding:34px 0 27px}.eyebrow{display:inline-block;color:#d0d0d0;font-size:11px;padding:5px 10px;border:1px solid #292929;border-radius:999px;background:#050505;margin-bottom:12px}
-h1{font-size:clamp(27px,4vw,34px);font-weight:800;letter-spacing:-.6px;margin:0 0 7px;text-shadow:none}.subtitle{font-size:13px;color:var(--muted);margin:0}
+.hero{padding:clamp(38px,5vw,64px) 0 36px}.eyebrow{display:inline-block;color:#d0d0d0;font-size:11px;padding:5px 10px;border:1px solid #292929;border-radius:999px;background:#050505;margin-bottom:12px}
+h1{font-size:clamp(32px,3.2vw,46px);font-weight:800;letter-spacing:-.6px;margin:0 0 7px;text-shadow:none}.subtitle{font-size:13px;color:var(--muted);margin:0}
 .playlist-head{display:flex;align-items:center;justify-content:space-between;padding:0 0 14px;border-bottom:1px solid var(--line);margin-bottom:18px}
 .playlist-head h2{font-size:15px;font-weight:700;margin:0;display:flex;align-items:center;gap:9px}.playlist-head h2:before{content:"";width:3px;height:17px;background:var(--accent);border-radius:3px;box-shadow:0 0 12px #82b5ff55}
 .day{font-size:11px;color:#b5c0d2;padding:5px 9px;background:#080808;border:1px solid #242424;border-radius:7px}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}.card{min-width:0;padding:8px 8px 12px;background:#050505;border:1px solid #222222;border-radius:12px;box-shadow:0 8px 24px #ffffff0a,0 0 0 1px #ffffff05;transition:transform .2s,border-color .2s,box-shadow .2s}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2.2vw,32px)}.card{min-width:0;padding:clamp(10px,1.2vw,16px) clamp(10px,1.2vw,16px) 18px;background:#050505;border:1px solid #222222;border-radius:12px;box-shadow:0 8px 24px #ffffff0a,0 0 0 1px #ffffff05;transition:transform .2s,border-color .2s,box-shadow .2s}
 .card:hover{transform:translateY(-4px);border-color:#444444;box-shadow:0 14px 30px #ffffff12,0 0 18px #ffffff08}
 .poster{display:block;width:100%;aspect-ratio:2/3;object-fit:cover;background:#000000;border-radius:7px}.poster.playable{cursor:default}
 .fallback{aspect-ratio:2/3;display:grid;place-items:center;text-align:center;padding:12px;background:#151923;color:#929caf;border-radius:7px;font-size:13px}
-.title{font-size:13px;font-weight:600;line-height:1.8;margin:10px 3px 0}
+.title{font-size:clamp(14px,1.1vw,17px);font-weight:600;line-height:1.8;margin:12px 3px 0}
 footer{margin-top:38px;border-top:1px solid #ffffff12;padding:16px 0 20px;text-align:center;color:#828da0;font-size:11px}.version{font-size:9px;color:#586579;margin-top:4px;letter-spacing:.3px}
 .ad-slot{width:100%;margin:30px 0 0;display:flex;justify-content:center;align-items:center;min-height:0}
 .ad-slot img{display:block;width:100%;height:auto;max-width:100%;object-fit:contain}
@@ -34,7 +34,7 @@ footer{margin-top:38px;border-top:1px solid #ffffff12;padding:16px 0 20px;text-a
 .secret-room h2{font-size:21px;margin:0 0 8px}.secret-room p{font-size:13px;color:#aeb9ca;line-height:2;margin:0}
 .secret-code{display:inline-block;margin-top:17px;padding:7px 11px;border:1px dashed #333333;border-radius:7px;color:#dddddd;font-size:11px;letter-spacing:1px;direction:ltr;background:#050505}
 .secret-close{position:absolute;left:12px;top:10px;background:none;border:0;color:#aeb9ca;font:inherit;font-size:22px;cursor:pointer}
-@media(max-width:600px){.shell{padding:0 13px}.hero{padding:28px 0 23px}.grid{gap:10px}.card{padding:6px 6px 9px}.title{font-size:12px;margin-top:8px}.overlay{padding:10px}.player-head{padding:9px 11px}}
+@media(min-width:1100px){.player-box{max-width:1120px;margin-left:auto;margin-right:auto}.player-head{padding:16px 20px}.player-title{font-size:16px}.playlist-head h2{font-size:17px}.day{font-size:12px}}\n@media(max-width:900px){.shell{padding:0 20px}}\n@media(max-width:600px){.shell{padding:0 13px}.hero{padding:28px 0 23px}.grid{gap:10px}.card{padding:6px 6px 9px}.title{font-size:12px;margin-top:8px}.overlay{padding:10px}.player-head{padding:9px 11px}}
 @media(max-width:360px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
@@ -46,7 +46,7 @@ footer{margin-top:38px;border-top:1px solid #ffffff12;padding:16px 0 20px;text-a
 <section aria-label="لیست پخش امروز"><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="player-box inline-player"><div class="player-head"><h2 class="player-title">هاپرز</h2></div><div class="player-frame" id="inlinePlayer"></div></div><div class="grid" id="grid"></div></section>
 </main>
 <section class="ad-slot" aria-label="تبلیغ"><img src="t.gif" alt=""></section>
-<footer>حلی سینما<div class="version">CINEMA v1.2.0</div></footer>
+<footer>حلی سینما<div class="version">CINEMA v1.2.1</div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
