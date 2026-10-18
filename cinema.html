@@ -96,9 +96,15 @@ h1,h2,h3,.player-title,.intro-title,.secret-room h2{font-family:'CinemaHead','Ci
 .scroll-reveal{opacity:0;transform:translateY(26px);filter:blur(5px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1),filter .7s ease}
 .scroll-reveal.in-view{opacity:1;transform:translateY(0);filter:blur(0)}
 
+
+/* Animated cinematic gold-particle background */
+#cinemaParticles{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.72}
+.shell{position:relative;z-index:1}
+@media(prefers-reduced-motion:reduce){#cinemaParticles{display:none}}
 </style>
 </head>
 <body>
+<canvas id="cinemaParticles" aria-hidden="true"></canvas>
 <div class="cinema-intro" id="cinemaIntro" role="button" tabindex="0" aria-label="ورود به حلی سینما">
  <div class="intro-glow" aria-hidden="true"></div>
  <div class="intro-content">
@@ -114,7 +120,7 @@ h1,h2,h3,.player-title,.intro-title,.secret-room h2{font-family:'CinemaHead','Ci
 <section aria-label="لیست پخش امروز"><div class="player-box inline-player"><div class="player-head"><h2 class="player-title">هاپرز</h2></div><div class="player-frame" id="inlinePlayer"></div></div><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="grid" id="grid"></div></section>
 </main>
 <section class="ad-slot" aria-label="تبلیغ"><img src="t.gif" alt=""></section>
-<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.20</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
+<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.21</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
@@ -243,5 +249,39 @@ document.querySelectorAll('.card').forEach(card=>{
 })();
 
 </script>
+
+<script>
+(()=> {
+ const canvas=document.getElementById('cinemaParticles');
+ if(!canvas||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ const ctx=canvas.getContext('2d',{alpha:true}); if(!ctx)return;
+ let w=0,h=0,dpr=1,particles=[],raf=0;
+ const makeParticle=()=>({x:Math.random()*w,y:Math.random()*h,r:.45+Math.random()*1.45,vx:(Math.random()-.5)*.18,vy:-.12-Math.random()*.3,a:.12+Math.random()*.48,phase:Math.random()*Math.PI*2,twinkle:.004+Math.random()*.012});
+ function resize(){
+  dpr=Math.min(window.devicePixelRatio||1,1.5);w=window.innerWidth;h=window.innerHeight;
+  canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);canvas.style.width=w+'px';canvas.style.height=h+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const count=Math.min(85,Math.max(28,Math.round(w*h/18000)));
+  particles=Array.from({length:count},makeParticle);
+ }
+ function draw(){
+  ctx.clearRect(0,0,w,h);
+  for(const p of particles){
+   p.x+=p.vx+Math.sin(p.phase)*.035;p.y+=p.vy;p.phase+=p.twinkle;
+   if(p.y < -5){p.y=h+5;p.x=Math.random()*w}
+   if(p.x < -5)p.x=w+5;if(p.x>w+5)p.x=-5;
+   const glow=p.r>1.25;
+   ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+   ctx.fillStyle='rgba(255,205,112,'+p.a+')';ctx.fill();
+   if(glow){ctx.beginPath();ctx.arc(p.x,p.y,p.r*3.2,0,Math.PI*2);ctx.fillStyle='rgba(255,184,72,'+(p.a*.09)+')';ctx.fill()}
+  }
+  raf=requestAnimationFrame(draw);
+ }
+ resize();draw();
+ let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(resize,120)},{passive:true});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf)}else{cancelAnimationFrame(raf);draw()}});
+})();
+</script>
+
 </body>
 </html>
