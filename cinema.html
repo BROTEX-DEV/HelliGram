@@ -5,8 +5,10 @@
 <title>حلی سینما</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+@font-face{font-family:'CinemaBody';src:url('./2.ttf') format('truetype');font-style:normal;font-weight:100 900;font-display:swap}
+@font-face{font-family:'CinemaHead';src:url('./1.ttf') format('truetype');font-style:normal;font-weight:100 900;font-display:swap}
 :root{color-scheme:dark;--bg:#000000;--panel:#000000;--line:#202020;--text:#f4f4f4;--muted:#929292;--accent:#bdbdbd}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#000000;color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif;animation:page-in .55s ease both;overflow-x:hidden}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#000000;color:var(--text);font-family:'CinemaBody',Tahoma,sans-serif;animation:page-in .55s ease both;overflow-x:hidden}
 body:before{content:"";position:fixed;inset:-30%;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% 8%,#ffffff19 0,transparent 34%),radial-gradient(ellipse at 12% 55%,#bfc8d51a 0,transparent 28%),radial-gradient(ellipse at 88% 72%,#ffffff12 0,transparent 30%);animation:ambient-drift 9s ease-in-out infinite alternate}
 @keyframes page-in{from{opacity:0}to{opacity:1}}
 @keyframes ambient-drift{from{transform:translate3d(-2%,0,0) scale(1)}to{transform:translate3d(2%,-1%,0) scale(1.08)}}
@@ -79,7 +81,10 @@ footer{margin-top:38px;border-top:1px solid #ffffff12;padding:16px 0 20px;text-a
 @keyframes intro-exit{0%{opacity:1;transform:scale(1);filter:brightness(1)}35%{opacity:1;filter:brightness(2.4)}100%{opacity:0;transform:scale(1.08);filter:brightness(3)}}
 
 
-/* Scroll reveal: posters and lower sections animate as they enter the viewport */
+
+/* Use the first custom font for headings and the second for regular text */
+h1,h2,h3,.player-title,.intro-title,.secret-room h2{font-family:'CinemaHead','CinemaBody',Tahoma,sans-serif}
+\n/* Scroll reveal: posters and lower sections animate as they enter the viewport */
 .card.in-view{animation-play-state:running}
 .scroll-reveal{opacity:0;transform:translateY(26px);filter:blur(5px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1),filter .7s ease}
 .scroll-reveal.in-view{opacity:1;transform:translateY(0);filter:blur(0)}
@@ -103,7 +108,7 @@ footer{margin-top:38px;border-top:1px solid #ffffff12;padding:16px 0 20px;text-a
 <section aria-label="لیست پخش امروز"><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="player-box inline-player"><div class="player-head"><h2 class="player-title">هاپرز</h2></div><div class="player-frame" id="inlinePlayer"></div></div><div class="grid" id="grid"></div></section>
 </main>
 <section class="ad-slot" aria-label="تبلیغ"><img src="t.gif" alt=""></section>
-<footer>حلی سینما<div class="version">CINEMA v1.2.7</div></footer>
+<footer>حلی سینما<div class="version">CINEMA v1.2.8</div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
