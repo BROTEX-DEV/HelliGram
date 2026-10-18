@@ -131,10 +131,14 @@ body:before{background:radial-gradient(ellipse at 50% 8%,#ffffff12 0,transparent
 <div class="shell">
 <main>
 <section class="hero"><h1>حلی سینما</h1><p class="subtitle">سینما، ساده و بی‌حاشیه.</p></section>
-<section aria-label="لیست پخش امروز"><div class="player-box inline-player"><div class="player-head"><h2 class="player-title">هاپرز</h2></div><div class="player-frame" id="inlinePlayer"><div class="curtain-intro" id="curtainIntro" role="button" tabindex="0" aria-label="شروع نمایش"><div class="curtain-panel left"></div><div class="curtain-panel right"></div><div class="curtain-title"><strong>حلی سینما</strong><span>THE SHOW IS ABOUT TO BEGIN</span><button class="curtain-start" id="curtainStart" type="button">🎬 شروع نمایش</button></div></div></div></div><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="grid" id="grid"></div></section>
+<section aria-label="لیست پخش امروز"><div class="player-box inline-player"><div class="player-head"><h2 class="player-title">هاپرز</h2></div><div class="player-frame" id="inlinePlayer"><iframe src="https://www.aparat.com/video/video/embed/videohash/zbvl3ru/vt/frame" title="پخش فیلم" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="eager"></iframe></div></div><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="grid" id="grid">
+<article class="card" style="--i:0"><img class="poster" src="./1.jpg" alt="پوستر فیلم ۱" loading="eager"><h3 class="title">فیلم ۱</h3></article>
+<article class="card" style="--i:1"><img class="poster" src="./2.jpg" alt="پوستر فیلم ۲" loading="eager"><h3 class="title">فیلم ۲</h3></article>
+<article class="card" style="--i:2"><img class="poster" src="./3.jpg" alt="پوستر فیلم ۳" loading="eager"><h3 class="title">فیلم ۳</h3></article>
+</div></section>
 </main>
 <section class="ad-slot" aria-label="تبلیغ"><img src="t.gif" alt=""></section>
-<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.31</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
+<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.32</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
@@ -163,41 +167,6 @@ body:before{background:radial-gradient(ellipse at 50% 8%,#ffffff12 0,transparent
 })();
 </script>
 
-<script id="playlistRepair">
-(()=>{
- const grid=document.getElementById('grid');
- const player=document.getElementById('inlinePlayer');
- if(grid&&!grid.dataset.ready){
-  grid.dataset.ready='1';
-  const posters=[
-   {src:'1.jpg',title:'فیلم شماره ۱'},
-   {src:'2.jpg',title:'فیلم شماره ۲'},
-   {src:'3.jpg',title:'فیلم شماره ۳'}
-  ];
-  grid.innerHTML=posters.map((item,i)=>'<article class="card" style="--i:'+i+'"><img class="poster" src="./'+item.src+'" alt="'+item.title+'" loading="lazy" onerror="this.outerHTML=\'<div class=&quot;fallback&quot;>تصویر پوستر بارگذاری نشد</div>\'"><h3 class="title">'+item.title+'</h3></article>').join('');
- }
- if(player&&!player.dataset.ready){
-  player.dataset.ready='1';
-  const curtain=document.getElementById('curtainIntro');
-  const start=document.getElementById('curtainStart');
-  let started=false;
-  function startMovie(){
-   if(started)return; started=true;
-   const frame=document.createElement('iframe');
-   frame.src='https://www.aparat.com/video/video/embed/videohash/zbvl3ru/vt/frame';
-   frame.title='پخش فیلم';frame.allow='autoplay; fullscreen; picture-in-picture';
-   frame.allowFullscreen=true;frame.loading='eager';
-   player.insertBefore(frame,curtain);
-   if(curtain){curtain.classList.add('opening');if(start)start.disabled=true;window.setTimeout(()=>{curtain.hidden=true},1750)}
-  }
-  if(start)start.addEventListener('click',e=>{e.stopPropagation();startMovie()});
-  if(curtain){
-   curtain.addEventListener('click',startMovie);
-   curtain.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();startMovie()}});
-  }
- }
-})();
-</script>
 
 <script>
 (()=>{
