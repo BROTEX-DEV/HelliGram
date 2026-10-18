@@ -91,7 +91,7 @@ footer{margin-top:38px;border-top:1px solid #ffffff12;padding:16px 0 20px;text-a
 .intro-title{font-size:clamp(34px,7vw,68px);font-weight:800;letter-spacing:1px;color:#fff;text-shadow:0 0 10px #fff9,0 0 28px #ffffff90,0 0 65px #ffffff55;margin:0}
 .intro-rule{width:min(360px,70vw);height:2px;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 20px #ffffffb0;animation:rule-grow 1.2s .85s ease both}
 .intro-tagline{margin:0;color:#c7c7c7;font-size:clamp(10px,2vw,13px);letter-spacing:clamp(2px,.7vw,6px);animation:page-in .8s 1.15s both}
-.cinema-intro.leaving{animation:intro-exit .85s cubic-bezier(.7,0,.3,1) both;pointer-events:none}
+.cinema-intro.leaving{animation:intro-exit .65s cubic-bezier(.7,0,.3,1) both;pointer-events:none;visibility:visible}
 @keyframes intro-blackout{from{opacity:0}to{opacity:1}}
 @keyframes beam-left{0%{opacity:0;transform:translateX(-18%) rotate(28deg) scaleX(.12)}40%{opacity:.9}100%{opacity:.22;transform:translateX(25%) rotate(28deg) scaleX(1.1)}}
 @keyframes beam-right{0%{opacity:0;transform:translateX(18%) rotate(-28deg) scaleX(.12)}40%{opacity:.8}100%{opacity:.18;transform:translateX(-25%) rotate(-28deg) scaleX(1.1)}}
@@ -137,7 +137,7 @@ body:before{background:radial-gradient(ellipse at 50% 100%,#f4f4f40a 0,transpare
 <section aria-label="لیست پخش امروز"><div class="player-box inline-player"><div class="player-head"><h2 class="player-title">هاپرز</h2></div><div class="player-frame" id="inlinePlayer"></div></div><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="grid" id="grid"></div></section>
 </main>
 <section class="ad-slot" aria-label="تبلیغ"><img src="t.gif" alt=""></section>
-<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.23</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
+<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.24</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
@@ -147,14 +147,16 @@ body:before{background:radial-gradient(ellipse at 50% 100%,#f4f4f40a 0,transpare
 const cinemaIntro=document.getElementById("cinemaIntro");
 let introDismissed=false;
 function dismissIntro(){
- if(introDismissed)return;
+ if(introDismissed||!cinemaIntro)return;
  introDismissed=true;
  cinemaIntro.classList.add("leaving");
- window.setTimeout(()=>{cinemaIntro.hidden=true;},850);
+ window.setTimeout(()=>{cinemaIntro.hidden=true;cinemaIntro.style.display="none";},700);
 }
 cinemaIntro.addEventListener("click",dismissIntro);
 cinemaIntro.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();dismissIntro()}});
-window.setTimeout(dismissIntro,4800);
+/* Keep the intro brief, with a hard fallback so it can never trap visitors. */
+window.setTimeout(dismissIntro,2600);
+window.setTimeout(()=>{if(cinemaIntro&&!cinemaIntro.hidden){cinemaIntro.hidden=true;cinemaIntro.style.display="none";}},6000);
 
 const movies=[
  {title:"هاپرز",file:"https://melofilm.ir/storage/assets/movies/4125/images/wPp5YqBa8Viup5IyegBfVzJBXSZlLsfkNWPegG4D_400.jpeg",embed:"https://www.aparat.com/video/video/embed/videohash/zbvl3ru/vt/frame"},
