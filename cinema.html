@@ -115,6 +115,21 @@ h1,h2,h3,.player-title,.intro-title,.secret-room h2{font-family:'CinemaHead','Ci
 body:before{background:radial-gradient(ellipse at 50% 8%,#ffffff12 0,transparent 38%)}
 .shell{position:relative;z-index:1}
 
+
+/* Shared cinema curtain controlled by the admin panel */
+.global-curtain{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;overflow:hidden;background:#070305;transition:opacity .7s ease,visibility .7s ease}
+.global-curtain[hidden]{display:none}
+.global-curtain .drape{position:absolute;inset:-3% 50% -3% -3%;background:repeating-linear-gradient(90deg,#26060b 0%,#64101b 7%,#390810 13%,#841c29 19%,#430a13 26%,#1c050a 33%);box-shadow:inset -20px 0 36px #000b,inset 0 0 35px #000b}
+.global-curtain .drape.right{inset:-3% -3% -3% 50%;background:repeating-linear-gradient(90deg,#1c050a 0%,#430a13 7%,#841c29 14%,#390810 20%,#64101b 27%,#26060b 34%);box-shadow:inset 20px 0 36px #000b,inset 0 0 35px #000b}
+.global-curtain .valance{position:absolute;top:-3%;left:-2%;right:-2%;height:18%;z-index:2;border-radius:0 0 50% 50%;background:repeating-linear-gradient(90deg,#26060b 0%,#841c29 8%,#450b14 16%,#741722 24%,#26060b 32%);box-shadow:0 12px 25px #000b}
+.global-curtain .curtain-message{position:relative;z-index:3;text-align:center;padding:24px;color:#fff;text-shadow:0 2px 18px #000}
+.global-curtain h2{font-size:clamp(22px,5vw,42px);margin:0 0 10px}
+.global-curtain p{margin:0;color:#ead5d8;font-size:13px}
+.global-curtain .gold-line{width:min(260px,60vw);height:1px;background:linear-gradient(90deg,transparent,#d5b879,transparent);margin:18px auto;box-shadow:0 0 12px #d5b87966}
+.global-curtain.opening .drape.left{transform:translateX(-103%)}
+.global-curtain.opening .drape.right{transform:translateX(103%)}
+.global-curtain .drape{transition:transform 1.6s cubic-bezier(.72,0,.24,1)}
+
 </style>
 </head>
 <body>
@@ -128,6 +143,7 @@ body:before{background:radial-gradient(ellipse at 50% 8%,#ffffff12 0,transparent
   <p class="intro-tagline">THE CINEMA EXPERIENCE</p>
  </div>
 </div>
+<div class="global-curtain" id="globalCurtain" hidden aria-live="polite"><div class="drape left"></div><div class="drape right"></div><div class="valance"></div><div class="curtain-message"><h2>حلی سینما</h2><div class="gold-line"></div><p>پرده بسته است؛ منتظر شروع نمایش باشید.</p></div></div>
 <div class="shell">
 <main>
 <section class="hero"><h1>حلی سینما</h1><p class="subtitle">سینما، ساده و بی‌حاشیه.</p></section>
@@ -222,6 +238,22 @@ body:before{background:radial-gradient(ellipse at 50% 8%,#ffffff12 0,transparent
    if(m.start&&m.end){const el=document.getElementById('time'+i);if(el)el.textContent=fa(m.start)+' تا '+fa(m.end);}
   });
  }).catch(()=>{});
+})();
+</script>
+
+<script>
+(()=> {
+ const el=document.getElementById('globalCurtain');
+ if(!el)return;
+ const endpoint='https://pwwicgyrycaexjnnhseb.supabase.co/rest/v1/site_settings?key=eq.public.cinema_curtain&select=value';
+ const key='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3d2ljZ3lyeWNhZXhqbm5oc2ViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwMzczMjgsImV4cCI6MjEwNjYxMzMyOH0.860RskDmycONZUHyOloN8AmKqRkzU5YNXUUze2DuPdM';
+ function apply(value){
+  const closed=value&&value.closed===true;
+  if(closed){el.hidden=false;el.classList.remove('opening');}
+  else if(!el.hidden){el.classList.add('opening');window.setTimeout(()=>{el.hidden=true;el.classList.remove('opening')},1650);}
+ }
+ async function refresh(){try{const r=await fetch(endpoint,{headers:{apikey:key,Authorization:'Bearer '+key},cache:'no-store'});if(!r.ok)return;const rows=await r.json();apply(rows?.[0]?.value||{closed:false});}catch(_){}}
+ refresh();window.setInterval(refresh,10000);
 })();
 </script>
 </body>
