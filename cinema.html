@@ -50,7 +50,22 @@ footer{margin-top:38px;border-top:1px solid #ffffff12;padding:16px 0 20px;text-a
 .player-box{width:100%;background:#000000;border:1px solid #444444;border-radius:14px;overflow:hidden;box-shadow:0 12px 32px #ffffff10,0 0 18px #ffffff05;margin-top:2cm;margin-bottom:3.5cm;animation:rise-in .8s .24s both,spotlight 3.2s 1.2s ease-in-out infinite}
 .player-head{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;border-bottom:1px solid #222222}.player-title{font-size:14px;font-weight:700;margin:0}
 .close{border:0;border-radius:8px;background:#161616;color:#e8eef8;width:34px;height:34px;font-size:23px;cursor:pointer}
-.player-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000}.player-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.player-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;isolation:isolate}.player-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.curtain-intro{position:absolute;inset:0;z-index:5;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at center,#25252b 0%,#070709 60%,#000 100%);cursor:pointer}
+.curtain-intro[hidden]{display:none}
+.curtain-title{position:relative;z-index:3;text-align:center;color:#f5f1e9;text-shadow:0 0 24px #ffffff40;padding:12px}
+.curtain-title strong{display:block;font-size:clamp(16px,2.4vw,27px);letter-spacing:2px;font-weight:700}
+.curtain-title span{display:block;margin-top:8px;color:#c9bca8;font-size:11px;letter-spacing:3px}
+.curtain-start{margin-top:20px;border:1px solid #c9bca875;border-radius:999px;padding:10px 20px;background:#ffffff0a;color:#fff;font:inherit;font-size:12px;cursor:pointer;backdrop-filter:blur(8px);transition:background .2s,border-color .2s}
+.curtain-start:hover{background:#ffffff18;border-color:#f0ddbd}
+.curtain-panel{position:absolute;inset:-3% 50% -3% -3%;z-index:2;background:repeating-linear-gradient(90deg,#390b12 0%,#721722 7%,#4c0d17 13%,#8a202b 19%,#4a0b14 26%,#21070d 33%);box-shadow:inset -18px 0 30px #0009,inset 0 0 25px #0009;transition:transform 1.65s cubic-bezier(.72,0,.24,1)}
+.curtain-panel.right{inset:-3% -3% -3% 50%;background:repeating-linear-gradient(90deg,#21070d 0%,#4a0b14 7%,#8a202b 14%,#4c0d17 20%,#721722 27%,#390b12 34%);box-shadow:inset 18px 0 30px #0009,inset 0 0 25px #0009}
+.curtain-intro.opening .curtain-panel.left{transform:translateX(-103%)}
+.curtain-intro.opening .curtain-panel.right{transform:translateX(103%)}
+.curtain-intro.opening .curtain-title{animation:curtain-title-out .45s ease forwards}
+.curtain-intro.opening{background:transparent;transition:background .7s ease .45s}
+@keyframes curtain-title-out{to{opacity:0;transform:scale(.94)}}
+@media(prefers-reduced-motion:reduce){.curtain-panel{transition:none}.curtain-intro.opening .curtain-panel.left{transform:translateX(-103%)}.curtain-intro.opening .curtain-panel.right{transform:translateX(103%)}}
 .player-note{font-size:11px;color:#8997ac;padding:10px 14px;margin:0}
 .secret-overlay{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:20px;background:#000000e8;backdrop-filter:blur(10px);animation:page-in .2s ease both}.secret-overlay[hidden]{display:none}
 .secret-room{position:relative;width:min(390px,100%);padding:30px 22px;text-align:center;background:#050505;border:1px solid #292929;border-radius:16px;box-shadow:0 24px 90px #000b,0 0 28px #ffffff0d;animation:rise-in .3s ease both}
@@ -122,7 +137,7 @@ body:before{background:radial-gradient(ellipse at 50% 100%,#f4f4f40a 0,transpare
 <section aria-label="لیست پخش امروز"><div class="player-box inline-player"><div class="player-head"><h2 class="player-title">هاپرز</h2></div><div class="player-frame" id="inlinePlayer"></div></div><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="grid" id="grid"></div></section>
 </main>
 <section class="ad-slot" aria-label="تبلیغ"><img src="t.gif" alt=""></section>
-<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.22</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
+<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.23</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
@@ -148,6 +163,17 @@ const movies=[
 ];
 const grid=document.getElementById("grid");
 const inlinePlayer=document.getElementById("inlinePlayer");
+const curtain=document.createElement("div");
+curtain.className="curtain-intro";
+curtain.setAttribute("role","group");
+curtain.setAttribute("aria-label","شروع نمایش سینمایی");
+curtain.innerHTML='<div class="curtain-panel left" aria-hidden="true"></div><div class="curtain-panel right" aria-hidden="true"></div><div class="curtain-title"><strong>حلی سینما</strong><span>THE SHOW IS ABOUT TO BEGIN</span><button class="curtain-start" type="button">🎬 شروع نمایش</button></div>';
+inlinePlayer.append(curtain);
+curtain.querySelector("button").addEventListener("click",()=>{
+ if(curtain.classList.contains("opening"))return;
+ curtain.classList.add("opening");
+ window.setTimeout(()=>{curtain.hidden=true;},1750);
+});
 const firstMovie=movies[0];
 if(firstMovie && firstMovie.embed){
  const frame=document.createElement("iframe");
