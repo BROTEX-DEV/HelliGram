@@ -26,6 +26,12 @@
     .empty h2{font-size:21px;margin:0 0 8px}.empty p{font-size:13px;color:#a5b3c8;line-height:2;margin:0}.screen.has-video .empty{display:none}
     .player-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 7px 5px}.program-title{font-weight:700;font-size:15px}.program-sub{font-size:12px;color:var(--muted);margin-top:3px}
     .tag{font-size:11px;white-space:nowrap;padding:6px 10px;border-radius:9px;color:#a9d0ff;background:#132847;border:1px solid #234774}
+    .playlist-wrap{margin-top:18px}
+    .playlist-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 19px;border:1px solid #2a4770;border-radius:16px;background:linear-gradient(120deg,#122743,#0c1728);color:var(--text);font:700 15px Vazirmatn,Tahoma,sans-serif;cursor:pointer;text-align:right;transition:border-color .2s,transform .2s}
+    .playlist-toggle:hover{border-color:#559bff;transform:translateY(-1px)}
+    .playlist-toggle .left{display:flex;align-items:center;gap:11px}.playlist-icon{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#1a3659;font-size:21px}.chevron{color:#9fc6ff;transition:transform .2s}.playlist-toggle[aria-expanded="true"] .chevron{transform:rotate(180deg)}
+    .playlist-panel{margin-top:10px;padding:18px;border:1px solid #202e43;background:#0c1421;border-radius:16px}.playlist-panel[hidden]{display:none}.playlist-panel h2{margin:0 0 7px;font-size:16px}.playlist-panel p{margin:0;color:var(--muted);font-size:13px;line-height:2}
+    .playlist-empty{display:flex;align-items:center;gap:10px;margin-top:14px;padding:13px;border:1px dashed #2b3d56;border-radius:12px;color:#aab9ce;font-size:12px;line-height:1.9}
     .info{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:18px 0 32px}.info-card{border:1px solid #202e43;background:#0c1421;border-radius:15px;padding:15px}
     .info-card b{display:block;font-size:13px;margin-bottom:5px}.info-card span{font-size:12px;color:var(--muted);line-height:1.8}
     footer{border-top:1px solid #ffffff12;padding:17px 0 22px;text-align:center;color:#74849b;font-size:11px}footer .version{font-size:9px;color:#52627a;margin-top:5px;letter-spacing:.4px}
@@ -49,17 +55,36 @@
         </div>
         <div class="player-meta"><div><div class="program-title" id="programTitle">برنامه حلی سینما</div><div class="program-sub" id="programSub">شبکه تصویری</div></div><span class="tag" id="statusTag">آماده پخش</span></div>
       </section>
+      <section class="playlist-wrap" aria-label="لیست پخش امروز">
+        <button class="playlist-toggle" id="playlistToggle" type="button" aria-expanded="false" aria-controls="playlistPanel">
+          <span class="left"><span class="playlist-icon" aria-hidden="true">☷</span><span>لیست پخش امروز</span></span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </button>
+        <div class="playlist-panel" id="playlistPanel" hidden>
+          <h2>📺 برنامه‌های امروز</h2>
+          <p>فهرست برنامه‌ها هنوز اعلام نشده است. جزئیات این بخش بعداً به‌روزرسانی می‌شود.</p>
+          <div class="playlist-empty"><span aria-hidden="true">🗓️</span><span>منتظر اعلام برنامه‌های امروز باشید.</span></div>
+        </div>
+      </section>
       <section class="info" aria-label="راهنمای تماشا">
         <div class="info-card"><b>▶ پخش در همین صفحه</b><span>برنامه را مستقیم در این صفحه تماشا کن.</span></div>
         <div class="info-card"><b>🔄 برنامه به‌روز</b><span>با ثبت لینک تازه، برنامه جدید جایگزین برنامه قبلی می‌شود.</span></div>
         <div class="info-card"><b>📱 سازگار با موبایل</b><span>صفحه برای گوشی، تبلت و رایانه بهینه شده است.</span></div>
       </section>
     </main>
-    <footer>حلی سینما<div class="version">CINEMA v1.0.4</div></footer>
+    <footer>حلی سینما<div class="version">CINEMA v1.0.5</div></footer>
   </div>
   <script>
     /* برای تغییر برنامه، مقدار VIDEO_URL را با لینک ویدیوی جدید جایگزین کن. */
     const VIDEO_URL = "https://www.aparat.com/v/ujuc7w2";
+    const playlistToggle = document.getElementById("playlistToggle");
+    const playlistPanel = document.getElementById("playlistPanel");
+    playlistToggle.addEventListener("click", () => {
+      const expanded = playlistToggle.getAttribute("aria-expanded") === "true";
+      playlistToggle.setAttribute("aria-expanded", String(!expanded));
+      playlistPanel.hidden = expanded;
+    });
+
     const screen = document.getElementById("screen");
     const title = document.getElementById("programTitle");
     const subtitle = document.getElementById("programSub");
