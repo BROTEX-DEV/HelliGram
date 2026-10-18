@@ -40,7 +40,7 @@ h1{font-size:clamp(32px,3.2vw,46px);font-weight:800;letter-spacing:-.6px;margin:
 }
 .poster.playable{cursor:default}
 .fallback{aspect-ratio:2/3;display:grid;place-items:center;text-align:center;padding:12px;background:#151923;color:#929caf;border-radius:7px;font-size:13px}
-.title{font-size:clamp(14px,1.1vw,17px);font-weight:600;line-height:1.8;margin:12px 3px 0}
+.title{font-size:clamp(14px,1.1vw,17px);font-weight:600;line-height:1.8;margin:12px 3px 0}.broadcast-time{display:block;margin:8px 3px 0;padding:7px 8px;border:1px solid #303030;border-radius:7px;background:#0b0b0b;color:#e4e4e4;font-size:12px;line-height:1.6;text-align:center}.broadcast-time span{display:block;color:#929292;font-size:10px;margin-bottom:2px}
 footer{margin-top:38px;border-top:1px solid #ffffff12;padding:16px 0 20px;text-align:center;color:#828da0;font-size:11px}
 .version{font-size:9px;opacity:.48;margin-top:3px}.online-count{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:3px;font-size:8px;line-height:1.4;opacity:.5;color:#aeb7c5}.online-dot{width:4px;height:4px;border-radius:50%;background:#5ecb8a;box-shadow:0 0 5px #5ecb8a;flex:0 0 auto}.version{font-size:9px;color:#586579;margin-top:4px;letter-spacing:.3px}
 .ad-slot{width:100%;margin:30px 0 0;display:flex;justify-content:center;align-items:center;min-height:0}
@@ -132,13 +132,13 @@ body:before{background:radial-gradient(ellipse at 50% 8%,#ffffff12 0,transparent
 <main>
 <section class="hero"><h1>حلی سینما</h1><p class="subtitle">سینما، ساده و بی‌حاشیه.</p></section>
 <section aria-label="لیست پخش امروز"><div class="player-box inline-player"><div class="player-head"><h2 class="player-title" dir="auto">Hoppers | هاپرز</h2></div><div class="player-frame" id="inlinePlayer"><iframe src="https://www.aparat.com/video/video/embed/videohash/zbvl3ru/vt/frame" title="پخش فیلم" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="eager"></iframe></div></div><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="grid" id="grid">
-<article class="card" style="--i:0"><img class="poster" src="./1.jpg" alt="پوستر هاپرز" loading="eager"><h3 class="title" dir="auto">Hoppers | هاپرز</h3></article>
-<article class="card" style="--i:1"><img class="poster" src="./2.jpg" alt="پوستر داستان اسباب‌بازی ۵" loading="eager"><h3 class="title" dir="auto">Toy Story 5 | داستان اسباب‌بازی ۵</h3></article>
-<article class="card" style="--i:2"><img class="poster" src="./3.jpg" alt="پوستر سوپر ماریو: کهکشان" loading="eager"><h3 class="title" dir="auto">The Super Mario Galaxy Movie | سوپر ماریو: کهکشان</h3></article>
+<article class="card" style="--i:0"><img class="poster" src="./1.jpg" alt="پوستر هاپرز" loading="eager"><h3 class="title" dir="auto">Hoppers | هاپرز</h3><div class="broadcast-time"><span>ساعت پخش</span>۱۵:۳۰ تا ۱۷:۳۰</div></article>
+<article class="card" style="--i:1"><img class="poster" src="./2.jpg" alt="پوستر داستان اسباب‌بازی ۵" loading="eager"><h3 class="title" dir="auto">Toy Story 5 | داستان اسباب‌بازی ۵</h3><div class="broadcast-time"><span>ساعت پخش</span>۱۷:۳۰ تا ۱۹:۳۰</div></article>
+<article class="card" style="--i:2"><img class="poster" src="./3.jpg" alt="پوستر سوپر ماریو: کهکشان" loading="eager"><h3 class="title" dir="auto">The Super Mario Galaxy Movie | سوپر ماریو: کهکشان</h3><div class="broadcast-time"><span>ساعت پخش</span>۱۹:۳۰ تا ۲۱:۳۰</div></article>
 </div></section>
 </main>
 <section class="ad-slot" aria-label="تبلیغ"><img src="t.gif" alt=""></section>
-<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.36</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
+<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.37</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
