@@ -16,7 +16,7 @@ h1{font-size:clamp(27px,4vw,34px);font-weight:800;letter-spacing:-.6px;margin:0 
 .day{font-size:11px;color:#b5c0d2;padding:5px 9px;background:#151d29;border:1px solid #283346;border-radius:7px}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}.card{min-width:0;padding:8px 8px 12px;background:linear-gradient(145deg,#141b27,#0e131c);border:1px solid #273143;border-radius:12px;box-shadow:0 8px 24px #0003;transition:transform .2s,border-color .2s,box-shadow .2s}
 .card:hover{transform:translateY(-4px);border-color:#506d96;box-shadow:0 14px 30px #0005,0 0 0 1px #8dbdff0c}
-.poster{display:block;width:100%;aspect-ratio:2/3;object-fit:cover;background:#151923;border-radius:7px}.poster.playable{cursor:pointer}.poster.playable:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.poster{display:block;width:100%;aspect-ratio:2/3;object-fit:cover;background:#151923;border-radius:7px}.poster.playable{cursor:default}
 .fallback{aspect-ratio:2/3;display:grid;place-items:center;text-align:center;padding:12px;background:#151923;color:#929caf;border-radius:7px;font-size:13px}
 .title{font-size:13px;font-weight:600;line-height:1.8;margin:10px 3px 0}
 footer{margin-top:38px;border-top:1px solid #ffffff12;padding:16px 0 20px;text-align:center;color:#828da0;font-size:11px}.version{font-size:9px;color:#586579;margin-top:4px;letter-spacing:.3px}
@@ -43,7 +43,7 @@ footer{margin-top:38px;border-top:1px solid #ffffff12;padding:16px 0 20px;text-a
 <section class="hero"><h1>حلی سینما</h1><p class="subtitle">سینما، ساده و بی‌حاشیه.</p></section>
 <section aria-label="لیست پخش امروز"><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="player-box inline-player"><div class="player-head"><h2 class="player-title">هاپرز</h2></div><div class="player-frame" id="inlinePlayer"></div></div><div class="grid" id="grid"></div></section>
 </main>
-<footer>حلی سینما<div class="version">CINEMA v1.1.5</div></footer>
+<footer>حلی سینما<div class="version">CINEMA v1.1.6</div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
@@ -67,14 +67,10 @@ if(firstMovie && firstMovie.embed){
  frame.loading="eager";
  inlinePlayer.replaceChildren(frame);
 }
-function playMovie(movie){
- if(!movie.embed)return;
- inlinePlayer.scrollIntoView({behavior:"smooth",block:"center"});
-}
 for(const m of movies){
  const card=document.createElement("article");card.className="card";
  const img=document.createElement("img");img.className="poster"+(m.embed?" playable":"");img.src=m.file;img.alt="پوستر "+m.title;img.loading="lazy";
- if(m.embed){img.tabIndex=0;img.setAttribute("role","button");img.setAttribute("aria-label","رفتن به پخش "+m.title);img.addEventListener("click",()=>playMovie(m));img.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();playMovie(m)}})}
+
  img.onerror=()=>{const f=document.createElement("div");f.className="fallback";f.textContent="پوستر "+m.title;img.replaceWith(f)};
  const title=document.createElement("h3");title.className="title";title.textContent=m.title;
  card.append(img,title);grid.append(card);
