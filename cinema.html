@@ -53,9 +53,44 @@ footer{margin-top:38px;border-top:1px solid #ffffff12;padding:16px 0 20px;text-a
 @media(max-width:600px){.shell{padding:0 13px}.hero{padding:28px 0 23px}.grid{gap:10px}.card{padding:6px 6px 9px}.title{font-size:12px;margin-top:8px}.overlay{padding:10px}.player-head{padding:9px 11px}}
 @media(max-width:360px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* Dramatic studio-style opening */
+.cinema-intro{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;overflow:hidden;background:#000;isolation:isolate;cursor:pointer;animation:intro-blackout .55s ease both}
+.cinema-intro[hidden]{display:none}
+.cinema-intro:before,.cinema-intro:after{content:"";position:absolute;z-index:-1;top:-55%;width:48vw;height:145vh;opacity:0;filter:blur(5px);background:linear-gradient(180deg,transparent 0%,#ffffff05 24%,#ffffff55 49%,#ffffff0a 70%,transparent 100%);transform-origin:top center;mix-blend-mode:screen}
+.cinema-intro:before{left:8%;transform:rotate(28deg);animation:beam-left 2.2s .15s ease-out both}
+.cinema-intro:after{right:8%;transform:rotate(-28deg);animation:beam-right 2.2s .15s ease-out both}
+.intro-glow{position:absolute;width:min(78vw,650px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#ffffff22 0, #ffffff0a 27%,transparent 68%);opacity:0;animation:glow-pop 1.4s .6s ease-out both}
+.intro-content{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;padding:24px;animation:studio-logo 1.25s .35s cubic-bezier(.16,1,.3,1) both}
+.intro-logo{width:clamp(100px,18vw,170px);height:clamp(100px,18vw,170px);object-fit:contain;filter:drop-shadow(0 0 12px #ffffff65) drop-shadow(0 0 42px #ffffff45);animation:logo-throb 2s 1.5s ease-in-out infinite}
+.intro-title{font-size:clamp(34px,7vw,68px);font-weight:800;letter-spacing:1px;color:#fff;text-shadow:0 0 10px #fff9,0 0 28px #ffffff90,0 0 65px #ffffff55;margin:0}
+.intro-rule{width:min(360px,70vw);height:2px;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 20px #ffffffb0;animation:rule-grow 1.2s .85s ease both}
+.intro-tagline{margin:0;color:#c7c7c7;font-size:clamp(10px,2vw,13px);letter-spacing:clamp(2px,.7vw,6px);animation:page-in .8s 1.15s both}
+.intro-skip{position:absolute;bottom:max(24px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);padding:10px 17px;border:1px solid #ffffff38;border-radius:999px;background:#ffffff0a;color:#eee;font:inherit;font-size:12px;white-space:nowrap;backdrop-filter:blur(8px);animation:page-in .6s 1.3s both;transition:background .2s,border-color .2s}
+.intro-skip:hover{background:#ffffff1b;border-color:#fff}
+.cinema-intro.leaving{animation:intro-exit .85s cubic-bezier(.7,0,.3,1) both;pointer-events:none}
+@keyframes intro-blackout{from{opacity:0}to{opacity:1}}
+@keyframes beam-left{0%{opacity:0;transform:translateX(-18%) rotate(28deg) scaleX(.12)}40%{opacity:.9}100%{opacity:.22;transform:translateX(25%) rotate(28deg) scaleX(1.1)}}
+@keyframes beam-right{0%{opacity:0;transform:translateX(18%) rotate(-28deg) scaleX(.12)}40%{opacity:.8}100%{opacity:.18;transform:translateX(-25%) rotate(-28deg) scaleX(1.1)}}
+@keyframes glow-pop{0%{opacity:0;transform:scale(.3)}55%{opacity:1;transform:scale(1.05)}100%{opacity:.6;transform:scale(1)}}
+@keyframes studio-logo{0%{opacity:0;transform:translateY(32px) scale(.72);filter:blur(14px)}65%{opacity:1;filter:blur(0);transform:translateY(-4px) scale(1.035)}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes logo-throb{0%,100%{filter:drop-shadow(0 0 12px #ffffff65) drop-shadow(0 0 42px #ffffff45);transform:scale(1)}50%{filter:drop-shadow(0 0 22px #fff) drop-shadow(0 0 68px #ffffffb0);transform:scale(1.045)}}
+@keyframes rule-grow{from{transform:scaleX(0);opacity:0}to{transform:scaleX(1);opacity:1}}
+@keyframes intro-exit{0%{opacity:1;transform:scale(1);filter:brightness(1)}35%{opacity:1;filter:brightness(2.4)}100%{opacity:0;transform:scale(1.08);filter:brightness(3)}}
+
 </style>
 </head>
 <body>
+<div class="cinema-intro" id="cinemaIntro" role="button" tabindex="0" aria-label="ورود به حلی سینما">
+ <div class="intro-glow" aria-hidden="true"></div>
+ <div class="intro-content">
+  <img class="intro-logo" src="1.png" alt="">
+  <h1 class="intro-title">حلی سینما</h1>
+  <div class="intro-rule" aria-hidden="true"></div>
+  <p class="intro-tagline">THE CINEMA EXPERIENCE</p>
+ </div>
+ <button class="intro-skip" id="introSkip" type="button">ورود به سینما ⟵</button>
+</div>
 <div class="shell">
 <header><button class="brand-mark" id="secretTrigger" type="button" aria-label="لوگوی حلی سینما"><img src="1.png" alt="لوگوی حلی سینما"></button><span>حلی سینما</span></header>
 <main>
@@ -63,12 +98,27 @@ footer{margin-top:38px;border-top:1px solid #ffffff12;padding:16px 0 20px;text-a
 <section aria-label="لیست پخش امروز"><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="player-box inline-player"><div class="player-head"><h2 class="player-title">هاپرز</h2></div><div class="player-frame" id="inlinePlayer"></div></div><div class="grid" id="grid"></div></section>
 </main>
 <section class="ad-slot" aria-label="تبلیغ"><img src="t.gif" alt=""></section>
-<footer>حلی سینما<div class="version">CINEMA v1.2.4</div></footer>
+<footer>حلی سینما<div class="version">CINEMA v1.2.5</div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
 </div>
 <script>
+
+const cinemaIntro=document.getElementById("cinemaIntro");
+const introSkip=document.getElementById("introSkip");
+let introDismissed=false;
+function dismissIntro(){
+ if(introDismissed)return;
+ introDismissed=true;
+ cinemaIntro.classList.add("leaving");
+ window.setTimeout(()=>{cinemaIntro.hidden=true;},850);
+}
+introSkip.addEventListener("click",e=>{e.stopPropagation();dismissIntro()});
+cinemaIntro.addEventListener("click",dismissIntro);
+cinemaIntro.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();dismissIntro()}});
+window.setTimeout(dismissIntro,4800);
+
 const movies=[
  {title:"هاپرز",file:"1.jpg",embed:"https://www.aparat.com/video/video/embed/videohash/zbvl3ru/vt/frame"},
  {title:"داستان اسباب‌بازی ۵",file:"2.jpg"},
