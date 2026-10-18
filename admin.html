@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050505"><title>مدیریت حلی سینما</title>
+<link rel="icon" type="image/png" href="./1.png">
+<style>
+@font-face{font-family:CinemaBody;src:url('./2.ttf') format('truetype');font-display:swap}
+:root{color-scheme:dark;--bg:#050505;--panel:#0b0b0b;--line:#292929;--text:#f4f4f4;--muted:#a0a0a0;--accent:#d8d8d8}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#171717 0,transparent 48%),var(--bg);color:var(--text);font-family:CinemaBody,Tahoma,sans-serif}
+.wrap{width:min(980px,100%);margin:auto;padding:24px 16px 50px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-bottom:20px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:12px}.brand img{width:46px;height:46px;object-fit:contain;border:1px solid var(--line);border-radius:12px;padding:4px;background:#080808}.brand h1{font-size:21px;margin:0}.brand p{font-size:12px;color:var(--muted);margin:4px 0 0}.btn{font:inherit;cursor:pointer;border:1px solid #383838;background:#111;color:#eee;border-radius:10px;padding:10px 14px}.btn.primary{background:#e5e5e5;color:#080808;border-color:#eee;font-weight:800}.btn:disabled{opacity:.55;cursor:wait}.panel{margin-top:22px;background:#090909;border:1px solid var(--line);border-radius:16px;padding:clamp(16px,3vw,26px);box-shadow:0 18px 55px #0008}.panel h2{font-size:18px;margin:0 0 7px}.hint{font-size:12px;line-height:1.9;color:var(--muted);margin:0 0 18px}.field{margin:12px 0}.field label{display:block;font-size:12px;color:#c8c8c8;margin-bottom:7px}input{width:100%;min-width:0;border:1px solid #303030;border-radius:9px;padding:11px 12px;background:#050505;color:#fff;font:inherit;outline:none}input:focus{border-color:#aaa;box-shadow:0 0 0 3px #ffffff0b}.login{max-width:440px;margin:36px auto}.movies{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.movie{min-width:0;border:1px solid #262626;background:#070707;border-radius:12px;padding:14px}.movie h3{font-size:14px;margin:0 0 12px}.actions{display:flex;align-items:center;gap:10px;margin-top:18px}.status{font-size:12px;line-height:1.8;color:#bdbdbd;min-height:22px;margin-top:10px}.status.error{color:#ff9b9b}.status.ok{color:#9ce4b2}.hide{display:none!important}.foot{text-align:center;color:#626262;font-size:10px;margin-top:20px}@media(max-width:720px){.movies{grid-template-columns:1fr}.movie{padding:15px}.top{align-items:flex-start}.brand h1{font-size:18px}}@media(max-width:380px){.top{flex-direction:column}.actions{align-items:stretch;flex-direction:column}.actions .btn{width:100%}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><div class="brand"><img src="./1.png" alt=""><div><h1>مدیریت حلی سینما</h1><p>ویرایش برنامه پخش، عنوان و پوستر</p></div></div><a class="btn" href="./cinema.html">بازگشت به سینما</a></header>
+<section id="loginPanel" class="panel login">
+<h2>ورود مدیر</h2><p class="hint">برای ورود از حساب مدیر ثبت‌شده در Supabase استفاده کن. فقط حساب‌هایی که دسترسی مدیر دارند اجازه ذخیره تغییرات را خواهند داشت.</p>
+<form id="loginForm"><div class="field"><label for="email">ایمیل مدیر</label><input id="email" type="email" autocomplete="username" required></div><div class="field"><label for="password">رمز عبور</label><input id="password" type="password" autocomplete="current-password" required></div><button id="loginBtn" class="btn primary" type="submit" style="width:100%;margin-top:8px">ورود امن</button></form><div id="loginStatus" class="status" role="status"></div>
+</section>
+<section id="editorPanel" class="panel hide">
+<h2>برنامه پخش امروز</h2><p class="hint">عنوان، مسیر یا لینک مستقیم تصویر پوستر و ساعت هر فیلم را ویرایش کن. تغییرات پس از ذخیره از طریق Supabase برای همه بازدیدکنندگان سایت نمایش داده می‌شود. برای پوستر می‌توانی مسیر فایل داخل مخزن مثل ./1.jpg یا یک نشانی تصویر استفاده کنی.</p>
+<form id="editorForm"><div id="movies" class="movies"></div><div class="actions"><button id="saveBtn" class="btn primary" type="submit">ذخیره تغییرات</button><button id="logoutBtn" class="btn" type="button">خروج از حساب</button></div><div id="saveStatus" class="status" role="status"></div></form>
+</section>
+<div class="foot">CINEMA ADMIN · v1.0.0</div>
+</div>
+<script>
+(()=> {
+ const SUPABASE_URL='https://pwwicgyrycaexjnnhseb.supabase.co';
+ const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3d2ljZ3lyeWNhZXhqbm5oc2ViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwMzczMjgsImV4cCI6MjEwNjYxMzMyOH0.860RskDmycONZUHyOloN8AmKqRkzU5YNXUUze2DuPdM';
+ const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+ const defaults=[
+  {title:'Hoppers | هاپرز',poster:'./1.jpg',start:'15:30',end:'17:30'},
+  {title:'Toy Story 5 | داستان اسباب‌بازی ۵',poster:'./2.jpg',start:'17:30',end:'19:30'},
+  {title:'The Super Mario Galaxy Movie | سوپر ماریو: کهکشان',poster:'./3.jpg',start:'19:30',end:'21:30'}
+ ];
+ const $=id=>document.getElementById(id);
+ const setStatus=(id,msg,type='')=>{$(id).textContent=msg;$(id).className='status '+type};
+ let movies=defaults.map(m=>({...m}));
+ function safeTime(v){return /^([01]\d|2[0-3]):[0-5]\d$/.test(v)}
+ function render(){
+  $('movies').replaceChildren();
+  movies.forEach((m,i)=>{
+   const box=document.createElement('section');box.className='movie';
+   const h=document.createElement('h3');h.textContent='فیلم '+(i+1);
+   box.append(h);
+   const fields=[['عنوان فیلم','title',m.title,'text'],['مسیر یا لینک پوستر','poster',m.poster,'text'],['شروع پخش','start',m.start,'time'],['پایان پخش','end',m.end,'time']];
+   fields.forEach(([label,key,value,type])=>{
+    const wrap=document.createElement('div');wrap.className='field';
+    const lab=document.createElement('label');const id=key+i;lab.htmlFor=id;lab.textContent=label;
+    const input=document.createElement('input');input.id=id;input.type=type;input.value=value||'';input.required=true;
+    input.addEventListener('input',()=>{movies[i][key]=input.value;});
+    wrap.append(lab,input);box.append(wrap);
+   });
+   $('movies').append(box);
+  });
+ }
+ async function loadPlaylist(){
+  const {data,error}=await client.from('site_settings').select('value').eq('key','public.cinema_playlist').maybeSingle();
+  if(error)throw error;
+  if(data?.value?.movies?.length===3)movies=data.value.movies.map((m,i)=>({...defaults[i],...m}));
+  render();
+ }
+ async function enterIfAdmin(user){
+  const {data,error}=await client.from('admin_users').select('user_id').eq('user_id',user.id).maybeSingle();
+  if(error)throw error;
+  if(!data)throw new Error('این حساب دسترسی مدیر حلی سینما را ندارد.');
+  $('loginPanel').classList.add('hide');$('editorPanel').classList.remove('hide');
+  await loadPlaylist();
+ }
+ $('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();$('loginBtn').disabled=true;setStatus('loginStatus','در حال بررسی حساب...');
+  try{
+   const {data,error}=await client.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});
+   if(error)throw error;
+   await enterIfAdmin(data.user);setStatus('saveStatus','ورود موفق بود.','ok');
+  }catch(err){await client.auth.signOut();setStatus('loginStatus',err.message||'ورود انجام نشد.','error');}
+  finally{$('loginBtn').disabled=false;}
+ });
+ $('editorForm').addEventListener('submit',async e=>{
+  e.preventDefault();$('saveBtn').disabled=true;setStatus('saveStatus','در حال ذخیره...');
+  try{
+   movies.forEach((m,i)=>{if(!m.title.trim()||!m.poster.trim()||!safeTime(m.start)||!safeTime(m.end))throw new Error('عنوان، پوستر و ساعت‌های فیلم '+(i+1)+' را بررسی کن.');if(m.end<=m.start)throw new Error('ساعت پایان فیلم '+(i+1)+' باید بعد از ساعت شروع باشد.');});
+   const {data:{user}}=await client.auth.getUser();if(!user)throw new Error('نشست ورود منقضی شده؛ دوباره وارد شو.');
+   const {data:admin,error:adminError}=await client.from('admin_users').select('user_id').eq('user_id',user.id).maybeSingle();
+   if(adminError)throw adminError;if(!admin)throw new Error('دسترسی مدیر تأیید نشد.');
+   const payload={key:'public.cinema_playlist',value:{movies:movies.map(m=>({title:m.title.trim(),poster:m.poster.trim(),start:m.start,end:m.end}))},updated_at:new Date().toISOString()};
+   const {error}=await client.from('site_settings').upsert(payload,{onConflict:'key'});if(error)throw error;
+   setStatus('saveStatus','ذخیره شد! برنامه جدید به سایت عمومی ارسال شد.','ok');
+  }catch(err){setStatus('saveStatus',err.message||'ذخیره انجام نشد.','error');}
+  finally{$('saveBtn').disabled=false;}
+ });
+ $('logoutBtn').addEventListener('click',async()=>{await client.auth.signOut();$('editorPanel').classList.add('hide');$('loginPanel').classList.remove('hide');$('password').value='';setStatus('loginStatus','از حساب خارج شدی.');});
+ client.auth.getSession().then(async({data})=>{if(data.session){try{await enterIfAdmin(data.session.user)}catch(err){await client.auth.signOut();setStatus('loginStatus',err.message||'برای مدیریت وارد شو.','error');}}});
+})();
+</script>
+</body></html>
