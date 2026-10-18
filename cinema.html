@@ -64,7 +64,7 @@
     const title = document.getElementById("programTitle");
     const subtitle = document.getElementById("programSub");
     const status = document.getElementById("statusTag");
-    function getAparatEmbed(url) {
+    function getVideoEmbed(url) {
       if (!url) return "";
       try {
         const parsed = new URL(url);
@@ -75,7 +75,7 @@
         return id ? "https://www.aparat.com/video/video/embed/videohash/" + encodeURIComponent(id) + "/vt/frame" : "";
       } catch (_) { return ""; }
     }
-    const embedUrl = getAparatEmbed(VIDEO_URL);
+    const embedUrl = getVideoEmbed(VIDEO_URL);
     if (embedUrl) {
       const frame = document.createElement("iframe");
       frame.src = embedUrl; frame.title = "پخش برنامه حلی سینما";
