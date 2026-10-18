@@ -30,7 +30,7 @@ h1{font-size:clamp(32px,3.2vw,46px);font-weight:800;letter-spacing:-.6px;margin:
 .playlist-head{display:flex;align-items:center;justify-content:space-between;padding:0 0 14px;border-bottom:1px solid var(--line);margin-bottom:18px}
 .playlist-head h2{font-size:15px;font-weight:700;margin:0;display:flex;align-items:center;gap:9px}.playlist-head h2:before{content:"";width:3px;height:17px;background:var(--accent);border-radius:3px;box-shadow:0 0 12px #82b5ff55}
 .day{font-size:11px;color:#b5c0d2;padding:5px 9px;background:#080808;border:1px solid #242424;border-radius:7px}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2.2vw,32px)}.card{min-width:0;padding:clamp(10px,1.2vw,16px) clamp(10px,1.2vw,16px) 18px;background:#050505;border:1px solid #222222;border-radius:12px;box-shadow:0 8px 24px #ffffff0a,0 0 0 1px #ffffff05;transition:transform .32s cubic-bezier(.2,.9,.25,1.35),border-color .25s ease,box-shadow .25s ease;animation:poster-arrive .85s cubic-bezier(.2,.8,.2,1) both;animation-play-state:paused;animation-delay:calc(.3s + var(--i,0)*.22s);transform-origin:center bottom}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2.2vw,32px)}.card{min-width:0;padding:clamp(10px,1.2vw,16px) clamp(10px,1.2vw,16px) 18px;background:#050505;border:1px solid #222222;border-radius:12px;box-shadow:0 8px 24px #ffffff0a,0 0 0 1px #ffffff05;transition:transform .32s cubic-bezier(.2,.9,.25,1.35),border-color .25s ease,box-shadow .25s ease;animation:poster-arrive .85s cubic-bezier(.2,.8,.2,1) both;animation-play-state:running;animation-delay:calc(.3s + var(--i,0)*.22s);transform-origin:center bottom}
 .card:hover{border-color:#eeeeee;box-shadow:0 22px 48px #ffffff24,0 0 34px #ffffff18}
 .poster{display:block;width:100%;aspect-ratio:2/3;object-fit:cover;background:#000000;border-radius:7px;transition:filter .35s ease,transform .35s ease;filter:contrast(1.02)}.card:hover .poster{filter:contrast(1.12) brightness(1.08);transform:scale(1.012)}
 /* Pointer-tracked 3D poster tilt: the corner nearest the pointer rises, the opposite corner dips. */
@@ -138,7 +138,7 @@ body:before{background:radial-gradient(ellipse at 50% 8%,#ffffff12 0,transparent
 </div></section>
 </main>
 <section class="ad-slot" aria-label="تبلیغ"><img src="t.gif" alt=""></section>
-<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.32</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
+<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.33</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
