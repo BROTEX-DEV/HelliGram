@@ -165,7 +165,7 @@ body:before{background:radial-gradient(ellipse at 50% 100%,#f4f4f40a 0,transpare
 <section aria-label="لیست پخش امروز"><div class="player-box inline-player"><div class="player-head"><h2 class="player-title">هاپرز</h2></div><div class="player-frame" id="inlinePlayer"></div></div><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="grid" id="grid"></div></section>
 </main>
 <section class="ad-slot" aria-label="تبلیغ"><img src="t.gif" alt=""></section>
-<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.25</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
+<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.26</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
@@ -286,50 +286,56 @@ document.querySelectorAll('.card').forEach(card=>{
   const channel=client.channel('helli-cinema-online-count',{config:{presence:{key:visitorKey}}});
   const updateCount=()=>{
    const state=channel.presenceState();
-   const count=Object.values(state).reduce((sum,entries)=>sum+(Array.is<script>
-(()=> {
+   const count=Object.values(state).reduce((sum,entries)=>sum+(Array.isArray(entries)?entries.length:0),0);
+   countEl.textContent='بازدیدکننده آنلاین: '+count;
+  };
+  channel.on('presence',{event:'sync'},updateCount).subscribe(async status=>{
+   if(status==='SUBSCRIBED'){await channel.track({online_at:new Date().toISOString()});updateCount();}
+  });
+ }catch(error){
+  countEl.textContent='حلی سینما';
+ }
+})();
+
+/* Cinematic moving light beams. */
+</script>
+<script>
+(()=>{
  const canvas=document.getElementById('cinemaParticles');
  if(!canvas||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
- const ctx=canvas.getContext('2d',{alpha:true}); if(!ctx)return;
+ const ctx=canvas.getContext('2d',{alpha:true});if(!ctx)return;
  let w=0,h=0,dpr=1,raf=0,beams=[];
  function resize(){
   dpr=Math.min(window.devicePixelRatio||1,1.5);w=window.innerWidth;h=window.innerHeight;
-  canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);canvas.style.width=w+'px';canvas.style.height=h+'px';
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-  beams=[{x:w*.18,width:w*.22,angle:.22,speed:.00011,phase:0,alpha:.045},{x:w*.78,width:w*.26,angle:-.19,speed:.000085,phase:2.2,alpha:.035},{x:w*.52,width:w*.16,angle:.07,speed:.00007,phase:4.4,alpha:.025}];
+  canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
+  canvas.style.width=w+'px';canvas.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0);
+  beams=[
+   {x:w*.18,width:w*.22,angle:.22,speed:.00011,phase:0,alpha:.045},
+   {x:w*.78,width:w*.26,angle:-.19,speed:.000085,phase:2.2,alpha:.035},
+   {x:w*.52,width:w*.16,angle:.07,speed:.00007,phase:4.4,alpha:.025}
+  ];
  }
  function draw(now){
-  ctx.clearRect(0,0,w,h);
-  const t=now||0;
+  if(document.hidden){raf=0;return;}
+  ctx.clearRect(0,0,w,h);const t=now||0;
   for(const b of beams){
    const x=b.x+Math.sin(t*b.speed+b.phase)*w*.13;
    const gradient=ctx.createLinearGradient(x-w*.18,0,x+b.width,h);
-   gradient.addColorStop(0,'rgba(255,255,255,0)');gradient.addColorStop(.45,'rgba(224,232,255,'+b.alpha+')');gradient.addColorStop(.55,'rgba(255,255,255,'+(b.alpha*.72)+')');gradient.addColorStop(1,'rgba(255,255,255,0)');
-   ctx.save();ctx.translate(x,h*.08);ctx.rotate(b.angle);ctx.fillStyle=gradient;ctx.fillRect(-b.width*.5,-h*.25,b.width,h*1.5);ctx.restore();
+   gradient.addColorStop(0,'rgba(255,255,255,0)');
+   gradient.addColorStop(.45,'rgba(224,232,255,'+b.alpha+')');
+   gradient.addColorStop(.55,'rgba(255,255,255,'+(b.alpha*.72)+')');
+   gradient.addColorStop(1,'rgba(255,255,255,0)');
+   ctx.save();ctx.translate(x,h*.08);ctx.rotate(b.angle);ctx.fillStyle=gradient;
+   ctx.fillRect(-b.width*.5,-h*.25,b.width,h*1.5);ctx.restore();
   }
   const haze=ctx.createRadialGradient(w*.5,h*.78,0,w*.5,h*.78,Math.max(w,h)*.68);
   haze.addColorStop(0,'rgba(185,198,225,0.035)');haze.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=haze;ctx.fillRect(0,0,w,h);
-  raf=requestAnimationFrame(draw);
+  ctx.fillStyle=haze;ctx.fillRect(0,0,w,h);raf=requestAnimationFrame(draw);
  }
- resize();draw(0);
+ resize();raf=requestAnimationFrame(draw);
  let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(resize,120)},{passive:true});
- document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf)}else{cancelAnimationFrame(raf);draw(0)}});
-})();
-</script>.y < -5){p.y=h+5;p.x=Math.random()*w}
-   if(p.x < -5)p.x=w+5;if(p.x>w+5)p.x=-5;
-   const glow=p.r>1.25;
-   ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-   ctx.fillStyle='rgba(255,205,112,'+p.a+')';ctx.fill();
-   if(glow){ctx.beginPath();ctx.arc(p.x,p.y,p.r*3.2,0,Math.PI*2);ctx.fillStyle='rgba(255,184,72,'+(p.a*.09)+')';ctx.fill()}
-  }
-  raf=requestAnimationFrame(draw);
- }
- resize();draw();
- let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(resize,120)},{passive:true});
- document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf)}else{cancelAnimationFrame(raf);draw()}});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf);raf=0}else if(!raf){raf=requestAnimationFrame(draw)}});
 })();
 </script>
-
 </body>
 </html>
