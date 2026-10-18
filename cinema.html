@@ -5,32 +5,32 @@
 <title>حلی سینما</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:dark;--bg:#090b10;--panel:#111722;--line:#252d3a;--text:#f4f6fb;--muted:#929caf;--accent:#82b5ff}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#18283e 0,transparent 54%),var(--bg);color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif}
+:root{color-scheme:dark;--bg:#000000;--panel:#000000;--line:#202020;--text:#f4f4f4;--muted:#929292;--accent:#bdbdbd}
+*{box-sizing:border-box}body{margin:0;background:#000000;color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif}
 .shell{max-width:960px;margin:auto;padding:0 20px}header{height:72px;display:flex;align-items:center;border-bottom:1px solid #ffffff12;font-size:15px;font-weight:700;gap:8px}
-.brand-mark{color:#d7e7ff;margin-left:2px;background:linear-gradient(145deg,#29486f,#15243a);border:1px solid #395477;border-radius:11px;padding:9px 10px;font-size:17px;cursor:pointer;touch-action:manipulation;box-shadow:inset 0 1px #ffffff18,0 5px 18px #0005}
-.hero{padding:34px 0 27px}.eyebrow{display:inline-block;color:#b8d5ff;font-size:11px;padding:5px 10px;border:1px solid #2b4567;border-radius:999px;background:#142238;margin-bottom:12px}
-h1{font-size:clamp(27px,4vw,34px);font-weight:800;letter-spacing:-.6px;margin:0 0 7px;text-shadow:0 3px 22px #8dbdff20}.subtitle{font-size:13px;color:var(--muted);margin:0}
+.brand-mark{color:#d7e7ff;margin-left:2px;background:#080808;border:1px solid #292929;border-radius:11px;padding:9px 10px;font-size:17px;cursor:pointer;touch-action:manipulation;box-shadow:inset 0 1px #ffffff18,0 5px 18px #0005}
+.hero{padding:34px 0 27px}.eyebrow{display:inline-block;color:#d0d0d0;font-size:11px;padding:5px 10px;border:1px solid #292929;border-radius:999px;background:#050505;margin-bottom:12px}
+h1{font-size:clamp(27px,4vw,34px);font-weight:800;letter-spacing:-.6px;margin:0 0 7px;text-shadow:none}.subtitle{font-size:13px;color:var(--muted);margin:0}
 .playlist-head{display:flex;align-items:center;justify-content:space-between;padding:0 0 14px;border-bottom:1px solid var(--line);margin-bottom:18px}
 .playlist-head h2{font-size:15px;font-weight:700;margin:0;display:flex;align-items:center;gap:9px}.playlist-head h2:before{content:"";width:3px;height:17px;background:var(--accent);border-radius:3px;box-shadow:0 0 12px #82b5ff55}
-.day{font-size:11px;color:#b5c0d2;padding:5px 9px;background:#151d29;border:1px solid #283346;border-radius:7px}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}.card{min-width:0;padding:8px 8px 12px;background:linear-gradient(145deg,#141b27,#0e131c);border:1px solid #273143;border-radius:12px;box-shadow:0 8px 24px #0003;transition:transform .2s,border-color .2s,box-shadow .2s}
-.card:hover{transform:translateY(-4px);border-color:#506d96;box-shadow:0 14px 30px #0005,0 0 0 1px #8dbdff0c}
-.poster{display:block;width:100%;aspect-ratio:2/3;object-fit:cover;background:#151923;border-radius:7px}.poster.playable{cursor:default}
+.day{font-size:11px;color:#b5c0d2;padding:5px 9px;background:#080808;border:1px solid #242424;border-radius:7px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}.card{min-width:0;padding:8px 8px 12px;background:#050505;border:1px solid #222222;border-radius:12px;box-shadow:0 8px 24px #0003;transition:transform .2s,border-color .2s,box-shadow .2s}
+.card:hover{transform:translateY(-4px);border-color:#444444;box-shadow:0 14px 30px #0008}
+.poster{display:block;width:100%;aspect-ratio:2/3;object-fit:cover;background:#000000;border-radius:7px}.poster.playable{cursor:default}
 .fallback{aspect-ratio:2/3;display:grid;place-items:center;text-align:center;padding:12px;background:#151923;color:#929caf;border-radius:7px;font-size:13px}
 .title{font-size:13px;font-weight:600;line-height:1.8;margin:10px 3px 0}
 footer{margin-top:38px;border-top:1px solid #ffffff12;padding:16px 0 20px;text-align:center;color:#828da0;font-size:11px}.version{font-size:9px;color:#586579;margin-top:4px;letter-spacing:.3px}
 .inline-player{display:block}
-.player-box{width:100%;background:#0e131c;border:1px solid #33445d;border-radius:14px;overflow:hidden;box-shadow:0 12px 32px #0005;margin-bottom:18px}
-.player-head{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;border-bottom:1px solid #263143}.player-title{font-size:14px;font-weight:700;margin:0}
-.close{border:0;border-radius:8px;background:#202b3a;color:#e8eef8;width:34px;height:34px;font-size:23px;cursor:pointer}
+.player-box{width:100%;background:#000000;border:1px solid #292929;border-radius:14px;overflow:hidden;box-shadow:0 12px 32px #0005;margin-bottom:18px}
+.player-head{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;border-bottom:1px solid #222222}.player-title{font-size:14px;font-weight:700;margin:0}
+.close{border:0;border-radius:8px;background:#161616;color:#e8eef8;width:34px;height:34px;font-size:23px;cursor:pointer}
 .player-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000}.player-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .player-note{font-size:11px;color:#8997ac;padding:10px 14px;margin:0}
-.secret-overlay{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:20px;background:#03060bd9;backdrop-filter:blur(10px)}.secret-overlay[hidden]{display:none}
-.secret-room{position:relative;width:min(390px,100%);padding:30px 22px;text-align:center;background:linear-gradient(145deg,#151e2b,#0c1017);border:1px solid #3a506c;border-radius:16px;box-shadow:0 24px 90px #000b,0 0 35px #3f79bb1a}
-.secret-stamp{width:64px;height:64px;margin:0 auto 17px;display:grid;place-items:center;border:1px solid #4d6b91;border-radius:18px;font-size:27px;color:#c5ddff;background:#17283e;box-shadow:inset 0 1px #ffffff15,0 8px 22px #0005}
+.secret-overlay{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:20px;background:#000000e8;backdrop-filter:blur(10px)}.secret-overlay[hidden]{display:none}
+.secret-room{position:relative;width:min(390px,100%);padding:30px 22px;text-align:center;background:#050505;border:1px solid #292929;border-radius:16px;box-shadow:0 24px 90px #000b,0 0 35px #3f79bb1a}
+.secret-stamp{width:64px;height:64px;margin:0 auto 17px;display:grid;place-items:center;border:1px solid #333333;border-radius:18px;font-size:27px;color:#eeeeee;background:#090909;box-shadow:inset 0 1px #ffffff15,0 8px 22px #0005}
 .secret-room h2{font-size:21px;margin:0 0 8px}.secret-room p{font-size:13px;color:#aeb9ca;line-height:2;margin:0}
-.secret-code{display:inline-block;margin-top:17px;padding:7px 11px;border:1px dashed #405570;border-radius:7px;color:#c7dafa;font-size:11px;letter-spacing:1px;direction:ltr;background:#111d2c}
+.secret-code{display:inline-block;margin-top:17px;padding:7px 11px;border:1px dashed #333333;border-radius:7px;color:#dddddd;font-size:11px;letter-spacing:1px;direction:ltr;background:#050505}
 .secret-close{position:absolute;left:12px;top:10px;background:none;border:0;color:#aeb9ca;font:inherit;font-size:22px;cursor:pointer}
 @media(max-width:600px){.shell{padding:0 13px}.hero{padding:28px 0 23px}.grid{gap:10px}.card{padding:6px 6px 9px}.title{font-size:12px;margin-top:8px}.overlay{padding:10px}.player-head{padding:9px 11px}}
 @media(max-width:360px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -43,7 +43,7 @@ footer{margin-top:38px;border-top:1px solid #ffffff12;padding:16px 0 20px;text-a
 <section class="hero"><h1>حلی سینما</h1><p class="subtitle">سینما، ساده و بی‌حاشیه.</p></section>
 <section aria-label="لیست پخش امروز"><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="player-box inline-player"><div class="player-head"><h2 class="player-title">هاپرز</h2></div><div class="player-frame" id="inlinePlayer"></div></div><div class="grid" id="grid"></div></section>
 </main>
-<footer>حلی سینما<div class="version">CINEMA v1.1.6</div></footer>
+<footer>حلی سینما<div class="version">CINEMA v1.1.7</div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
