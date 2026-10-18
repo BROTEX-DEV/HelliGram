@@ -1,2 +1,55 @@
 <!doctype html>
-<html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#070b14"><title>حلی سینما</title><link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet"><style>:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#17325a,transparent 50%),#070b14;color:#f5f7fb;font-family:Vazirmatn,Tahoma,sans-serif}.shell{max-width:1100px;margin:auto;padding:0 18px}header{padding:20px 0;border-bottom:1px solid #ffffff18;font-weight:900}.hero{text-align:center;padding:38px 0 26px}.hero h1{font-size:clamp(30px,5vw,48px);margin:12px 0}.hero p{color:#9aa8bd}.toggle{width:100%;padding:17px;border:1px solid #2a4770;border-radius:16px;background:#10213a;color:white;text-align:right;font:700 16px Vazirmatn;cursor:pointer}.panel{margin-top:10px;padding:16px;border:1px solid #202e43;background:#0c1421;border-radius:16px}.panel[hidden]{display:none}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{overflow:hidden;border:1px solid #263750;background:#101b2b;border-radius:15px}.poster{display:block;width:100%;aspect-ratio:2/3;object-fit:cover;background:#0b1220}.fallback{aspect-ratio:2/3;display:grid;place-items:center;padding:12px;text-align:center;color:#8ea5c4;background:#13233a}.info{padding:12px}.title{margin:0;font-size:15px;line-height:1.8}footer{text-align:center;color:#74849b;border-top:1px solid #ffffff18;margin-top:28px;padding:18px;font-size:11px}.version{font-size:9px;color:#52627a;margin-top:5px}@media(max-width:650px){.shell{padding:0 12px}.grid{gap:8px}.info{padding:8px}.title{font-size:12px}}@media(max-width:380px){.grid{grid-template-columns:1fr}.card{display:grid;grid-template-columns:110px 1fr}.poster,.fallback{aspect-ratio:2/3}.info{align-self:center}}</style></head><body><div class="shell"><header>▶ حلی سینما</header><main><section class="hero"><h1>حلی سینما</h1><p>هر روز سه انیمیشن؛ پوسترها و عنوان فیلم‌ها</p></section><section><button class="toggle" id="toggle" aria-expanded="true" aria-controls="panel">☷　لیست پخش امروز　⌄</button><div class="panel" id="panel"><h2>🎬 برنامه روز اول</h2><div class="grid" id="grid"></div><p style="color:#9aa8bd;font-size:12px">پوسترها از فایل‌های تصویری کنار cinema.html بارگذاری می‌شوند.</p></div></section></main><footer>حلی سینما<div class="version">CINEMA v1.0.7</div></footer></div><script>const movies=[{title:"هاپرز",file:"1.jpg"},{title:"داستان اسباب‌بازی ۵",file:"2.jpg"},{title:"سوپر ماریو: کهکشان",file:"3.jpg"}];const grid=document.getElementById("grid");for(const m of movies){const card=document.createElement("article");card.className="card";const img=document.createElement("img");img.className="poster";img.src=m.file;img.alt="پوستر "+m.title;img.loading="lazy";img.onerror=()=>{const f=document.createElement("div");f.className="fallback";f.textContent="پوستر "+m.title;img.replaceWith(f)};const info=document.createElement("div");info.className="info";const title=document.createElement("h3");title.className="title";title.textContent=m.title;info.append(title);card.append(img,info);grid.append(card)}document.getElementById("toggle").addEventListener("click",e=>{const b=e.currentTarget;const open=b.getAttribute("aria-expanded")==="true";b.setAttribute("aria-expanded",String(!open));document.getElementById("panel").hidden=open});</script></body></html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090909">
+<title>حلی سینما</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#090909;--surface:#111;--line:#252525;--text:#f4f4f4;--muted:#888}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif}
+.shell{max-width:960px;margin:auto;padding:0 20px}
+header{height:68px;display:flex;align-items:center;border-bottom:1px solid var(--line);font-size:15px;font-weight:700}
+.brand-mark{color:#bbb;margin-left:9px}
+.hero{padding:35px 0 24px}
+h1{font-size:27px;font-weight:700;letter-spacing:-.5px;margin:0 0 6px}
+.subtitle{font-size:13px;color:var(--muted);margin:0}
+.playlist-head{display:flex;align-items:center;justify-content:space-between;padding:15px 0;border-bottom:1px solid var(--line);margin-bottom:17px}
+.playlist-head h2{font-size:14px;font-weight:600;margin:0}
+.day{font-size:11px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.card{min-width:0}
+.poster{display:block;width:100%;aspect-ratio:2/3;object-fit:cover;background:#151515;border-radius:5px}
+.fallback{aspect-ratio:2/3;display:grid;place-items:center;text-align:center;padding:12px;background:#151515;color:#888;border-radius:5px;font-size:13px}
+.title{font-size:13px;font-weight:500;line-height:1.8;margin:9px 0 0}
+footer{margin-top:36px;border-top:1px solid var(--line);padding:15px 0 20px;text-align:center;color:#777;font-size:11px}
+.version{font-size:9px;color:#555;margin-top:4px;letter-spacing:.3px}
+@media(max-width:600px){.shell{padding:0 13px}.hero{padding:28px 0 20px}h1{font-size:24px}.grid{gap:10px}.title{font-size:12px}}
+@media(max-width:360px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header><span class="brand-mark">▶</span>حلی سینما</header>
+<main>
+<section class="hero"><h1>حلی سینما</h1><p class="subtitle">سینما، ساده و بی‌حاشیه.</p></section>
+<section aria-label="لیست پخش امروز">
+<div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div>
+<div class="grid" id="grid"></div>
+</section>
+</main>
+<footer>حلی سینما<div class="version">CINEMA v1.0.8</div></footer>
+</div>
+<script>
+const movies=[{title:"هاپرز",file:"1.jpg"},{title:"داستان اسباب‌بازی ۵",file:"2.jpg"},{title:"سوپر ماریو: کهکشان",file:"3.jpg"}];
+const grid=document.getElementById("grid");
+for(const m of movies){
+ const card=document.createElement("article");card.className="card";
+ const img=document.createElement("img");img.className="poster";img.src=m.file;img.alt="پوستر "+m.title;img.loading="lazy";
+ img.onerror=()=>{const f=document.createElement("div");f.className="fallback";f.textContent="پوستر "+m.title;img.replaceWith(f)};
+ const title=document.createElement("h3");title.className="title";title.textContent=m.title;
+ card.append(img,title);grid.append(card);
+}
+</script>
+</body>
+</html>
