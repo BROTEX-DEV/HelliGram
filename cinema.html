@@ -97,10 +97,12 @@ h1,h2,h3,.player-title,.intro-title,.secret-room h2{font-family:'CinemaHead','Ci
 .scroll-reveal.in-view{opacity:1;transform:translateY(0);filter:blur(0)}
 
 
-/* Animated cinematic gold-particle background */
-#cinemaParticles{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.72}
+/* Cinematic moving spotlights and subtle atmospheric haze */
+#cinemaParticles{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.86}
+body:before{background:radial-gradient(ellipse at 50% 100%,#f4f4f40a 0,transparent 42%),linear-gradient(112deg,transparent 0%,#dce7ff00 28%,#dce7ff0a 40%,transparent 52%),linear-gradient(248deg,transparent 0%,#ffffff00 31%,#ffffff0a 43%,transparent 56%);background-size:100% 100%,220% 220%,220% 220%;animation:cinema-beams 19s ease-in-out infinite alternate}
+@keyframes cinema-beams{0%{background-position:0 0,120% 0,-30% 100%;transform:translate3d(-1%,0,0) scale(1)}50%{background-position:0 0,35% 70%,80% 20%;transform:translate3d(1%,0,0) scale(1.03)}100%{background-position:0 0,-30% 100%,120% 0;transform:translate3d(-.5%,-1%,0) scale(1.05)}}
 .shell{position:relative;z-index:1}
-@media(prefers-reduced-motion:reduce){#cinemaParticles{display:none}}
+@media(prefers-reduced-motion:reduce){#cinemaParticles{display:none}body:before{animation:none}}
 </style>
 </head>
 <body>
@@ -120,7 +122,7 @@ h1,h2,h3,.player-title,.intro-title,.secret-room h2{font-family:'CinemaHead','Ci
 <section aria-label="لیست پخش امروز"><div class="player-box inline-player"><div class="player-head"><h2 class="player-title">هاپرز</h2></div><div class="player-frame" id="inlinePlayer"></div></div><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="grid" id="grid"></div></section>
 </main>
 <section class="ad-slot" aria-label="تبلیغ"><img src="t.gif" alt=""></section>
-<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.21</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
+<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.22</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
@@ -228,47 +230,37 @@ document.querySelectorAll('.card').forEach(card=>{
   const channel=client.channel('helli-cinema-online-count',{config:{presence:{key:visitorKey}}});
   const updateCount=()=>{
    const state=channel.presenceState();
-   const count=Object.values(state).reduce((sum,entries)=>sum+(Array.isArray(entries)?entries.length:0),0);
-   countEl.textContent=count+' نفر آنلاین';
-  };
-  channel.on('presence',{event:'sync'},updateCount);
-  channel.on('presence',{event:'join'},updateCount);
-  channel.on('presence',{event:'leave'},updateCount);
-  channel.subscribe(async status=>{
-   if(status==='SUBSCRIBED'){
-    await channel.track({joined_at:new Date().toISOString(),page:'cinema'});
-    updateCount();
-   }else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT'||status==='CLOSED'){
-    countEl.textContent='شمارش در دسترس نیست';
-   }
-  });
- }catch(error){
-  countEl.textContent='شمارش در دسترس نیست';
-  console.warn('Cinema online count unavailable:',error);
- }
-})();
-
-</script>
-
-<script>
+   const count=Object.values(state).reduce((sum,entries)=>sum+(Array.is<script>
 (()=> {
  const canvas=document.getElementById('cinemaParticles');
  if(!canvas||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
  const ctx=canvas.getContext('2d',{alpha:true}); if(!ctx)return;
- let w=0,h=0,dpr=1,particles=[],raf=0;
- const makeParticle=()=>({x:Math.random()*w,y:Math.random()*h,r:.45+Math.random()*1.45,vx:(Math.random()-.5)*.18,vy:-.12-Math.random()*.3,a:.12+Math.random()*.48,phase:Math.random()*Math.PI*2,twinkle:.004+Math.random()*.012});
+ let w=0,h=0,dpr=1,raf=0,beams=[];
  function resize(){
   dpr=Math.min(window.devicePixelRatio||1,1.5);w=window.innerWidth;h=window.innerHeight;
   canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);canvas.style.width=w+'px';canvas.style.height=h+'px';
   ctx.setTransform(dpr,0,0,dpr,0,0);
-  const count=Math.min(85,Math.max(28,Math.round(w*h/18000)));
-  particles=Array.from({length:count},makeParticle);
+  beams=[{x:w*.18,width:w*.22,angle:.22,speed:.00011,phase:0,alpha:.045},{x:w*.78,width:w*.26,angle:-.19,speed:.000085,phase:2.2,alpha:.035},{x:w*.52,width:w*.16,angle:.07,speed:.00007,phase:4.4,alpha:.025}];
  }
- function draw(){
+ function draw(now){
   ctx.clearRect(0,0,w,h);
-  for(const p of particles){
-   p.x+=p.vx+Math.sin(p.phase)*.035;p.y+=p.vy;p.phase+=p.twinkle;
-   if(p.y < -5){p.y=h+5;p.x=Math.random()*w}
+  const t=now||0;
+  for(const b of beams){
+   const x=b.x+Math.sin(t*b.speed+b.phase)*w*.13;
+   const gradient=ctx.createLinearGradient(x-w*.18,0,x+b.width,h);
+   gradient.addColorStop(0,'rgba(255,255,255,0)');gradient.addColorStop(.45,'rgba(224,232,255,'+b.alpha+')');gradient.addColorStop(.55,'rgba(255,255,255,'+(b.alpha*.72)+')');gradient.addColorStop(1,'rgba(255,255,255,0)');
+   ctx.save();ctx.translate(x,h*.08);ctx.rotate(b.angle);ctx.fillStyle=gradient;ctx.fillRect(-b.width*.5,-h*.25,b.width,h*1.5);ctx.restore();
+  }
+  const haze=ctx.createRadialGradient(w*.5,h*.78,0,w*.5,h*.78,Math.max(w,h)*.68);
+  haze.addColorStop(0,'rgba(185,198,225,0.035)');haze.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=haze;ctx.fillRect(0,0,w,h);
+  raf=requestAnimationFrame(draw);
+ }
+ resize();draw(0);
+ let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(resize,120)},{passive:true});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf)}else{cancelAnimationFrame(raf);draw(0)}});
+})();
+</script>.y < -5){p.y=h+5;p.x=Math.random()*w}
    if(p.x < -5)p.x=w+5;if(p.x>w+5)p.x=-5;
    const glow=p.r>1.25;
    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
