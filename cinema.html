@@ -116,19 +116,22 @@ body:before{background:radial-gradient(ellipse at 50% 8%,#ffffff12 0,transparent
 .shell{position:relative;z-index:1}
 
 
-/* Shared cinema curtain controlled by the admin panel */
-.global-curtain{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;overflow:hidden;background:#070305;transition:opacity .7s ease,visibility .7s ease}
-.global-curtain[hidden]{display:none}
-.global-curtain .drape{position:absolute;inset:-3% 50% -3% -3%;background:repeating-linear-gradient(90deg,#26060b 0%,#64101b 7%,#390810 13%,#841c29 19%,#430a13 26%,#1c050a 33%);box-shadow:inset -20px 0 36px #000b,inset 0 0 35px #000b}
-.global-curtain .drape.right{inset:-3% -3% -3% 50%;background:repeating-linear-gradient(90deg,#1c050a 0%,#430a13 7%,#841c29 14%,#390810 20%,#64101b 27%,#26060b 34%);box-shadow:inset 20px 0 36px #000b,inset 0 0 35px #000b}
-.global-curtain .valance{position:absolute;top:-3%;left:-2%;right:-2%;height:18%;z-index:2;border-radius:0 0 50% 50%;background:repeating-linear-gradient(90deg,#26060b 0%,#841c29 8%,#450b14 16%,#741722 24%,#26060b 32%);box-shadow:0 12px 25px #000b}
-.global-curtain .curtain-message{position:relative;z-index:3;text-align:center;padding:24px;color:#fff;text-shadow:0 2px 18px #000}
-.global-curtain h2{font-size:clamp(22px,5vw,42px);margin:0 0 10px}
-.global-curtain p{margin:0;color:#ead5d8;font-size:13px}
-.global-curtain .gold-line{width:min(260px,60vw);height:1px;background:linear-gradient(90deg,transparent,#d5b879,transparent);margin:18px auto;box-shadow:0 0 12px #d5b87966}
-.global-curtain.opening .drape.left{transform:translateX(-103%)}
-.global-curtain.opening .drape.right{transform:translateX(103%)}
-.global-curtain .drape{transition:transform 1.6s cubic-bezier(.72,0,.24,1)}
+/* Movie curtain: scoped to the player only; state is stored per movie. */
+.player-curtain{position:absolute;inset:0;z-index:8;display:grid;place-items:center;overflow:hidden;background:#070305;cursor:pointer}
+.player-curtain[hidden]{display:none}
+.player-curtain .drape{position:absolute;inset:-3% 50% -3% -3%;background:repeating-linear-gradient(90deg,#26060b 0%,#64101b 7%,#390810 13%,#841c29 19%,#430a13 26%,#1c050a 33%);box-shadow:inset -20px 0 36px #000b,inset 0 0 35px #000b;transition:transform 1.6s cubic-bezier(.72,0,.24,1)}
+.player-curtain .drape.right{inset:-3% -3% -3% 50%;background:repeating-linear-gradient(90deg,#1c050a 0%,#430a13 7%,#841c29 14%,#390810 20%,#64101b 27%,#26060b 34%);box-shadow:inset 20px 0 36px #000b,inset 0 0 35px #000b}
+.player-curtain .valance{position:absolute;top:-3%;left:-2%;right:-2%;height:18%;z-index:2;border-radius:0 0 50% 50%;background:repeating-linear-gradient(90deg,#26060b 0%,#841c29 8%,#450b14 16%,#741722 24%,#26060b 32%);box-shadow:0 12px 25px #000b;pointer-events:none}
+.player-curtain .curtain-message{position:relative;z-index:3;text-align:center;padding:18px;color:#fff;text-shadow:0 2px 18px #000}
+.player-curtain h2{font-size:clamp(18px,3vw,30px);margin:0 0 8px}
+.player-curtain p{margin:0;color:#ead5d8;font-size:12px}
+.player-curtain .gold-line{width:min(220px,60vw);height:1px;background:linear-gradient(90deg,transparent,#d5b879,transparent);margin:14px auto;box-shadow:0 0 12px #d5b87966}
+.player-curtain button{margin-top:14px;padding:10px 20px;border:1px solid #d5b879;border-radius:999px;background:#16090b;color:#fff;font:inherit;cursor:pointer}
+.player-curtain.opening .drape.left{transform:translateX(-103%)}
+.player-curtain.opening .drape.right{transform:translateX(103%)}
+.player-curtain.opening .curtain-message{animation:curtain-title-out .45s ease forwards}
+.player-curtain.opening{background:transparent;transition:background .7s ease .45s}
+@media(prefers-reduced-motion:reduce){.player-curtain .drape{transition:none}}
 
 </style>
 </head>
@@ -143,18 +146,18 @@ body:before{background:radial-gradient(ellipse at 50% 8%,#ffffff12 0,transparent
   <p class="intro-tagline">THE CINEMA EXPERIENCE</p>
  </div>
 </div>
-<div class="global-curtain" id="globalCurtain" role="dialog" aria-label="پرده سینما"><div class="drape left"></div><div class="drape right"></div><div class="valance"></div><div class="curtain-message"><h2>حلی سینما</h2><div class="gold-line"></div><p>برای شروع نمایش، پرده را باز کن.</p><button id="openPersonalCurtain" type="button" style="margin-top:22px;padding:12px 24px;border:1px solid #d5b879;border-radius:999px;background:#16090b;color:#fff;font:inherit;cursor:pointer">باز کردن پرده</button></div></div>
+
 <div class="shell">
 <main>
 <section class="hero"><h1>حلی سینما</h1><p class="subtitle">سینما، ساده و بی‌حاشیه.</p></section>
-<section aria-label="لیست پخش امروز"><div class="player-box inline-player"><div class="player-head"><h2 class="player-title" dir="auto">Hoppers | هاپرز</h2></div><div class="player-frame" id="inlinePlayer"><iframe src="https://www.aparat.com/video/video/embed/videohash/zbvl3ru/vt/frame" title="پخش فیلم" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="eager"></iframe></div></div><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="grid" id="grid">
+<section aria-label="لیست پخش امروز"><div class="player-box inline-player"><div class="player-head"><h2 class="player-title" dir="auto">Hoppers | هاپرز</h2></div><div class="player-frame" id="inlinePlayer"><iframe src="https://www.aparat.com/video/video/embed/videohash/zbvl3ru/vt/frame" title="پخش فیلم" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="eager"></iframe><div class="player-curtain" id="playerCurtain" role="dialog" aria-label="پرده پلیر"><div class="drape left"></div><div class="drape right"></div><div class="valance"></div><div class="curtain-message"><h2>آماده نمایش؟</h2><div class="gold-line"></div><p>پرده را باز کن و از فیلم لذت ببر.</p><button id="openPlayerCurtain" type="button">باز کردن پرده</button></div></div></div></div><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="grid" id="grid">
 <article class="card" data-movie="0" style="--i:0"><img class="poster" id="poster0" src="./1.jpg" alt="پوستر هاپرز" loading="eager"><h3 class="title" id="title0" dir="auto">Hoppers | هاپرز</h3><div class="broadcast-time"><span>ساعت پخش</span><b id="time0">۱۵:۳۰ تا ۱۷:۳۰</b></div></article>
 <article class="card" data-movie="1" style="--i:1"><img class="poster" id="poster1" src="./2.jpg" alt="پوستر داستان اسباب‌بازی ۵" loading="eager"><h3 class="title" id="title1" dir="auto">Toy Story 5 | داستان اسباب‌بازی ۵</h3><div class="broadcast-time"><span>ساعت پخش</span><b id="time1">۱۷:۳۰ تا ۱۹:۳۰</b></div></article>
 <article class="card" data-movie="2" style="--i:2"><img class="poster" id="poster2" src="./3.jpg" alt="پوستر سوپر ماریو: کهکشان" loading="eager"><h3 class="title" id="title2" dir="auto">The Super Mario Galaxy Movie | سوپر ماریو: کهکشان</h3><div class="broadcast-time"><span>ساعت پخش</span><b id="time2">۱۹:۳۰ تا ۲۱:۳۰</b></div></article>
 </div></section>
 </main>
 <section class="ad-slot" aria-label="تبلیغ"><img src="t.gif" alt=""></section>
-<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.39</div><a class="admin-shortcut" href="./admin.html">مدیریت</a><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
+<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.40</div><a class="admin-shortcut" href="./admin.html">مدیریت</a><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
@@ -243,15 +246,44 @@ body:before{background:radial-gradient(ellipse at 50% 8%,#ffffff12 0,transparent
 
 <script>
 (()=>{
- const el=document.getElementById('globalCurtain');
- const button=document.getElementById('openPersonalCurtain');
- if(!el||!button)return;
- button.addEventListener('click',()=>{
-  el.classList.add('opening');
+ const frame=document.getElementById('inlinePlayer');
+ const curtain=document.getElementById('playerCurtain');
+ const button=document.getElementById('openPlayerCurtain');
+ const title=document.querySelector('.player-title');
+ if(!frame||!curtain||!button||!title)return;
+ const storePrefix='helli-cinema-curtain-v1:';
+ let currentKey='';
+ const movieKey=()=>storePrefix+encodeURIComponent((title.textContent||'').trim()+'|'+(frame.querySelector('iframe')?.getAttribute('src')||''));
+ function syncMovie(){
+  const nextKey=movieKey();
+  if(nextKey===currentKey)return;
+  currentKey=nextKey;
+  curtain.classList.remove('opening');
+  button.disabled=false;
+  button.textContent='باز کردن پرده';
+  let opened=false;
+  try{opened=localStorage.getItem(currentKey)==='open'}catch(_){}
+  curtain.hidden=opened;
+ }
+ function openCurtain(){
+  if(curtain.hidden||curtain.classList.contains('opening'))return;
+  curtain.classList.add('opening');
   button.disabled=true;
   button.textContent='از نمایش لذت ببر';
-  window.setTimeout(()=>{el.hidden=true;el.classList.remove('opening')},1650);
- });
+  try{localStorage.setItem(currentKey,'open')}catch(_){}
+  window.setTimeout(()=>{
+   if(currentKey===movieKey()){
+    curtain.hidden=true;
+    curtain.classList.remove('opening');
+   }
+  },1650);
+ }
+ button.addEventListener('click',openCurtain);
+ curtain.addEventListener('click',event=>{if(event.target===curtain)openCurtain()});
+ syncMovie();
+ new MutationObserver(syncMovie).observe(title,{childList:true,subtree:true,characterData:true});
+ const iframe=frame.querySelector('iframe');
+ if(iframe)new MutationObserver(syncMovie).observe(iframe,{attributes:true,attributeFilter:['src']});
 })();
 </script>
 </body>
