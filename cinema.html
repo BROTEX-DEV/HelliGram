@@ -68,7 +68,7 @@
       if (!url) return "";
       try {
         const parsed = new URL(url);
-        if (!/(^|\\.)aparat\\.com$/i.test(parsed.hostname)) return "";
+        if (!/(^|\.)aparat\.com$/i.test(parsed.hostname)) return "";
         const parts = parsed.pathname.split("/").filter(Boolean);
         let id = (parts[0] === "v" || parts[0] === "video") ? (parts[1] || "") : "";
         id = id.replace(/[^a-zA-Z0-9_-]/g, "");
