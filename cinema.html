@@ -5,12 +5,12 @@
 <title>حلی سینما</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:dark;--bg:#090909;--surface:#111;--line:#252525;--text:#f4f4f4;--muted:#888}
+:root{color-scheme:dark;--bg:#090909;--line:#252525;--text:#f4f4f4;--muted:#888}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif}
 .shell{max-width:960px;margin:auto;padding:0 20px}
 header{height:68px;display:flex;align-items:center;border-bottom:1px solid var(--line);font-size:15px;font-weight:700}
-.brand-mark{color:#bbb;margin-left:9px}
+.brand-mark{color:#bbb;margin-left:9px;background:none;border:0;padding:10px 4px;font-size:17px;cursor:pointer;touch-action:manipulation}
 .hero{padding:35px 0 24px}
 h1{font-size:27px;font-weight:700;letter-spacing:-.5px;margin:0 0 6px}
 .subtitle{font-size:13px;color:var(--muted);margin:0}
@@ -24,13 +24,21 @@ h1{font-size:27px;font-weight:700;letter-spacing:-.5px;margin:0 0 6px}
 .title{font-size:13px;font-weight:500;line-height:1.8;margin:9px 0 0}
 footer{margin-top:36px;border-top:1px solid var(--line);padding:15px 0 20px;text-align:center;color:#777;font-size:11px}
 .version{font-size:9px;color:#555;margin-top:4px;letter-spacing:.3px}
+.secret-overlay{position:fixed;inset:0;z-index:10;display:grid;place-items:center;padding:20px;background:#000d;backdrop-filter:blur(8px)}
+.secret-overlay[hidden]{display:none}
+.secret-room{position:relative;width:min(390px,100%);padding:30px 22px;text-align:center;background:#101010;border:1px solid #393939;border-radius:14px;box-shadow:0 20px 80px #000}
+.secret-stamp{width:64px;height:64px;margin:0 auto 17px;display:grid;place-items:center;border:1px solid #555;border-radius:50%;font-size:27px;color:#eee}
+.secret-room h2{font-size:21px;margin:0 0 8px}
+.secret-room p{font-size:13px;color:#aaa;line-height:2;margin:0}
+.secret-code{display:inline-block;margin-top:17px;padding:6px 11px;border:1px dashed #555;border-radius:5px;color:#ddd;font-size:11px;letter-spacing:1px;direction:ltr}
+.secret-close{position:absolute;left:12px;top:10px;background:none;border:0;color:#aaa;font:inherit;font-size:22px;cursor:pointer}
 @media(max-width:600px){.shell{padding:0 13px}.hero{padding:28px 0 20px}h1{font-size:24px}.grid{gap:10px}.title{font-size:12px}}
 @media(max-width:360px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
 <div class="shell">
-<header><span class="brand-mark">▶</span>حلی سینما</header>
+<header><button class="brand-mark" id="secretTrigger" type="button" aria-label="لوگوی حلی سینما">▶</button><span>حلی سینما</span></header>
 <main>
 <section class="hero"><h1>حلی سینما</h1><p class="subtitle">سینما، ساده و بی‌حاشیه.</p></section>
 <section aria-label="لیست پخش امروز">
@@ -38,7 +46,16 @@ footer{margin-top:36px;border-top:1px solid var(--line);padding:15px 0 20px;text
 <div class="grid" id="grid"></div>
 </section>
 </main>
-<footer>حلی سینما<div class="version">CINEMA v1.0.8</div></footer>
+<footer>حلی سینما<div class="version">CINEMA v1.0.9</div></footer>
+</div>
+<div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
+<section class="secret-room">
+<button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button>
+<div class="secret-stamp" aria-hidden="true">✦</div>
+<h2 id="secretTitle">اتاق مخفی سینما</h2>
+<p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p>
+<div class="secret-code">SECRET SCREENING · 001</div>
+</section>
 </div>
 <script>
 const movies=[{title:"هاپرز",file:"1.jpg"},{title:"داستان اسباب‌بازی ۵",file:"2.jpg"},{title:"سوپر ماریو: کهکشان",file:"3.jpg"}];
@@ -50,6 +67,18 @@ for(const m of movies){
  const title=document.createElement("h3");title.className="title";title.textContent=m.title;
  card.append(img,title);grid.append(card);
 }
+const trigger=document.getElementById("secretTrigger"),overlay=document.getElementById("secretOverlay"),closeButton=document.getElementById("secretClose");
+let taps=0,tapTimer;
+trigger.addEventListener("click",()=>{
+ taps++;
+ clearTimeout(tapTimer);
+ if(taps>=5){taps=0;overlay.hidden=false;closeButton.focus();}
+ else tapTimer=setTimeout(()=>{taps=0},1800);
+});
+function closeSecret(){overlay.hidden=true;trigger.focus()}
+closeButton.addEventListener("click",closeSecret);
+overlay.addEventListener("click",e=>{if(e.target===overlay)closeSecret()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!overlay.hidden)closeSecret()});
 </script>
 </body>
 </html>
