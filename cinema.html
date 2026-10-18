@@ -45,7 +45,7 @@
       </section>
       <section class="player-card" aria-label="پخش برنامه">
         <div class="screen" id="screen">
-          <div class="empty" id="empty"><div class="tv-icon" aria-hidden="true">📺</div><h2>به حلی سینما خوش آمدی</h2><p>در حال حاضر برنامه‌ای برای پخش تنظیم نشده است.<br>به‌محض قرار گرفتن لینک آپارات، برنامه اینجا نمایش داده می‌شود.</p></div>
+          <div class="empty" id="empty"><div class="tv-icon" aria-hidden="true">📺</div><h2>به حلی سینما خوش آمدی</h2><p>در حال حاضر برنامه‌ای برای پخش تنظیم نشده است.<br>به‌محض قرار گرفتن لینک ویدیو، برنامه اینجا نمایش داده می‌شود.</p></div>
         </div>
         <div class="player-meta"><div><div class="program-title" id="programTitle">برنامه حلی سینما</div><div class="program-sub" id="programSub">شبکه تصویری</div></div><span class="tag" id="statusTag">آماده پخش</span></div>
       </section>
@@ -55,11 +55,11 @@
         <div class="info-card"><b>📱 سازگار با موبایل</b><span>صفحه برای گوشی، تبلت و رایانه بهینه شده است.</span></div>
       </section>
     </main>
-    <footer>حلی سینما<div class="version">CINEMA v1.0.3</div></footer>
+    <footer>حلی سینما<div class="version">CINEMA v1.0.4</div></footer>
   </div>
   <script>
-    /* برای تغییر برنامه، مقدار APARAT_URL را با لینک جدید آپارات جایگزین کن. */
-    const APARAT_URL = "https://www.aparat.com/v/ujuc7w2";
+    /* برای تغییر برنامه، مقدار VIDEO_URL را با لینک ویدیوی جدید جایگزین کن. */
+    const VIDEO_URL = "https://www.aparat.com/v/ujuc7w2";
     const screen = document.getElementById("screen");
     const title = document.getElementById("programTitle");
     const subtitle = document.getElementById("programSub");
@@ -75,16 +75,16 @@
         return id ? "https://www.aparat.com/video/video/embed/videohash/" + encodeURIComponent(id) + "/vt/frame" : "";
       } catch (_) { return ""; }
     }
-    const embedUrl = getAparatEmbed(APARAT_URL);
+    const embedUrl = getAparatEmbed(VIDEO_URL);
     if (embedUrl) {
       const frame = document.createElement("iframe");
       frame.src = embedUrl; frame.title = "پخش برنامه حلی سینما";
       frame.allow = "autoplay; encrypted-media; picture-in-picture"; frame.allowFullscreen = true;
       frame.referrerPolicy = "strict-origin-when-cross-origin";
       screen.appendChild(frame); screen.classList.add("has-video");
-      title.textContent = "برنامه در حال پخش"; subtitle.textContent = "پخش از آپارات"; status.textContent = "اکنون تماشا کنید";
-    } else if (APARAT_URL) {
-      title.textContent = "لینک برنامه نیاز به بررسی دارد"; subtitle.textContent = "لینک معتبر ویدیوی آپارات وارد نشده است."; status.textContent = "لینک نامعتبر";
+      title.textContent = "برنامه در حال پخش"; subtitle.textContent = "پخش آنلاین"; status.textContent = "اکنون تماشا کنید";
+    } else if (VIDEO_URL) {
+      title.textContent = "لینک برنامه نیاز به بررسی دارد"; subtitle.textContent = "لینک ویدیو معتبر نیست."; status.textContent = "لینک نامعتبر";
     }
   </script>
 </body>
