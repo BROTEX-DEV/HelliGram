@@ -9,7 +9,7 @@
 :root{color-scheme:dark;--bg:#050505;--panel:#0b0b0b;--line:#292929;--text:#f4f4f4;--muted:#a0a0a0;--accent:#d8d8d8}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#171717 0,transparent 48%),var(--bg);color:var(--text);font-family:CinemaBody,Tahoma,sans-serif}
 .wrap{width:min(980px,100%);margin:auto;padding:24px 16px 50px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-bottom:20px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:12px}.brand img{width:46px;height:46px;object-fit:contain;border:1px solid var(--line);border-radius:12px;padding:4px;background:#080808}.brand h1{font-size:21px;margin:0}.brand p{font-size:12px;color:var(--muted);margin:4px 0 0}.btn{font:inherit;cursor:pointer;border:1px solid #383838;background:#111;color:#eee;border-radius:10px;padding:10px 14px}.btn.primary{background:#e5e5e5;color:#080808;border-color:#eee;font-weight:800}.btn:disabled{opacity:.55;cursor:wait}.panel{margin-top:22px;background:#090909;border:1px solid var(--line);border-radius:16px;padding:clamp(16px,3vw,26px);box-shadow:0 18px 55px #0008}.panel h2{font-size:18px;margin:0 0 7px}.hint{font-size:12px;line-height:1.9;color:var(--muted);margin:0 0 18px}.field{margin:12px 0}.field label{display:block;font-size:12px;color:#c8c8c8;margin-bottom:7px}input{width:100%;min-width:0;border:1px solid #303030;border-radius:9px;padding:11px 12px;background:#050505;color:#fff;font:inherit;outline:none}input:focus{border-color:#aaa;box-shadow:0 0 0 3px #ffffff0b}.login{max-width:440px;margin:36px auto}.movies{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.movie{min-width:0;border:1px solid #262626;background:#070707;border-radius:12px;padding:14px}.movie h3{font-size:14px;margin:0 0 12px}.actions{display:flex;align-items:center;gap:10px;margin-top:18px}.status{font-size:12px;line-height:1.8;color:#bdbdbd;min-height:22px;margin-top:10px}.status.error{color:#ff9b9b}.status.ok{color:#9ce4b2}.hide{display:none!important}.foot{text-align:center;color:#626262;font-size:10px;margin-top:20px}@media(max-width:720px){.movies{grid-template-columns:1fr}.movie{padding:15px}.top{align-items:flex-start}.brand h1{font-size:18px}}@media(max-width:380px){.top{flex-direction:column}.actions{align-items:stretch;flex-direction:column}.actions .btn{width:100%}}
-</style>
+.curtain-controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:14px;padding:14px;border:1px solid #38302a;border-radius:12px;background:linear-gradient(120deg,#16090b,#090909)}.curtain-state{font-size:12px;color:#e7c6a5;line-height:1.8;flex:1;min-width:150px}.btn.curtain{background:#3b0d15;border-color:#792432;color:#fff}.btn.curtain.open{background:#12301e;border-color:#2e6943;color:#c8f4d5}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -19,11 +19,11 @@
 <h2>ورود مدیر</h2><p class="hint">برای ورود از حساب مدیر ثبت‌شده در Supabase استفاده کن. فقط حساب‌هایی که دسترسی مدیر دارند اجازه ذخیره تغییرات را خواهند داشت.</p>
 <form id="loginForm"><div class="field"><label for="email">ایمیل مدیر</label><input id="email" type="email" autocomplete="username" required></div><div class="field"><label for="password">رمز عبور</label><input id="password" type="password" autocomplete="current-password" required></div><button id="loginBtn" class="btn primary" type="submit" style="width:100%;margin-top:8px">ورود امن</button></form><div id="loginStatus" class="status" role="status"></div>
 </section>
-<section id="editorPanel" class="panel hide">
+<section id="editorPanel" class="panel hide">\n<div class="curtain-controls"><div class="curtain-state"><strong>پرده سینما</strong><br><span id="curtainState">در حال دریافت وضعیت...</span></div><button id="curtainBtn" class="btn curtain" type="button">...</button></div>
 <h2>برنامه پخش امروز</h2><p class="hint">عنوان، مسیر یا لینک مستقیم تصویر پوستر و ساعت هر فیلم را ویرایش کن. تغییرات پس از ذخیره از طریق Supabase برای همه بازدیدکنندگان سایت نمایش داده می‌شود. برای پوستر می‌توانی مسیر فایل داخل مخزن مثل ./1.jpg یا یک نشانی تصویر استفاده کنی.</p>
 <form id="editorForm"><div id="movies" class="movies"></div><div class="actions"><button id="saveBtn" class="btn primary" type="submit">ذخیره تغییرات</button><button id="logoutBtn" class="btn" type="button">خروج از حساب</button></div><div id="saveStatus" class="status" role="status"></div></form>
 </section>
-<div class="foot">CINEMA ADMIN · v1.0.0</div>
+<div class="foot">CINEMA ADMIN · v1.1.0</div>
 </div>
 <script>
 (()=> {
@@ -37,7 +37,7 @@
  ];
  const $=id=>document.getElementById(id);
  const setStatus=(id,msg,type='')=>{$(id).textContent=msg;$(id).className='status '+type};
- let movies=defaults.map(m=>({...m}));
+ let movies=defaults.map(m=>({...m}));\n let curtainClosed=false;\n async function loadCurtain(){const {data,error}=await client.from('site_settings').select('value').eq('key','public.cinema_curtain').maybeSingle();if(error)throw error;curtainClosed=data?.value?.closed===true;renderCurtain();}\n function renderCurtain(){const b=$('curtainBtn');if(!b)return;b.textContent=curtainClosed?'باز کردن پرده برای همه':'بستن پرده برای همه';b.classList.toggle('open',!curtainClosed);$('curtainState').textContent=curtainClosed?'پرده برای همه بازدیدکنندگان بسته است.':'پرده باز است و سایت برای همه قابل مشاهده است.';}\n async function toggleCurtain(){const b=$('curtainBtn');b.disabled=true;try{const next=!curtainClosed;const {error}=await client.from('site_settings').upsert({key:'public.cinema_curtain',value:{closed:next},updated_at:new Date().toISOString()},{onConflict:'key'});if(error)throw error;curtainClosed=next;renderCurtain();$('curtainState').textContent=curtainClosed?'پرده برای همه بسته شد.':'پرده برای همه باز شد.';}catch(err){$('curtainState').textContent=err.message||'تغییر وضعیت پرده ذخیره نشد.';}finally{b.disabled=false;}}\n $('curtainBtn').addEventListener('click',toggleCurtain);
  function safeTime(v){return /^([01]\d|2[0-3]):[0-5]\d$/.test(v)}
  function render(){
   $('movies').replaceChildren();
@@ -67,7 +67,7 @@
   if(error)throw error;
   if(!data)throw new Error('این حساب دسترسی مدیر حلی سینما را ندارد.');
   $('loginPanel').classList.add('hide');$('editorPanel').classList.remove('hide');
-  await loadPlaylist();
+  await loadPlaylist();\n  await loadCurtain();
  }
  $('loginForm').addEventListener('submit',async e=>{
   e.preventDefault();$('loginBtn').disabled=true;setStatus('loginStatus','در حال بررسی حساب...');
