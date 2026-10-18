@@ -8,7 +8,7 @@
 :root{color-scheme:dark;--bg:#000000;--panel:#000000;--line:#202020;--text:#f4f4f4;--muted:#929292;--accent:#bdbdbd}
 *{box-sizing:border-box}body{margin:0;background:#000000;color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif}
 .shell{width:min(1440px,100%);margin:auto;padding:0 clamp(22px,4vw,64px)}header{height:80px;display:flex;align-items:center;border-bottom:1px solid #ffffff12;font-size:15px;font-weight:700;gap:8px}
-.brand-mark{color:#d7e7ff;margin-left:2px;background:#080808;border:1px solid #292929;border-radius:11px;padding:9px 10px;font-size:17px;cursor:pointer;touch-action:manipulation;box-shadow:inset 0 1px #ffffff18,0 5px 18px #ffffff12}
+.brand-mark{display:grid;place-items:center;width:46px;height:46px;flex:0 0 46px;margin-left:2px;padding:4px;overflow:hidden;background:#080808;border:1px solid #292929;border-radius:11px;cursor:pointer;touch-action:manipulation;box-shadow:inset 0 1px #ffffff18,0 5px 18px #ffffff12}.brand-mark img{display:block;width:100%;height:100%;object-fit:contain;border-radius:7px}
 .hero{padding:clamp(38px,5vw,64px) 0 36px}.eyebrow{display:inline-block;color:#d0d0d0;font-size:11px;padding:5px 10px;border:1px solid #292929;border-radius:999px;background:#050505;margin-bottom:12px}
 h1{font-size:clamp(32px,3.2vw,46px);font-weight:800;letter-spacing:-.6px;margin:0 0 7px;text-shadow:none}.subtitle{font-size:13px;color:var(--muted);margin:0}
 .playlist-head{display:flex;align-items:center;justify-content:space-between;padding:0 0 14px;border-bottom:1px solid var(--line);margin-bottom:18px}
@@ -40,13 +40,13 @@ footer{margin-top:38px;border-top:1px solid #ffffff12;padding:16px 0 20px;text-a
 </head>
 <body>
 <div class="shell">
-<header><button class="brand-mark" id="secretTrigger" type="button" aria-label="لوگوی حلی سینما">▶</button><span>حلی سینما</span></header>
+<header><button class="brand-mark" id="secretTrigger" type="button" aria-label="لوگوی حلی سینما"><img src="1.png" alt="لوگوی حلی سینما"></button><span>حلی سینما</span></header>
 <main>
 <section class="hero"><h1>حلی سینما</h1><p class="subtitle">سینما، ساده و بی‌حاشیه.</p></section>
 <section aria-label="لیست پخش امروز"><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="player-box inline-player"><div class="player-head"><h2 class="player-title">هاپرز</h2></div><div class="player-frame" id="inlinePlayer"></div></div><div class="grid" id="grid"></div></section>
 </main>
 <section class="ad-slot" aria-label="تبلیغ"><img src="t.gif" alt=""></section>
-<footer>حلی سینما<div class="version">CINEMA v1.2.1</div></footer>
+<footer>حلی سینما<div class="version">CINEMA v1.2.2</div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
