@@ -115,36 +115,10 @@ h1,h2,h3,.player-title,.intro-title,.secret-room h2{font-family:'CinemaHead','Ci
 body:before{background:radial-gradient(ellipse at 50% 8%,#ffffff12 0,transparent 38%)}
 .shell{position:relative;z-index:1}
 
-/* Custom Helli Cinema cursor: clapper icon with a soft light trail (desktop pointers only). */
-@media (hover:hover) and (pointer:fine){
- body,body *{cursor:none!important}
- #cinemaCursor{position:fixed;left:0;top:0;width:30px;height:30px;z-index:2000;pointer-events:none;opacity:0;transform:translate3d(-60px,-60px,0);will-change:transform;filter:drop-shadow(0 0 5px #fff8);transition:opacity .18s ease}
- #cinemaCursor svg{display:block;width:100%;height:100%;overflow:visible}
- #cinemaCursor .cursor-light{position:absolute;width:7px;height:7px;left:3px;top:3px;border-radius:50%;background:#fff;box-shadow:0 0 8px #fff,0 0 17px #d9e4ff;opacity:.85}
- #cinemaCursor.cursor-visible{opacity:1}
- #cinemaCursor.cursor-click svg{transform:scale(.82)}
-}
-@media (hover:none),(pointer:coarse){#cinemaCursor{display:none}}
-@media(prefers-reduced-motion:reduce){#cinemaCursor{transition:none}}
-
 </style>
 </head>
 <body>
-<div id="cinemaCursor" aria-hidden="true"><span class="cursor-light"></span><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 14.5 30 14.5 30 32 8 32Z" fill="#101114" stroke="#F5F5F5" stroke-width="1.7"/><path d="M7 7.5 29 7.5 32 14.5 10 14.5Z" fill="#191A1D" stroke="#F5F5F5" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 8 16 14M20 8 24 14M28 10 30 14" stroke="#D8D8D8" stroke-width="2" stroke-linecap="round"/><path d="M13 20H25M13 24H21" stroke="#D8D8D8" stroke-width="1.5" stroke-linecap="round"/><path d="M29 27 33 31 38 22" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-<script>
-(()=>{
- const cursor=document.getElementById('cinemaCursor');
- if(!cursor||!window.matchMedia('(hover:hover) and (pointer:fine)').matches)return;
- let x=-60,y=-60,tx=-60,ty=-60,frame=0;
- const move=e=>{tx=e.clientX-7;ty=e.clientY-7;cursor.classList.add('cursor-visible');if(!frame)frame=requestAnimationFrame(tick)};
- function tick(){x+=(tx-x)*.42;y+=(ty-y)*.42;cursor.style.transform='translate3d('+x+'px,'+y+'px,0)';if(Math.abs(tx-x)>.15||Math.abs(ty-y)>.15){frame=requestAnimationFrame(tick)}else frame=0}
- document.addEventListener('pointermove',move,{passive:true});
- document.addEventListener('pointerdown',()=>cursor.classList.add('cursor-click'));
- document.addEventListener('pointerup',()=>cursor.classList.remove('cursor-click'));
- document.addEventListener('pointerleave',()=>cursor.classList.remove('cursor-visible'));
- document.addEventListener('pointerenter',()=>cursor.classList.add('cursor-visible'));
-})();
-</script>
+
 <div class="cinema-intro" id="cinemaIntro" role="button" tabindex="0" aria-label="ورود به حلی سینما">
  <div class="intro-glow" aria-hidden="true"></div>
  <div class="intro-content">
@@ -160,7 +134,7 @@ body:before{background:radial-gradient(ellipse at 50% 8%,#ffffff12 0,transparent
 <section aria-label="لیست پخش امروز"><div class="player-box inline-player"><div class="player-head"><h2 class="player-title">هاپرز</h2></div><div class="player-frame" id="inlinePlayer"></div></div><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="grid" id="grid"></div></section>
 </main>
 <section class="ad-slot" aria-label="تبلیغ"><img src="t.gif" alt=""></section>
-<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.28</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
+<footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.29</div><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
 </div>
 <div class="secret-overlay" id="secretOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="secretTitle">
 <section class="secret-room"><button class="secret-close" id="secretClose" type="button" aria-label="بستن">×</button><div class="secret-stamp" aria-hidden="true">✦</div><h2 id="secretTitle">اتاق مخفی سینما</h2><p>پیداش کردی! 👀<br>این بخش فقط برای کنجکاوهای واقعی حلی سینماست.<br>چراغ‌ها خاموش… فیلم به‌زودی شروع می‌شود.</p><div class="secret-code">SECRET SCREENING · 001</div></section>
