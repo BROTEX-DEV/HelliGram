@@ -209,7 +209,7 @@
    const {error}=await client.from('site_settings').upsert(payload,{onConflict:'key'});if(error)throw error;
    setStatus('saveStatus','ذخیره شد! برنامه جدید به سایت عمومی ارسال شد.','ok');
   }catch(err){setStatus('saveStatus',err.message||'ذخیره انجام نشد.','error');}
-  finally{$('saveBtn').disabled=false;}
+  finally{$('saveBtn').disabled=currentPermissions.manage_movies!==true;}
  });
  $('logoutBtn').addEventListener('click',async()=>{await client.auth.signOut();$('editorPanel').classList.add('hide');$('loginPanel').classList.remove('hide');$('password').value='';setStatus('loginStatus','از حساب خارج شدی.');});
  client.auth.getSession().then(async({data})=>{if(data.session){try{await enterIfAdmin(data.session.user)}catch(err){await client.auth.signOut();setStatus('loginStatus',err.message||'برای مدیریت وارد شو.','error');}}});
