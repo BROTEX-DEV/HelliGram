@@ -126,14 +126,17 @@
   currentPermissions=data.permissions||{};
   $('loginPanel').classList.add('hide');$('editorPanel').classList.remove('hide');
   $('adminTools').classList.toggle('hide',currentPermissions.manage_admins!==true);
-  $('resourceTools').classList.toggle('hide',currentPermissions.manage_documents!==true&&currentPermissions.manage_lessons!==true);\n  $('documentAdmin').classList.toggle('hide',currentPermissions.manage_documents!==true);\n  $('lessonAdmin').classList.toggle('hide',currentPermissions.manage_lessons!==true);
+  $('resourceTools').classList.toggle('hide',currentPermissions.manage_documents!==true&&currentPermissions.manage_lessons!==true);
+  $('documentAdmin').classList.toggle('hide',currentPermissions.manage_documents!==true);
+  $('lessonAdmin').classList.toggle('hide',currentPermissions.manage_lessons!==true);
   $('saveBtn').disabled=currentPermissions.manage_movies!==true;
   if(currentPermissions.manage_movies!==true) setStatus('saveStatus','این حساب فقط اجازه مشاهده برنامه را دارد؛ برای ویرایش، دسترسی مدیریت فیلم لازم است.');
   else setStatus('saveStatus','دسترسی مدیر تأیید شد؛ در حال بارگذاری برنامه...');
   await loadPlaylist();
   if(currentPermissions.manage_settings===true) await loadCurtain();
   else { $('curtainBtn').disabled=true; $('curtainState').textContent='برای تغییر پرده، دسترسی تنظیمات سایت لازم است.'; }
-  if(currentPermissions.manage_admins===true) await loadAdminManagement();\n  if(currentPermissions.manage_documents===true||currentPermissions.manage_lessons===true) await loadResourceAdmin();
+  if(currentPermissions.manage_admins===true) await loadAdminManagement();
+  if(currentPermissions.manage_documents===true||currentPermissions.manage_lessons===true) await loadResourceAdmin();
  }
 
 
@@ -199,7 +202,8 @@
   ['manage_posters','مدیریت پوسترها'],
   ['manage_ads','مدیریت تبلیغات'],
   ['manage_settings','تنظیمات سایت'],
-  ['manage_documents','مدیریت مستندها'],\n  ['manage_lessons','مدیریت دروس']
+  ['manage_documents','مدیریت مستندها'],
+  ['manage_lessons','مدیریت دروس']
  ];
  function readPermissions(prefix){
   const result={};
