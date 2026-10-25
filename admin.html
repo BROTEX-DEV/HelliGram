@@ -125,7 +125,8 @@
   if(!data)throw new Error('این حساب دسترسی مدیر حلی سینما را ندارد.');
   currentPermissions=data.permissions||{};
   $('loginPanel').classList.add('hide');$('editorPanel').classList.remove('hide');
-  $('adminTools').classList.toggle('hide',currentPermissions.manage_admins!==true);\n  $('resourceTools').classList.toggle('hide',currentPermissions.manage_documents!==true&&currentPermissions.manage_lessons!==true);\n  $('documentAdmin').classList.toggle('hide',currentPermissions.manage_documents!==true);\n  $('lessonAdmin').classList.toggle('hide',currentPermissions.manage_lessons!==true);
+  $('adminTools').classList.toggle('hide',currentPermissions.manage_admins!==true);
+  $('resourceTools').classList.toggle('hide',currentPermissions.manage_documents!==true&&currentPermissions.manage_lessons!==true);\n  $('documentAdmin').classList.toggle('hide',currentPermissions.manage_documents!==true);\n  $('lessonAdmin').classList.toggle('hide',currentPermissions.manage_lessons!==true);
   $('saveBtn').disabled=currentPermissions.manage_movies!==true;
   if(currentPermissions.manage_movies!==true) setStatus('saveStatus','این حساب فقط اجازه مشاهده برنامه را دارد؛ برای ویرایش، دسترسی مدیریت فیلم لازم است.');
   else setStatus('saveStatus','دسترسی مدیر تأیید شد؛ در حال بارگذاری برنامه...');
@@ -197,7 +198,8 @@
   ['manage_movies','مدیریت برنامه فیلم'],
   ['manage_posters','مدیریت پوسترها'],
   ['manage_ads','مدیریت تبلیغات'],
-  ['manage_settings','تنظیمات سایت'],\n  ['manage_documents','مدیریت مستندها'],\n  ['manage_lessons','مدیریت دروس']
+  ['manage_settings','تنظیمات سایت'],
+  ['manage_documents','مدیریت مستندها'],\n  ['manage_lessons','مدیریت دروس']
  ];
  function readPermissions(prefix){
   const result={};
