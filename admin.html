@@ -135,6 +135,8 @@
   try{
    const {data,error}=await withTimeout(client.rpc('cinema_admin_list'),'دریافت فهرست مدیرها');
    if(error)throw error;
+   const {data:{user:currentUser}}=await client.auth.getUser();
+   const currentUserId=currentUser?.id;
    (Array.isArray(data)?data:[]).forEach(admin=>{
     const card=document.createElement('article');card.className='admin-card';
     const head=document.createElement('div');head.className='admin-head';
@@ -143,10 +145,10 @@
     const uid=document.createElement('div');uid.className='admin-id';uid.textContent='شناسه: '+admin.user_id;
     info.append(email,uid);head.append(info);
     const form=document.createElement('form');
-    const perms=permissionCheckboxes('p_'+admin.user_id+'_',admin.permissions,admin.user_id===((await client.auth.getUser()).data.user?.id));
+    const perms=permissionCheckboxes('p_'+admin.user_id+'_',admin.permissions,admin.user_id===currentUserId);
     const actions=document.createElement('div');actions.className='actions';
     const save=document.createElement('button');save.className='btn primary';save.type='submit';save.textContent='ذخیره دسترسی‌ها';
-    const del=document.createElement('button');del.className='btn';del.type='button';del.textContent='🗑️ حذف مدیر';del.disabled=admin.user_id===((await client.auth.getUser()).data.user?.id);
+    const del=document.createElement('button');del.className='btn';del.type='button';del.textContent='🗑️ حذف مدیر';del.disabled=admin.user_id===currentUserId;
     actions.append(save,del);form.append(perms,actions);card.append(head,form);list.append(card);
     form.addEventListener('submit',async ev=>{
      ev.preventDefault();save.disabled=true;
