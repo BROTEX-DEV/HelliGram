@@ -9,7 +9,7 @@
 :root{color-scheme:dark;--bg:#050505;--panel:#0b0b0b;--line:#292929;--text:#f4f4f4;--muted:#a0a0a0;--accent:#d8d8d8}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#171717 0,transparent 48%),var(--bg);color:var(--text);font-family:CinemaBody,Tahoma,sans-serif}
 .wrap{width:min(980px,100%);margin:auto;padding:24px 16px 50px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-bottom:20px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:12px}.brand img{width:46px;height:46px;object-fit:contain;border:1px solid var(--line);border-radius:12px;padding:4px;background:#080808}.brand h1{font-size:21px;margin:0}.brand p{font-size:12px;color:var(--muted);margin:4px 0 0}.btn{font:inherit;cursor:pointer;border:1px solid #383838;background:#111;color:#eee;border-radius:10px;padding:10px 14px}.btn.primary{background:#e5e5e5;color:#080808;border-color:#eee;font-weight:800}.btn:disabled{opacity:.55;cursor:wait}.panel{margin-top:22px;background:#090909;border:1px solid var(--line);border-radius:16px;padding:clamp(16px,3vw,26px);box-shadow:0 18px 55px #0008}.panel h2{font-size:18px;margin:0 0 7px}.hint{font-size:12px;line-height:1.9;color:var(--muted);margin:0 0 18px}.field{margin:12px 0}.field label{display:block;font-size:12px;color:#c8c8c8;margin-bottom:7px}input{width:100%;min-width:0;border:1px solid #303030;border-radius:9px;padding:11px 12px;background:#050505;color:#fff;font:inherit;outline:none}input:focus{border-color:#aaa;box-shadow:0 0 0 3px #ffffff0b}.login{max-width:440px;margin:36px auto}.movies{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.movie{min-width:0;border:1px solid #262626;background:#070707;border-radius:12px;padding:14px}.movie h3{font-size:14px;margin:0 0 12px}.actions{display:flex;align-items:center;gap:10px;margin-top:18px}.status{font-size:12px;line-height:1.8;color:#bdbdbd;min-height:22px;margin-top:10px}.status.error{color:#ff9b9b}.status.ok{color:#9ce4b2}.hide{display:none!important}.foot{text-align:center;color:#626262;font-size:10px;margin-top:20px}@media(max-width:720px){.movies{grid-template-columns:1fr}.movie{padding:15px}.top{align-items:flex-start}.brand h1{font-size:18px}}@media(max-width:380px){.top{flex-direction:column}.actions{align-items:stretch;flex-direction:column}.actions .btn{width:100%}}
-.curtain-controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:14px;padding:14px;border:1px solid #38302a;border-radius:12px;background:linear-gradient(120deg,#16090b,#090909)}.curtain-state{font-size:12px;color:#e7c6a5;line-height:1.8;flex:1;min-width:150px}.btn.curtain{background:#3b0d15;border-color:#792432;color:#fff}.btn.curtain.open{background:#12301e;border-color:#2e6943;color:#c8f4d5}</style>
+.admin-tools{margin-top:24px;border-top:1px solid var(--line);padding-top:22px}.admin-list{display:grid;gap:12px;margin-top:14px}.admin-card{border:1px solid #292929;border-radius:12px;padding:14px;background:#070707}.admin-head{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}.admin-email{font-size:14px;font-weight:700;overflow-wrap:anywhere}.admin-id{font-size:10px;color:#777;overflow-wrap:anywhere;margin-top:5px}.permission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin-top:12px}.permission{display:flex;align-items:center;gap:7px;font-size:12px;color:#ddd;border:1px solid #292929;border-radius:8px;padding:8px}.permission input{width:auto;min-width:auto;accent-color:#ddd}.admin-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.admin-form .field{margin:0}.curtain-controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:14px;padding:14px;border:1px solid #38302a;border-radius:12px;background:linear-gradient(120deg,#16090b,#090909)}.curtain-state{font-size:12px;color:#e7c6a5;line-height:1.8;flex:1;min-width:150px}.btn.curtain{background:#3b0d15;border-color:#792432;color:#fff}.btn.curtain.open{background:#12301e;border-color:#2e6943;color:#c8f4d5}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -23,8 +23,29 @@
 <div class="curtain-controls"><div class="curtain-state"><strong>پرده سینما</strong><br><span id="curtainState">در حال دریافت وضعیت...</span></div><button id="curtainBtn" class="btn curtain" type="button">...</button></div>
 <h2>برنامه پخش امروز</h2><p class="hint">عنوان، مسیر یا لینک مستقیم تصویر پوستر و ساعت هر فیلم را ویرایش کن. تغییرات پس از ذخیره از طریق Supabase برای همه بازدیدکنندگان سایت نمایش داده می‌شود. برای پوستر می‌توانی مسیر فایل داخل مخزن مثل ./1.jpg یا یک نشانی تصویر استفاده کنی.</p>
 <form id="editorForm"><div id="movies" class="movies"></div><div class="actions"><button id="saveBtn" class="btn primary" type="submit">ذخیره تغییرات</button><button id="logoutBtn" class="btn" type="button">خروج از حساب</button></div><div id="saveStatus" class="status" role="status"></div></form>
+<div id="adminTools" class="admin-tools hide">
+  <h2>👥 مدیریت مدیرها</h2>
+  <p class="hint">فقط مدیر دارای دسترسی «مدیریت مدیرها» می‌تواند مدیر اضافه کند، حذف کند یا دسترسی‌ها را تغییر دهد. ایمیل باید از قبل در سامانه حساب داشته باشد.</p>
+  <form id="addAdminForm">
+    <div class="admin-form">
+      <div class="field"><label for="newAdminEmail">ایمیل حساب موجود</label><input id="newAdminEmail" type="email" autocomplete="off" placeholder="admin@example.com" required></div>
+      <div class="field"><label>دسترسی‌های مدیر جدید</label>
+        <div class="permission-grid">
+          <label class="permission"><input type="checkbox" name="new_manage_admins"> مدیریت مدیرها</label>
+          <label class="permission"><input type="checkbox" name="new_manage_movies" checked> مدیریت برنامه فیلم</label>
+          <label class="permission"><input type="checkbox" name="new_manage_posters" checked> مدیریت پوسترها</label>
+          <label class="permission"><input type="checkbox" name="new_manage_ads"> مدیریت تبلیغات</label>
+          <label class="permission"><input type="checkbox" name="new_manage_settings"> تنظیمات سایت</label>
+        </div>
+      </div>
+    </div>
+    <div class="actions"><button id="addAdminBtn" class="btn primary" type="submit">➕ افزودن مدیر</button></div>
+    <div id="adminStatus" class="status" role="status"></div>
+  </form>
+  <div id="adminList" class="admin-list"></div>
+</div>
 </section>
-<div class="foot">CINEMA ADMIN · v1.1.1</div>
+<div class="foot">CINEMA ADMIN · v1.2.0</div>
 </div>
 <script>
 (()=> {
@@ -40,7 +61,7 @@
  const setStatus=(id,msg,type='')=>{$(id).textContent=msg;$(id).className='status '+type};
  const withTimeout=(promise,label,ms=15000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+' بیش از ۱۵ ثانیه طول کشید. اتصال اینترنت و وضعیت Supabase را بررسی کن.')),ms))]);
  let movies=defaults.map(m=>({...m}));
- let curtainClosed=false;
+ let curtainClosed=false;\n let currentPermissions={};
  async function loadCurtain(){const {data,error}=await withTimeout(client.from('site_settings').select('value').eq('key','public.cinema_curtain').maybeSingle(),'دریافت وضعیت پرده');if(error)throw error;curtainClosed=data?.value?.closed===true;renderCurtain();}
  function renderCurtain(){const b=$('curtainBtn');if(!b)return;b.textContent=curtainClosed?'باز کردن پرده برای همه':'بستن پرده برای همه';b.classList.toggle('open',!curtainClosed);$('curtainState').textContent=curtainClosed?'پرده برای همه بازدیدکنندگان بسته است.':'پرده باز است و سایت برای همه قابل مشاهده است.';}
  async function toggleCurtain(){const b=$('curtainBtn');b.disabled=true;try{const next=!curtainClosed;const {error}=await client.from('site_settings').upsert({key:'public.cinema_curtain',value:{closed:next},updated_at:new Date().toISOString()},{onConflict:'key'});if(error)throw error;curtainClosed=next;renderCurtain();$('curtainState').textContent=curtainClosed?'پرده برای همه بسته شد.':'پرده برای همه باز شد.';}catch(err){$('curtainState').textContent=err.message||'تغییر وضعیت پرده ذخیره نشد.';}finally{b.disabled=false;}}
@@ -71,14 +92,100 @@
  }
  async function enterIfAdmin(user){
   setStatus('loginStatus','ورود انجام شد؛ در حال بررسی دسترسی مدیر...');
-  const {data,error}=await withTimeout(client.from('admin_users').select('user_id').eq('user_id',user.id).maybeSingle(),'بررسی دسترسی مدیر');
+  const {data,error}=await withTimeout(client.from('admin_users').select('user_id,permissions').eq('user_id',user.id).maybeSingle(),'بررسی دسترسی مدیر');
   if(error)throw error;
   if(!data)throw new Error('این حساب دسترسی مدیر حلی سینما را ندارد.');
+  currentPermissions=data.permissions||{};
   $('loginPanel').classList.add('hide');$('editorPanel').classList.remove('hide');
-  setStatus('saveStatus','دسترسی مدیر تأیید شد؛ در حال بارگذاری برنامه...');
+  $('adminTools').classList.toggle('hide',currentPermissions.manage_admins!==true);
+  $('saveBtn').disabled=currentPermissions.manage_movies!==true;
+  if(currentPermissions.manage_movies!==true) setStatus('saveStatus','این حساب فقط اجازه مشاهده برنامه را دارد؛ برای ویرایش، دسترسی مدیریت فیلم لازم است.');
+  else setStatus('saveStatus','دسترسی مدیر تأیید شد؛ در حال بارگذاری برنامه...');
   await loadPlaylist();
-  await loadCurtain();
+  if(currentPermissions.manage_settings===true) await loadCurtain();
+  else { $('curtainBtn').disabled=true; $('curtainState').textContent='برای تغییر پرده، دسترسی تنظیمات سایت لازم است.'; }
+  if(currentPermissions.manage_admins===true) await loadAdminManagement();
  }
+
+ const permissionDefs=[
+  ['manage_admins','مدیریت مدیرها'],
+  ['manage_movies','مدیریت برنامه فیلم'],
+  ['manage_posters','مدیریت پوسترها'],
+  ['manage_ads','مدیریت تبلیغات'],
+  ['manage_settings','تنظیمات سایت']
+ ];
+ function readPermissions(prefix){
+  const result={};
+  permissionDefs.forEach(([key])=>{const el=document.querySelector('[name="'+prefix+key+'"]');result[key]=!!el?.checked;});
+  return result;
+ }
+ function permissionCheckboxes(prefix,permissions,disabled=false){
+  const grid=document.createElement('div');grid.className='permission-grid';
+  permissionDefs.forEach(([key,label])=>{
+   const lab=document.createElement('label');lab.className='permission';
+   const input=document.createElement('input');input.type='checkbox';input.name=prefix+key;input.checked=permissions?.[key]===true;input.disabled=disabled;
+   const span=document.createElement('span');span.textContent=label;
+   lab.append(input,span);grid.append(lab);
+  });
+  return grid;
+ }
+ async function loadAdminManagement(){
+  const list=$('adminList');list.replaceChildren();
+  setStatus('adminStatus','در حال دریافت فهرست مدیرها...');
+  try{
+   const {data,error}=await withTimeout(client.rpc('cinema_admin_list'),'دریافت فهرست مدیرها');
+   if(error)throw error;
+   (Array.isArray(data)?data:[]).forEach(admin=>{
+    const card=document.createElement('article');card.className='admin-card';
+    const head=document.createElement('div');head.className='admin-head';
+    const info=document.createElement('div');
+    const email=document.createElement('div');email.className='admin-email';email.textContent=admin.email||'بدون ایمیل';
+    const uid=document.createElement('div');uid.className='admin-id';uid.textContent='شناسه: '+admin.user_id;
+    info.append(email,uid);head.append(info);
+    const form=document.createElement('form');
+    const perms=permissionCheckboxes('p_'+admin.user_id+'_',admin.permissions,admin.user_id===((await client.auth.getUser()).data.user?.id));
+    const actions=document.createElement('div');actions.className='actions';
+    const save=document.createElement('button');save.className='btn primary';save.type='submit';save.textContent='ذخیره دسترسی‌ها';
+    const del=document.createElement('button');del.className='btn';del.type='button';del.textContent='🗑️ حذف مدیر';del.disabled=admin.user_id===((await client.auth.getUser()).data.user?.id);
+    actions.append(save,del);form.append(perms,actions);card.append(head,form);list.append(card);
+    form.addEventListener('submit',async ev=>{
+     ev.preventDefault();save.disabled=true;
+     try{
+      const chosen={};permissionDefs.forEach(([key])=>{chosen[key]=!!perms.querySelector('[name="p_'+admin.user_id+'_'+key+'"]')?.checked;});
+      const {error}=await client.rpc('cinema_admin_set_permissions',{p_user_id:admin.user_id,p_permissions:chosen});
+      if(error)throw error;
+      setStatus('adminStatus','دسترسی‌های '+(admin.email||'مدیر')+' ذخیره شد.','ok');
+      await loadAdminManagement();
+     }catch(err){setStatus('adminStatus',err.message||'ذخیره دسترسی‌ها انجام نشد.','error');save.disabled=false;}
+    });
+    del.addEventListener('click',async()=>{
+     if(!confirm('مدیر '+(admin.email||admin.user_id)+' حذف شود؟ این کار دسترسی مدیریتی او را لغو می‌کند.'))return;
+     del.disabled=true;
+     try{
+      const {error}=await client.rpc('cinema_admin_delete',{p_user_id:admin.user_id});
+      if(error)throw error;
+      setStatus('adminStatus','مدیر حذف شد.','ok');await loadAdminManagement();
+     }catch(err){setStatus('adminStatus',err.message||'حذف مدیر انجام نشد.','error');del.disabled=false;}
+    });
+   });
+   setStatus('adminStatus','تعداد مدیرها: '+(Array.isArray(data)?data.length:0),'ok');
+  }catch(err){setStatus('adminStatus',err.message||'دریافت فهرست مدیرها انجام نشد.','error');}
+ }
+ $('addAdminForm').addEventListener('submit',async e=>{
+  e.preventDefault();$('addAdminBtn').disabled=true;setStatus('adminStatus','در حال افزودن مدیر...');
+  try{
+   const email=$('newAdminEmail').value.trim();
+   const permissions=readPermissions('new_');
+   const {error}=await client.rpc('cinema_admin_add',{p_email:email,p_permissions:permissions});
+   if(error)throw error;
+   $('newAdminEmail').value='';
+   document.querySelectorAll('#addAdminForm input[type="checkbox"]').forEach(el=>{el.checked=el.name==='new_manage_movies'||el.name==='new_manage_posters';});
+   setStatus('adminStatus','مدیر اضافه شد یا دسترسی‌های حساب موجود به‌روزرسانی شد.','ok');
+   await loadAdminManagement();
+  }catch(err){setStatus('adminStatus',err.message||'افزودن مدیر انجام نشد.','error');}
+  finally{$('addAdminBtn').disabled=false;}
+ });
+
  $('loginForm').addEventListener('submit',async e=>{
   e.preventDefault();$('loginBtn').disabled=true;setStatus('loginStatus','در حال بررسی حساب...');
   try{
