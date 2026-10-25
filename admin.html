@@ -61,7 +61,8 @@
  const setStatus=(id,msg,type='')=>{$(id).textContent=msg;$(id).className='status '+type};
  const withTimeout=(promise,label,ms=15000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+' بیش از ۱۵ ثانیه طول کشید. اتصال اینترنت و وضعیت Supabase را بررسی کن.')),ms))]);
  let movies=defaults.map(m=>({...m}));
- let curtainClosed=false;\n let currentPermissions={};
+ let curtainClosed=false;
+ let currentPermissions={};
  async function loadCurtain(){const {data,error}=await withTimeout(client.from('site_settings').select('value').eq('key','public.cinema_curtain').maybeSingle(),'دریافت وضعیت پرده');if(error)throw error;curtainClosed=data?.value?.closed===true;renderCurtain();}
  function renderCurtain(){const b=$('curtainBtn');if(!b)return;b.textContent=curtainClosed?'باز کردن پرده برای همه':'بستن پرده برای همه';b.classList.toggle('open',!curtainClosed);$('curtainState').textContent=curtainClosed?'پرده برای همه بازدیدکنندگان بسته است.':'پرده باز است و سایت برای همه قابل مشاهده است.';}
  async function toggleCurtain(){const b=$('curtainBtn');b.disabled=true;try{const next=!curtainClosed;const {error}=await client.from('site_settings').upsert({key:'public.cinema_curtain',value:{closed:next},updated_at:new Date().toISOString()},{onConflict:'key'});if(error)throw error;curtainClosed=next;renderCurtain();$('curtainState').textContent=curtainClosed?'پرده برای همه بسته شد.':'پرده برای همه باز شد.';}catch(err){$('curtainState').textContent=err.message||'تغییر وضعیت پرده ذخیره نشد.';}finally{b.disabled=false;}}
