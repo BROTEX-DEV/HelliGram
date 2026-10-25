@@ -36,6 +36,8 @@
           <label class="permission"><input type="checkbox" name="new_manage_posters" checked> مدیریت پوسترها</label>
           <label class="permission"><input type="checkbox" name="new_manage_ads"> مدیریت تبلیغات</label>
           <label class="permission"><input type="checkbox" name="new_manage_settings"> تنظیمات سایت</label>
+          <label class="permission"><input type="checkbox" name="new_manage_documents" checked> مدیریت مستندها</label>
+          <label class="permission"><input type="checkbox" name="new_manage_lessons" checked> مدیریت دروس</label>
         </div>
       </div>
     </div>
@@ -44,8 +46,33 @@
   </form>
   <div id="adminList" class="admin-list"></div>
 </div>
+
+<div id="resourceTools" class="admin-tools hide">
+ <h2>📚 مدیریت مستندها و دروس</h2>
+ <p class="hint">لینک فایل یا ویدئوی آپلودشده را وارد کن. این فرم لینک‌ها را در کتابخانه سایت ثبت می‌کند؛ فایل باید از قبل روی یک سرویس قابل‌دسترسی آپلود شده باشد.</p>
+ <div id="documentAdmin" class="panel" style="margin:12px 0">
+  <h3>🔬 مستندها</h3>
+  <form id="documentForm">
+   <div class="field"><label for="documentTitle">عنوان مستند</label><input id="documentTitle" required maxlength="160"></div>
+   <div class="field"><label for="documentUrl">لینک فایل یا ویدئو</label><input id="documentUrl" type="url" required placeholder="https://..." maxlength="1500"></div>
+   <div class="field"><label for="documentDescription">توضیح کوتاه (اختیاری)</label><input id="documentDescription" maxlength="500"></div>
+   <div class="actions"><button class="btn primary" type="submit" id="addDocumentBtn">افزودن مستند</button></div>
+  </form><div id="documentAdminList" class="admin-list"></div>
+ </div>
+ <div id="lessonAdmin" class="panel" style="margin:12px 0">
+  <h3>📘 دروس</h3>
+  <form id="lessonForm">
+   <div class="field"><label for="lessonTitle">عنوان درس</label><input id="lessonTitle" required maxlength="160"></div>
+   <div class="field"><label for="lessonUrl">لینک فایل یا ویدئو</label><input id="lessonUrl" type="url" required placeholder="https://..." maxlength="1500"></div>
+   <div class="field"><label for="lessonDescription">توضیح کوتاه (اختیاری)</label><input id="lessonDescription" maxlength="500"></div>
+   <div class="actions"><button class="btn primary" type="submit" id="addLessonBtn">افزودن درس</button></div>
+  </form><div id="lessonAdminList" class="admin-list"></div>
+ </div>
+ <div id="resourceStatus" class="status" role="status"></div>
+</div>
+
 </section>
-<div class="foot">CINEMA ADMIN · v1.2.0</div>
+<div class="foot">CINEMA ADMIN · v1.3.0</div>
 </div>
 <script>
 (()=> {
@@ -98,22 +125,79 @@
   if(!data)throw new Error('این حساب دسترسی مدیر حلی سینما را ندارد.');
   currentPermissions=data.permissions||{};
   $('loginPanel').classList.add('hide');$('editorPanel').classList.remove('hide');
-  $('adminTools').classList.toggle('hide',currentPermissions.manage_admins!==true);
+  $('adminTools').classList.toggle('hide',currentPermissions.manage_admins!==true);\n  $('resourceTools').classList.toggle('hide',currentPermissions.manage_documents!==true&&currentPermissions.manage_lessons!==true);\n  $('documentAdmin').classList.toggle('hide',currentPermissions.manage_documents!==true);\n  $('lessonAdmin').classList.toggle('hide',currentPermissions.manage_lessons!==true);
   $('saveBtn').disabled=currentPermissions.manage_movies!==true;
   if(currentPermissions.manage_movies!==true) setStatus('saveStatus','این حساب فقط اجازه مشاهده برنامه را دارد؛ برای ویرایش، دسترسی مدیریت فیلم لازم است.');
   else setStatus('saveStatus','دسترسی مدیر تأیید شد؛ در حال بارگذاری برنامه...');
   await loadPlaylist();
   if(currentPermissions.manage_settings===true) await loadCurtain();
   else { $('curtainBtn').disabled=true; $('curtainState').textContent='برای تغییر پرده، دسترسی تنظیمات سایت لازم است.'; }
-  if(currentPermissions.manage_admins===true) await loadAdminManagement();
+  if(currentPermissions.manage_admins===true) await loadAdminManagement();\n  if(currentPermissions.manage_documents===true||currentPermissions.manage_lessons===true) await loadResourceAdmin();
  }
+
+
+ const resourceDefs={
+  documents:{key:'public.cinema_documents',form:'documentForm',title:'documentTitle',url:'documentUrl',description:'documentDescription',list:'documentAdminList',button:'addDocumentBtn',permission:'manage_documents',label:'مستند'},
+  lessons:{key:'public.cinema_lessons',form:'lessonForm',title:'lessonTitle',url:'lessonUrl',description:'lessonDescription',list:'lessonAdminList',button:'addLessonBtn',permission:'manage_lessons',label:'درس'}
+ };
+ const resourceCache={documents:[],lessons:[]};
+ async function loadResourceAdmin(){
+  for(const [type,def] of Object.entries(resourceDefs)){
+   if(currentPermissions[def.permission]!==true)continue;
+   try{
+    const {data,error}=await withTimeout(client.from('site_settings').select('value').eq('key',def.key).maybeSingle(),'دریافت '+def.label+'ها');
+    if(error)throw error;
+    resourceCache[type]=Array.isArray(data?.value?.items)?data.value.items:[];
+    renderResourceAdmin(type);
+   }catch(err){setStatus('resourceStatus',err.message||'بارگذاری کتابخانه انجام نشد.','error');}
+  }
+ }
+ function renderResourceAdmin(type){
+  const def=resourceDefs[type],list=$(def.list);list.replaceChildren();
+  resourceCache[type].forEach((item,index)=>{
+   const card=document.createElement('article');card.className='admin-card';
+   const title=document.createElement('div');title.className='admin-email';title.textContent=item.title||def.label;
+   const url=document.createElement('div');url.className='admin-id';url.textContent=item.url||'';
+   const actions=document.createElement('div');actions.className='actions';
+   const del=document.createElement('button');del.className='btn';del.type='button';del.textContent='🗑️ حذف';
+   del.addEventListener('click',async()=>{
+    if(!confirm('«'+(item.title||def.label)+'» حذف شود؟'))return;
+    const old=[...resourceCache[type]];
+    resourceCache[type]=old.filter((_,i)=>i!==index);
+    try{await saveResources(type);renderResourceAdmin(type);setStatus('resourceStatus',def.label+' حذف شد.','ok');}
+    catch(err){resourceCache[type]=old;renderResourceAdmin(type);setStatus('resourceStatus',err.message||'حذف انجام نشد.','error');}
+   });
+   actions.append(del);card.append(title,url,actions);list.append(card);
+  });
+ }
+ async function saveResources(type){
+  const def=resourceDefs[type];
+  const {error}=await withTimeout(client.from('site_settings').upsert({key:def.key,value:{items:resourceCache[type]},updated_at:new Date().toISOString()},{onConflict:'key'}),'ذخیره '+def.label+'ها');
+  if(error)throw error;
+ }
+ Object.entries(resourceDefs).forEach(([type,def])=>{
+  $(def.form).addEventListener('submit',async event=>{
+   event.preventDefault();
+   if(currentPermissions[def.permission]!==true){setStatus('resourceStatus','برای این کار دسترسی لازم را نداری.','error');return;}
+   const btn=$(def.button);btn.disabled=true;
+   try{
+    const title=$(def.title).value.trim(),url=$(def.url).value.trim(),description=$(def.description).value.trim();
+    const parsed=new URL(url);
+    if(!['https:','http:'].includes(parsed.protocol))throw new Error('لینک باید با http یا https شروع شود.');
+    resourceCache[type].push({title,url:parsed.href,description});
+    await saveResources(type);renderResourceAdmin(type);$(def.form).reset();
+    setStatus('resourceStatus',def.label+' به کتابخانه اضافه شد.','ok');
+   }catch(err){setStatus('resourceStatus',err.message||'ذخیره انجام نشد.','error');}
+   finally{btn.disabled=false;}
+  });
+ });
 
  const permissionDefs=[
   ['manage_admins','مدیریت مدیرها'],
   ['manage_movies','مدیریت برنامه فیلم'],
   ['manage_posters','مدیریت پوسترها'],
   ['manage_ads','مدیریت تبلیغات'],
-  ['manage_settings','تنظیمات سایت']
+  ['manage_settings','تنظیمات سایت'],\n  ['manage_documents','مدیریت مستندها'],\n  ['manage_lessons','مدیریت دروس']
  ];
  function readPermissions(prefix){
   const result={};
