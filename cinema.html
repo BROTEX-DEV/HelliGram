@@ -133,6 +133,27 @@ body:before{background:radial-gradient(ellipse at 50% 8%,#ffffff12 0,transparent
 .player-curtain.opening{background:transparent;transition:background .7s ease .45s}
 @media(prefers-reduced-motion:reduce){.player-curtain .drape{transition:none}}
 
+
+/* Main content sections */
+.main-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0 26px}
+.main-tab{font:inherit;color:#c8c8c8;background:#080808;border:1px solid #292929;border-radius:13px;padding:14px 10px;cursor:pointer;transition:background .2s,border-color .2s,transform .2s}
+.main-tab:hover{border-color:#777;transform:translateY(-2px)}
+.main-tab[aria-selected="true"]{background:#f2f2f2;color:#050505;border-color:#f2f2f2;box-shadow:0 8px 24px #ffffff12}
+.main-tab .tab-icon{display:block;font-size:22px;margin-bottom:5px}
+.content-section[hidden]{display:none!important}
+.library-intro{padding:20px 0 14px}
+.library-intro h2{font-family:'CinemaHead','CinemaBody',sans-serif;margin:0 0 8px;font-size:clamp(22px,4vw,30px)}
+.library-intro p{color:var(--muted);margin:0;line-height:1.9}
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:13px;margin:12px 0 28px}
+.resource-card{background:#080808;border:1px solid #242424;border-radius:14px;padding:16px;min-width:0;transition:border-color .2s,transform .2s}
+.resource-card:hover{border-color:#696969;transform:translateY(-2px)}
+.resource-type{display:inline-flex;align-items:center;border:1px solid #333;border-radius:999px;padding:4px 9px;color:#aaa;font-size:11px;margin-bottom:10px}
+.resource-card h3{margin:0 0 8px;font-size:17px;overflow-wrap:anywhere}
+.resource-card p{color:#aaa;font-size:13px;line-height:1.9;margin:0 0 14px;overflow-wrap:anywhere}
+.resource-open{display:inline-flex;justify-content:center;align-items:center;text-decoration:none;color:#050505;background:#eee;border-radius:9px;padding:9px 14px;font-size:13px}
+.empty-library{border:1px dashed #333;border-radius:14px;padding:28px 16px;text-align:center;color:#888;line-height:2;margin:14px 0 28px}
+@media(max-width:520px){.main-nav{gap:6px}.main-tab{font-size:12px;padding:12px 5px}.main-tab .tab-icon{font-size:20px}.resource-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -150,11 +171,28 @@ body:before{background:radial-gradient(ellipse at 50% 8%,#ffffff12 0,transparent
 <div class="shell">
 <main>
 <section class="hero"><h1>حلی سینما</h1><p class="subtitle">سینما، ساده و بی‌حاشیه.</p></section>
+<nav class="main-nav" aria-label="بخش‌های اصلی حلی سینما">
+ <button class="main-tab" type="button" data-section="animation" aria-selected="true"><span class="tab-icon">🎬</span>انیمیشن آنلاین</button>
+ <button class="main-tab" type="button" data-section="documents" aria-selected="false"><span class="tab-icon">🔬</span>مستندها</button>
+ <button class="main-tab" type="button" data-section="lessons" aria-selected="false"><span class="tab-icon">📚</span>دروس</button>
+</nav>
+<div class="content-section" id="section-animation">
 <section aria-label="لیست پخش امروز"><div class="player-box inline-player"><div class="player-head"><h2 class="player-title" dir="auto">Hoppers | هاپرز</h2></div><div class="player-frame" id="inlinePlayer"><iframe src="https://www.aparat.com/video/video/embed/videohash/zbvl3ru/vt/frame" title="پخش فیلم" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="eager"></iframe><div class="player-curtain" id="playerCurtain" role="dialog" aria-label="پرده پلیر"><div class="drape left"></div><div class="drape right"></div><div class="valance"></div><div class="curtain-message"><h2>آماده نمایش؟</h2><div class="gold-line"></div><p>پرده را باز کن و از فیلم لذت ببر.</p><button id="openPlayerCurtain" type="button">باز کردن پرده</button></div></div></div></div><div class="playlist-head"><h2>لیست پخش امروز</h2><span class="day">روز اول</span></div><div class="grid" id="grid">
 <article class="card" data-movie="0" style="--i:0"><img class="poster" id="poster0" src="./1.jpg" alt="پوستر هاپرز" loading="eager"><h3 class="title" id="title0" dir="auto">Hoppers | هاپرز</h3><div class="broadcast-time"><span>ساعت پخش</span><b id="time0">۱۵:۳۰ تا ۱۷:۳۰</b></div></article>
 <article class="card" data-movie="1" style="--i:1"><img class="poster" id="poster1" src="./2.jpg" alt="پوستر داستان اسباب‌بازی ۵" loading="eager"><h3 class="title" id="title1" dir="auto">Toy Story 5 | داستان اسباب‌بازی ۵</h3><div class="broadcast-time"><span>ساعت پخش</span><b id="time1">۱۷:۳۰ تا ۱۹:۳۰</b></div></article>
 <article class="card" data-movie="2" style="--i:2"><img class="poster" id="poster2" src="./3.jpg" alt="پوستر سوپر ماریو: کهکشان" loading="eager"><h3 class="title" id="title2" dir="auto">The Super Mario Galaxy Movie | سوپر ماریو: کهکشان</h3><div class="broadcast-time"><span>ساعت پخش</span><b id="time2">۱۹:۳۰ تا ۲۱:۳۰</b></div></article>
 </div></section>
+</div>
+<section class="content-section" id="section-documents" hidden aria-labelledby="documentsHeading">
+ <div class="library-intro"><h2 id="documentsHeading">مستندهای آپلودشده</h2><p>مستندهای علمی و آموزشی در این بخش قرار می‌گیرند.</p></div>
+ <div class="resource-grid" id="documentsGrid"></div>
+ <div class="empty-library" id="documentsEmpty" hidden>هنوز مستندی اضافه نشده است.</div>
+</section>
+<section class="content-section" id="section-lessons" hidden aria-labelledby="lessonsHeading">
+ <div class="library-intro"><h2 id="lessonsHeading">دروس آپلودشده</h2><p>ویدئوها و فایل‌های آموزشی در این بخش قرار می‌گیرند.</p></div>
+ <div class="resource-grid" id="lessonsGrid"></div>
+ <div class="empty-library" id="lessonsEmpty" hidden>هنوز درسی اضافه نشده است.</div>
+</section>
 </main>
 <section class="ad-slot" aria-label="تبلیغ"><img src="t.gif" alt=""></section>
 <footer id="secretTrigger" title="حلی سینما">حلی سینما<div class="version">CINEMA v1.2.41</div><a class="admin-shortcut" href="./admin.html">مدیریت</a><div class="online-count" aria-live="polite"><span class="online-dot"></span><span id="onlineCount">در حال اتصال...</span></div></footer>
@@ -286,5 +324,52 @@ body:before{background:radial-gradient(ellipse at 50% 8%,#ffffff12 0,transparent
  if(iframe)new MutationObserver(syncMovie).observe(iframe,{attributes:true,attributeFilter:['src']});
 })();
 </script>
+
+<script>
+(()=>{
+ const tabs=[...document.querySelectorAll('.main-tab')];
+ const sections={animation:document.getElementById('section-animation'),documents:document.getElementById('section-documents'),lessons:document.getElementById('section-lessons')};
+ function showSection(name){
+  if(!sections[name])return;
+  Object.entries(sections).forEach(([key,el])=>{el.hidden=key!==name;});
+  tabs.forEach(tab=>tab.setAttribute('aria-selected',String(tab.dataset.section===name)));
+  try{sessionStorage.setItem('helliCinemaMainSection',name)}catch(_){}
+  if(name==='documents')loadResources('documents');
+  if(name==='lessons')loadResources('lessons');
+ }
+ tabs.forEach(tab=>tab.addEventListener('click',()=>showSection(tab.dataset.section)));
+ const SUPABASE_URL='https://pwwicgyrycaexjnnhseb.supabase.co';
+ const API_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3d2ljZ3lyY2Fl eGpubm5oc2ViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwMzczMjgsImV4cCI6MjEwNjYxMzMyOH0.860RskDmycONZUHyOloN8AmKqRkzU5YNXUUze2DuPdM'.replace(/ /g,'');
+ const cache={};
+ async function loadResources(type){
+  if(cache[type])return;
+  cache[type]=true;
+  const key=type==='documents'?'public.cinema_documents':'public.cinema_lessons';
+  const grid=document.getElementById(type+'Grid'),empty=document.getElementById(type+'Empty');
+  grid.replaceChildren();
+  try{
+   const res=await fetch(SUPABASE_URL+'/rest/v1/site_settings?key=eq.'+encodeURIComponent(key)+'&select=value',{headers:{apikey:API_KEY,Authorization:'Bearer '+API_KEY}});
+   if(!res.ok)throw new Error('load failed');
+   const rows=await res.json(),items=Array.isArray(rows?.[0]?.value?.items)?rows[0].value.items:[];
+   items.forEach(item=>{
+    if(!item||typeof item.title!=='string'||typeof item.url!=='string')return;
+    let url;try{url=new URL(item.url,location.href)}catch(_){return}
+    if(!['https:','http:'].includes(url.protocol))return;
+    const card=document.createElement('article');card.className='resource-card';
+    const badge=document.createElement('span');badge.className='resource-type';badge.textContent=type==='documents'?'مستند علمی':'درس آموزشی';
+    const title=document.createElement('h3');title.textContent=item.title;
+    card.append(badge,title);
+    if(item.description){const p=document.createElement('p');p.textContent=item.description;card.append(p);}
+    const link=document.createElement('a');link.className='resource-open';link.href=url.href;link.target='_blank';link.rel='noopener noreferrer';link.textContent=type==='documents'?'مشاهده مستند':'مشاهده درس';
+    card.append(link);grid.append(card);
+   });
+   empty.hidden=grid.children.length>0;
+  }catch(_){cache[type]=false;empty.hidden=false;empty.textContent='بارگذاری این بخش ممکن نشد؛ اتصال اینترنت را بررسی کن.';}
+ }
+ let first='animation';try{const saved=sessionStorage.getItem('helliCinemaMainSection');if(saved&&sections[saved])first=saved}catch(_){}
+ showSection(first);
+})();
+</script>
+
 </body>
 </html>
