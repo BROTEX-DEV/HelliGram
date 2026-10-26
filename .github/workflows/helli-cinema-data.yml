@@ -1,0 +1,92 @@
+name: Helli Cinema data updates
+
+on:
+  issues:
+    types: [opened, edited, labeled]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  update-cinema-data:
+    if: contains(github.event.issue.labels.*.name, 'cinema-data-update')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate trusted owner and payload
+        env:
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          set -euo pipefail
+          if [ "$ISSUE_AUTHOR" != "Nevar-Dev" ]; then
+            echo "Unauthorized issue author: $ISSUE_AUTHOR"
+            exit 1
+          fi
+          python - <<'PY'
+          import json, os, re, sys
+          body = os.environ.get("ISSUE_BODY", "")
+          match = re.search(r"```json\s*(.*?)\s*```", body, re.S)
+          if not match:
+              raise SystemExit("Issue body must contain one fenced JSON payload.")
+          data = json.loads(match.group(1))
+          allowed = {"playlist", "curtainClosed", "documents", "lessons"}
+          if not isinstance(data, dict) or set(data) - allowed:
+              raise SystemExit("Unexpected JSON structure.")
+          if "playlist" in data:
+              p = data["playlist"]
+              if not isinstance(p, list) or len(p) != 3:
+                  raise SystemExit("playlist must contain exactly three movies.")
+              for m in p:
+                  if not isinstance(m, dict) or not all(isinstance(m.get(k), str) for k in ("title","poster","start","end")):
+                      raise SystemExit("Each movie needs title, poster, start and end strings.")
+          if "curtainClosed" in data and not isinstance(data["curtainClosed"], bool):
+              raise SystemExit("curtainClosed must be true or false.")
+          for key in ("documents", "lessons"):
+              if key in data:
+                  items = data[key]
+                  if not isinstance(items, list) or any(not isinstance(x, dict) for x in items):
+                      raise SystemExit(key + " must be a list of objects.")
+                  for item in items:
+                      if not isinstance(item.get("title"), str) or not isinstance(item.get("url"), str):
+                          raise SystemExit(key + " entries require title and url.")
+          print("Payload validated.")
+          PY
+      - uses: actions/checkout@v4
+      - name: Apply JSON update
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          python - <<'PY'
+          import json, os, re
+          path = "cinema-data.json"
+          with open(path, encoding="utf-8") as f:
+              current = json.load(f)
+          body = os.environ.get("ISSUE_BODY", "")
+          match = re.search(r"```json\s*(.*?)\s*```", body, re.S)
+          incoming = json.loads(match.group(1))
+          current.update(incoming)
+          current["version"] = int(current.get("version", 0)) + 1
+          with open(path, "w", encoding="utf-8") as f:
+              json.dump(current, f, ensure_ascii=False, indent=2)
+              f.write("\n")
+          PY
+      - name: Commit and push data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cinema-data.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update Helli Cinema data from trusted owner"
+            git push
+          fi
+      - name: Close processed issue
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" --body "اطلاعات حلی سینما بررسی و ثبت شد."
+          gh issue close "$ISSUE_NUMBER"
