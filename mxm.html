@@ -4,7 +4,7 @@
 @font-face{font-family:CinemaBody;src:url('./2.ttf') format('truetype');font-display:swap}:root{color-scheme:dark;--line:#292929;--text:#f4f4f4;--muted:#a0a0a0}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#191919 0,transparent 48%),#050505;color:var(--text);font-family:CinemaBody,Tahoma,sans-serif;min-height:100vh}.wrap{width:min(1100px,100%);margin:auto;padding:22px 15px 55px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:18px}.brand{display:flex;align-items:center;gap:12px}.brand img{width:46px;height:46px;object-fit:contain;border:1px solid var(--line);border-radius:12px;padding:4px;background:#080808}.brand h1{font-size:21px;margin:0}.brand p{font-size:12px;color:var(--muted);margin:4px 0 0}.btn{font:inherit;cursor:pointer;border:1px solid #383838;background:#111;color:#eee;border-radius:10px;padding:10px 14px}.btn.primary{background:#e5e5e5;color:#080808;border-color:#eee;font-weight:800}.btn.danger{border-color:#743333;color:#ffbcbc}.btn:disabled{opacity:.55;cursor:wait}.panel{margin-top:20px;background:#090909;border:1px solid var(--line);border-radius:16px;padding:clamp(15px,3vw,25px);box-shadow:0 18px 55px #0008}.panel h2{font-size:18px;margin:0 0 7px}.hint{font-size:12px;line-height:1.9;color:var(--muted);margin:0 0 17px}.movies{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.movie,.admin-card,.resource-card{min-width:0;border:1px solid #292929;background:#070707;border-radius:12px;padding:14px}.movie h3{font-size:14px;margin:0 0 12px}.field{margin:12px 0}.field label{display:block;font-size:12px;color:#c8c8c8;margin-bottom:7px}input{width:100%;min-width:0;border:1px solid #303030;border-radius:9px;padding:11px 12px;background:#050505;color:#fff;font:inherit;outline:none}input:focus{border-color:#aaa}.actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:15px}.status{font-size:12px;line-height:1.8;color:#bbb;min-height:22px;margin-top:9px}.status.error{color:#ff9b9b}.status.ok{color:#9ce4b2}.hide{display:none!important}.resource-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.resource-form .field{margin:0}.resource-form .wide{grid-column:1/-1}.resource-list,.admin-list{display:grid;gap:10px;margin-top:14px}.resource-card{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.resource-card .meta{min-width:0;overflow-wrap:anywhere}.resource-card small,.admin-id{display:block;font-size:10px;color:#888;overflow-wrap:anywhere;margin-top:5px}.admin-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}.permissions{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:12px}.permission{display:flex;align-items:center;gap:7px;font-size:12px;color:#ddd;border:1px solid #292929;border-radius:8px;padding:8px}.permission input{width:auto;min-width:auto;accent-color:#ddd}.admin-form{display:grid;grid-template-columns:1fr 2fr;gap:12px}.foot{text-align:center;color:#666;font-size:10px;margin-top:22px}@media(max-width:720px){.movies{grid-template-columns:1fr}.admin-form,.resource-form{grid-template-columns:1fr}.resource-form .wide{grid-column:auto}.brand h1{font-size:18px}.resource-card{flex-direction:column}.actions .btn{flex:1}}
 </style></head><body><main class="wrap">
 <header class="top"><div class="brand"><img src="./1.png" alt=""><div><h1>پنل مالک حلی سینما</h1><p>مدیریت برنامه پخش، منابع و مدیرها</p></div></div><div class="actions" style="margin:0"><a class="btn" href="./cinema.html">مشاهده سینما</a><button class="btn danger" id="logoutBtn" type="button">قفل پنل</button></div></header>
-<div id="locked" class="panel"><h2>لینک مالک لازم است</h2><p class="hint">این پنل فقط با لینک خصوصی مالک باز می‌شود. لینک را در اختیار دیگران نگذار.</p><div id="lockStatus" class="status" role="status"></div></div>
+<div id="locked" class="panel"><h2>ورود امن مالک</h2><p class="hint">برای مدیریت حلی سینما با حساب تأییدشده وارد شو. رمز عبور فقط از طریق Supabase Auth بررسی می‌شود.</p><form id="authForm"><div class="field"><label for="authEmail">ایمیل</label><input id="authEmail" type="email" required autocomplete="username" placeholder="ایمیل حساب"></div><div class="field"><label for="authPassword">رمز عبور</label><input id="authPassword" type="password" required minlength="8" autocomplete="current-password" placeholder="حداقل ۸ نویسه"></div><div class="actions"><button class="btn primary" id="signInBtn" type="submit">ورود</button><button class="btn" id="signUpBtn" type="button">ساخت حساب</button></div></form><div id="lockStatus" class="status" role="status"></div></div>
 <div id="workspace" class="hide"><div id="bootStatus" class="status" role="status"></div>
 <section class="panel"><h2>برنامه پخش امروز</h2><p class="hint">عنوان، پوستر و زمان هر سه فیلم را ویرایش کن.</p><form id="movieForm"><div id="movies" class="movies"></div><div class="actions"><button id="saveMovies" class="btn primary">ذخیره برنامه پخش</button></div><div id="movieStatus" class="status" role="status"></div></form></section>
 <section class="panel"><h2>پرده سینما</h2><p class="hint">نمایش سایت را برای همه بازدیدکنندگان ببند یا باز کن.</p><div class="actions"><button id="curtainBtn" class="btn">در حال دریافت...</button><span id="curtainText" class="status"></span></div></section>
@@ -13,6 +13,7 @@
 </section>
 <section class="panel"><h2>مدیریت مدیرها</h2><p class="hint">ایمیل باید از قبل حساب داشته باشد. فقط دسترسی‌های لازم را فعال کن.</p><form id="adminForm"><div class="admin-form"><div class="field"><label for="adminEmail">ایمیل حساب مدیر</label><input id="adminEmail" type="email" required autocomplete="off" placeholder="admin@example.com"></div><div class="field"><label>دسترسی‌ها</label><div class="permissions" id="newPermissions"><label class="permission"><input type="checkbox" data-perm="manage_admins"> مدیریت مدیرها</label><label class="permission"><input type="checkbox" data-perm="manage_movies" checked> مدیریت فیلم‌ها</label><label class="permission"><input type="checkbox" data-perm="manage_posters" checked> مدیریت پوسترها</label><label class="permission"><input type="checkbox" data-perm="manage_ads"> مدیریت تبلیغات</label><label class="permission"><input type="checkbox" data-perm="manage_settings"> تنظیمات سایت</label><label class="permission"><input type="checkbox" data-perm="manage_documents" checked> مدیریت مستندها</label><label class="permission"><input type="checkbox" data-perm="manage_lessons" checked> مدیریت دروس</label></div></div></div><div class="actions"><button class="btn primary">افزودن یا به‌روزرسانی مدیر</button></div></form><div id="adminStatus" class="status"></div><div id="adminList" class="admin-list"></div></section>
 </div><div class="foot">MXM OWNER · private-link access</div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (()=>{
  const $=id=>document.getElementById(id);
@@ -24,13 +25,14 @@
  ];
  let data={version:1,playlist:defaults.map(x=>({...x})),curtainClosed:false,documents:[],lessons:[]};
  const resources={documents:[],lessons:[]};
- function downloadData(messageId){
+ async function saveData(messageId){
   data.version=(Number(data.version)||1)+1;
-  const blob=new Blob([JSON.stringify(data,null,2)+'\\n'],{type:'application/json;charset=utf-8'});
-  const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='cinema-data.json';document.body.append(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
-  status(messageId,'فایل cinema-data.json دانلود شد. برای انتشار، همین فایل را در مخزن GitHub و مسیر اصلی جایگزین کن.','ok');
+  const {data:authData,error:authError}=await supabase.auth.getSession();
+  if(authError||!authData.session){status(messageId,'نشست ورود پیدا نشد؛ دوباره وارد شو.','error');return;}
+  const {data:updated,error}=await supabase.from('cinema_data').update({data,updated_at:new Date().toISOString()}).eq('id',1).select('id');
+  if(error){status(messageId,'ذخیره انجام نشد: '+error.message,'error');return;}
+  if(!updated||!updated.length){status(messageId,'ذخیره رد شد؛ ایمیل این حساب هنوز مجوز مالک ندارد.','error');return;}
+  status(messageId,'با موفقیت در Supabase ذخیره شد.','ok');
  }
  function renderMovies(){
   const topActions=document.querySelector('.top .actions');
@@ -70,7 +72,7 @@
    const url=document.createElement('small');url.textContent=item.url||'';
    meta.append(title,url);
    const del=document.createElement('button');del.type='button';del.className='btn danger';del.textContent='حذف';
-   del.addEventListener('click',()=>{data[type].splice(index,1);renderResources(type);downloadData(type+'Status');});
+   del.addEventListener('click',()=>{data[type].splice(index,1);renderResources(type);saveData(type+'Status');});
    card.append(meta,del);host.append(card);
   });
  }
@@ -81,18 +83,46 @@
   renderMovies();renderResources('documents');renderResources('lessons');
   $('curtainBtn').textContent=data.curtainClosed?'باز کردن پرده برای همه':'بستن پرده برای همه';
   $('curtainText').textContent=data.curtainClosed?'پرده بسته است.':'پرده باز است.';
-  status('bootStatus','اطلاعات از Supabase خوانده شد. ذخیره مستقیم هنوز به ورود امن مدیر و مجوز نوشتن نیاز دارد.');
+  status('bootStatus','وارد شدی. تغییرات فقط در صورت داشتن مجوز مالک در Supabase ذخیره می‌شوند.');
  }
- fetch('https://hbvoqgfdgdzbccqekwnw.supabase.co/rest/v1/cinema_data?id=eq.1&select=data',{headers:{apikey:'sb_publishable_fwvUhfFvAcR0h-Ec5_eZoQ_qs-3jZ9j',Authorization:'Bearer sb_publishable_fwvUhfFvAcR0h-Ec5_eZoQ_qs-3jZ9j'},cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('خواندن اطلاعات Supabase ناموفق بود');return r.json();}).then(rows=>{
-  const saved=rows&&rows[0]&&rows[0].data;if(!saved||typeof saved!=='object')throw new Error('اطلاعات سینما در Supabase پیدا نشد');
-  data={...data,...saved};
+ async function loadSavedData(){
+  const {data:row,error}=await supabase.from('cinema_data').select('data').eq('id',1).single();
+  if(error)throw error;
+  if(!row||!row.data)throw new Error('اطلاعات سینما پیدا نشد');
+  data={...data,...row.data};
   data.playlist=Array.isArray(data.playlist)&&data.playlist.length===3?data.playlist:defaults.map(x=>({...x}));
   data.documents=Array.isArray(data.documents)?data.documents:[];
   data.lessons=Array.isArray(data.lessons)?data.lessons:[];
   boot();
- }).catch(err=>{boot();status('bootStatus','فایل داده خوانده نشد؛ مقادیر پیش‌فرض نمایش داده شده‌اند. '+err.message,'error');});
- $('movieForm').addEventListener('submit',e=>{e.preventDefault();downloadData('movieStatus');});
- $('curtainBtn').addEventListener('click',()=>{data.curtainClosed=!data.curtainClosed;$('curtainBtn').textContent=data.curtainClosed?'باز کردن پرده برای همه':'بستن پرده برای همه';$('curtainText').textContent=data.curtainClosed?'پرده بسته است.':'پرده باز است.';downloadData('curtainText');});
+ }
+ const supabase=window.supabase.createClient('https://hbvoqgfdgdzbccqekwnw.supabase.co','sb_publishable_fwvUhfFvAcR0h-Ec5_eZoQ_qs-3jZ9j');
+ async function enterSession(session){
+  if(!session){$('workspace').classList.add('hide');$('locked').classList.remove('hide');return;}
+  $('locked').classList.add('hide');
+  try{await loadSavedData();}catch(err){$('workspace').classList.add('hide');$('locked').classList.remove('hide');status('lockStatus','ورود انجام شد اما دسترسی خواندن اطلاعات خطا داد: '+err.message,'error');}
+ }
+ $('authForm').addEventListener('submit',async e=>{
+  e.preventDefault();const btn=$('signInBtn');btn.disabled=true;status('lockStatus','در حال بررسی حساب...');
+  const email=$('authEmail').value.trim(),password=$('authPassword').value;
+  const {data:result,error}=await supabase.auth.signInWithPassword({email,password});
+  btn.disabled=false;
+  if(error){status('lockStatus','ورود ناموفق بود: '+error.message,'error');return;}
+  status('lockStatus','ورود موفق بود.','ok');await enterSession(result.session);
+ });
+ $('signUpBtn').addEventListener('click',async()=>{
+  const email=$('authEmail').value.trim(),password=$('authPassword').value;
+  if(!email||password.length<8){status('lockStatus','ایمیل را وارد کن و رمز حداقل ۸ نویسه‌ای بگذار.','error');return;}
+  $('signUpBtn').disabled=true;status('lockStatus','در حال ساخت حساب...');
+  const {data:result,error}=await supabase.auth.signUp({email,password});
+  $('signUpBtn').disabled=false;
+  if(error){status('lockStatus','ساخت حساب ناموفق بود: '+error.message,'error');return;}
+  if(!result.session){status('lockStatus','حساب ساخته شد. ایمیل را تأیید کن و سپس وارد شو.','ok');return;}
+  status('lockStatus','حساب ساخته شد؛ دسترسی مالک پس از تأیید ایمیل و تنظیم مجوز داده می‌شود.','ok');await enterSession(result.session);
+ });
+ supabase.auth.onAuthStateChange((_event,session)=>{if(session)enterSession(session);else{$('workspace').classList.add('hide');$('locked').classList.remove('hide');}});
+ supabase.auth.getSession().then(({data:auth})=>enterSession(auth.session));
+ $('movieForm').addEventListener('submit',e=>{e.preventDefault();saveData('movieStatus');});
+ $('curtainBtn').addEventListener('click',()=>{data.curtainClosed=!data.curtainClosed;$('curtainBtn').textContent=data.curtainClosed?'باز کردن پرده برای همه':'بستن پرده برای همه';$('curtainText').textContent=data.curtainClosed?'پرده بسته است.':'پرده باز است.';saveData('curtainText');});
  for(const type of ['documents','lessons']){
   $(type+'Form').addEventListener('submit',e=>{
    e.preventDefault();
@@ -103,10 +133,10 @@
    try{
     const parsed=new URL(url);if(!['http:','https:'].includes(parsed.protocol))throw new Error('لینک باید http یا https باشد.');
     data[type].push({title,url:parsed.href,description});
-    renderResources(type);e.target.reset();downloadData(type+'Status');
+    renderResources(type);e.target.reset();saveData(type+'Status');
    }catch(err){status(type+'Status',err.message,'error');}
   });
  }
- $('logoutBtn').addEventListener('click',()=>{status('bootStatus','برای قفل‌کردن نمای پنل، این صفحه را ببند. اطلاعات خصوصی یا توکن گیت‌هاب در این فایل ذخیره نمی‌شود.');});
+ $('logoutBtn').addEventListener('click',async()=>{await supabase.auth.signOut();$('workspace').classList.add('hide');$('locked').classList.remove('hide');status('lockStatus','از حساب خارج شدی.');});
 })();
 </script></body></html>
