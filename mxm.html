@@ -33,6 +33,20 @@
   status(messageId,'فایل cinema-data.json دانلود شد. برای انتشار، همین فایل را در مخزن GitHub و مسیر اصلی جایگزین کن.','ok');
  }
  function renderMovies(){
+  const topActions=document.querySelector('.top .actions');
+  if(topActions&&!$('publishGitHubBtn')){
+   const publish=document.createElement('button');publish.id='publishGitHubBtn';publish.type='button';publish.className='btn primary';publish.textContent='ارسال تغییرات به گیت‌هاب';
+   publish.addEventListener('click',()=>{
+    const payload={playlist:data.playlist,curtainClosed:data.curtainClosed===true,documents:data.documents||[],lessons:data.lessons||[]};
+    const title='[CINEMA DATA] به‌روزرسانی حلی سینما';
+    const body='این درخواست از پنل مالک حلی سینما ساخته شده است.\n\nبرای ثبت خودکار، JSON زیر را بدون تغییر نگه دارید:\n\n```json\n'+JSON.stringify(payload,null,2)+'\n```';
+    const url='https://github.com/BROTEX-DEV/HelliGram/issues/new?title='+encodeURIComponent(title)+'&body='+encodeURIComponent(body);
+    if(url.length>7000){status('bootStatus','اطلاعات خیلی حجیم است؛ از دانلود JSON استفاده کن.','error');return;}
+    window.open(url,'_blank');
+    status('bootStatus','فرم درخواست در گیت‌هاب باز شد. برای ثبت اطلاعات، باید در گیت‌هاب روی Submit new issue بزنی؛ گردش‌کار فقط درخواست حساب Nevar-Dev را می‌پذیرد.');
+   });
+   topActions.insertBefore(publish,$('logoutBtn'));
+  }
   const host=$('movies');host.replaceChildren();
   data.playlist.slice(0,3).forEach((m,i)=>{
    const box=document.createElement('section');box.className='movie';
