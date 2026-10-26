@@ -81,9 +81,10 @@
   renderMovies();renderResources('documents');renderResources('lessons');
   $('curtainBtn').textContent=data.curtainClosed?'باز کردن پرده برای همه':'بستن پرده برای همه';
   $('curtainText').textContent=data.curtainClosed?'پرده بسته است.':'پرده باز است.';
-  status('bootStatus','اتصال خواندن به cinema-data.json برقرار است. این پنل فایل به‌روزشده را دانلود می‌کند؛ GitHub Pages اجازه ذخیره مستقیم و امن در مخزن را از داخل مرورگر نمی‌دهد.');
+  status('bootStatus','اطلاعات از Supabase خوانده شد. ذخیره مستقیم هنوز به ورود امن مدیر و مجوز نوشتن نیاز دارد.');
  }
- fetch('./cinema-data.json?v='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('فایل اطلاعات در دسترس نیست');return r.json();}).then(saved=>{
+ fetch('https://hbvoqgfdgdzbccqekwnw.supabase.co/rest/v1/cinema_data?id=eq.1&select=data',{headers:{apikey:'sb_publishable_fwvUhfFvAcR0h-Ec5_eZoQ_qs-3jZ9j',Authorization:'Bearer sb_publishable_fwvUhfFvAcR0h-Ec5_eZoQ_qs-3jZ9j'},cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('خواندن اطلاعات Supabase ناموفق بود');return r.json();}).then(rows=>{
+  const saved=rows&&rows[0]&&rows[0].data;if(!saved||typeof saved!=='object')throw new Error('اطلاعات سینما در Supabase پیدا نشد');
   data={...data,...saved};
   data.playlist=Array.isArray(data.playlist)&&data.playlist.length===3?data.playlist:defaults.map(x=>({...x}));
   data.documents=Array.isArray(data.documents)?data.documents:[];
