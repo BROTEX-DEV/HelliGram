@@ -72,7 +72,7 @@
 </div>
 
 </section>
-<div class="foot">CINEMA ADMIN · v1.3.0</div>
+<div class="foot">CINEMA ADMIN · v1.3.1</div>
 </div>
 <script>
 (()=> {
@@ -124,7 +124,7 @@
   if(error)throw error;
   if(!data)throw new Error('این حساب دسترسی مدیر حلی سینما را ندارد.');
   currentPermissions=data.permissions||{};
-  $('loginPanel').classList.add('hide');$('editorPanel').classList.remove('hide');
+  // Configure and load the panel first; only hide the login form after required loads succeed.
   $('adminTools').classList.toggle('hide',currentPermissions.manage_admins!==true);
   $('resourceTools').classList.toggle('hide',currentPermissions.manage_documents!==true&&currentPermissions.manage_lessons!==true);
   $('documentAdmin').classList.toggle('hide',currentPermissions.manage_documents!==true);
@@ -137,6 +137,8 @@
   else { $('curtainBtn').disabled=true; $('curtainState').textContent='برای تغییر پرده، دسترسی تنظیمات سایت لازم است.'; }
   if(currentPermissions.manage_admins===true) await loadAdminManagement();
   if(currentPermissions.manage_documents===true||currentPermissions.manage_lessons===true) await loadResourceAdmin();
+  $('loginPanel').classList.add('hide');
+  $('editorPanel').classList.remove('hide');
  }
 
 
@@ -279,13 +281,27 @@
   finally{$('addAdminBtn').disabled=false;}
  });
 
+ function showLoginError(err){
+  $('editorPanel').classList.add('hide');
+  $('loginPanel').classList.remove('hide');
+  try{client.auth.signOut().catch(()=>{});}catch(_){}
+  const raw=String(err?.message||'');
+  let msg=raw||'ورود انجام نشد. دوباره تلاش کن.';
+  if(/invalid login credentials/i.test(raw))msg='ایمیل یا رمز عبور اشتباه است.';
+  else if(/email not confirmed/i.test(raw))msg='ایمیل این حساب هنوز تأیید نشده است.';
+  setStatus('loginStatus',msg,'error');
+ }
  $('loginForm').addEventListener('submit',async e=>{
   e.preventDefault();$('loginBtn').disabled=true;setStatus('loginStatus','در حال بررسی حساب...');
   try{
-   const {data,error}=await withTimeout(client.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value}),'ورود به حساب');
+   const email=$('email').value.trim(),password=$('password').value;
+   if(!email||!password)throw new Error('ایمیل و رمز عبور را وارد کن.');
+   const {data,error}=await withTimeout(client.auth.signInWithPassword({email,password}),'ورود به حساب');
    if(error)throw error;
-   await enterIfAdmin(data.user);setStatus('saveStatus','ورود موفق بود.','ok');
-  }catch(err){await client.auth.signOut();setStatus('loginStatus',err.message||'ورود انجام نشد.','error');}
+   if(!data?.user)throw new Error('ورود تأیید نشد؛ دوباره تلاش کن.');
+   await enterIfAdmin(data.user);
+   setStatus('saveStatus','ورود موفق بود.','ok');
+  }catch(err){showLoginError(err);}
   finally{$('loginBtn').disabled=false;}
  });
  $('editorForm').addEventListener('submit',async e=>{
@@ -302,7 +318,13 @@
   finally{$('saveBtn').disabled=currentPermissions.manage_movies!==true;}
  });
  $('logoutBtn').addEventListener('click',async()=>{await client.auth.signOut();$('editorPanel').classList.add('hide');$('loginPanel').classList.remove('hide');$('password').value='';setStatus('loginStatus','از حساب خارج شدی.');});
- client.auth.getSession().then(async({data})=>{if(data.session){try{await enterIfAdmin(data.session.user)}catch(err){await client.auth.signOut();setStatus('loginStatus',err.message||'برای مدیریت وارد شو.','error');}}});
+ client.auth.getSession().then(async({data,error})=>{
+  if(error){showLoginError(error);return;}
+  if(data.session){
+   try{await enterIfAdmin(data.session.user);}
+   catch(err){showLoginError(err);}
+  }
+ }).catch(showLoginError);
 })();
 </script>
 </body></html>
