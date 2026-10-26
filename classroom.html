@@ -234,5 +234,7 @@ async function leaveRoom(send=true){if(!joined&&!localStream)return;joined=false
 window.addEventListener("beforeunload",()=>{if(classScreenStream)classScreenStream.getTracks().forEach(t=>t.stop());if(localStream)localStream.getTracks().forEach(t=>t.stop());for(const st of pcs.values())st.pc.close();});
 init();
 </script>
+
+<script src="./ui-icons.js?v=1.0.0" defer></script>
 </body>
 </html>
