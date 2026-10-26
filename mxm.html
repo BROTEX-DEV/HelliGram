@@ -14,19 +14,84 @@
 <section class="panel"><h2>مدیریت مدیرها</h2><p class="hint">ایمیل باید از قبل حساب داشته باشد. فقط دسترسی‌های لازم را فعال کن.</p><form id="adminForm"><div class="admin-form"><div class="field"><label for="adminEmail">ایمیل حساب مدیر</label><input id="adminEmail" type="email" required autocomplete="off" placeholder="admin@example.com"></div><div class="field"><label>دسترسی‌ها</label><div class="permissions" id="newPermissions"><label class="permission"><input type="checkbox" data-perm="manage_admins"> مدیریت مدیرها</label><label class="permission"><input type="checkbox" data-perm="manage_movies" checked> مدیریت فیلم‌ها</label><label class="permission"><input type="checkbox" data-perm="manage_posters" checked> مدیریت پوسترها</label><label class="permission"><input type="checkbox" data-perm="manage_ads"> مدیریت تبلیغات</label><label class="permission"><input type="checkbox" data-perm="manage_settings"> تنظیمات سایت</label><label class="permission"><input type="checkbox" data-perm="manage_documents" checked> مدیریت مستندها</label><label class="permission"><input type="checkbox" data-perm="manage_lessons" checked> مدیریت دروس</label></div></div></div><div class="actions"><button class="btn primary">افزودن یا به‌روزرسانی مدیر</button></div></form><div id="adminStatus" class="status"></div><div id="adminList" class="admin-list"></div></section>
 </div><div class="foot">MXM OWNER · private-link access</div></main>
 <script>
-(()=>{const endpoint='https://pwwicgyrycaexjnnhseb.supabase.co/functions/v1/cinema-owner-gate';let key=new URLSearchParams(location.hash.slice(1)).get('key')||sessionStorage.getItem('mxmOwnerKey')||'';if(key){sessionStorage.setItem('mxmOwnerKey',key);history.replaceState(null,'',location.pathname+location.search);}const $=id=>document.getElementById(id);const status=(id,msg,type='')=>{$(id).textContent=msg;$(id).className='status '+type};
-const defaults=[{title:'Hoppers | هاپرز',poster:'./1.jpg',start:'15:30',end:'17:30'},{title:'Toy Story 5 | داستان اسباب‌بازی ۵',poster:'./2.jpg',start:'17:30',end:'19:30'},{title:'The Super Mario Galaxy Movie | سوپر ماریو: کهکشان',poster:'./3.jpg',start:'19:30',end:'21:30'}];let movies=defaults.map(x=>({...x})),curtainClosed=false,resources={documents:[],lessons:[]},admins=[];
-async function call(action,data={}){const res=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','x-owner-key':key},body:JSON.stringify({action,...data})});const body=await res.json().catch(()=>({error:'پاسخ سرور قابل خواندن نیست.'}));if(!res.ok)throw new Error(body.error||'درخواست ناموفق بود.');return body;}
-function lock(message){$('workspace').classList.add('hide');$('locked').classList.remove('hide');status('lockStatus',message,'error');}
-function renderMovies(){const host=$('movies');host.replaceChildren();movies.forEach((m,i)=>{const box=document.createElement('section');box.className='movie';const h=document.createElement('h3');h.textContent='فیلم '+(i+1);box.append(h);[['عنوان فیلم','title',m.title,'text'],['مسیر یا لینک پوستر','poster',m.poster,'text'],['شروع پخش','start',m.start,'time'],['پایان پخش','end',m.end,'time']].forEach(([label,name,value,type])=>{const wrap=document.createElement('div');wrap.className='field';const lab=document.createElement('label');lab.textContent=label;const input=document.createElement('input');input.type=type;input.value=value||'';input.required=true;input.addEventListener('input',()=>{movies[i][name]=input.value;});wrap.append(lab,input);box.append(wrap);});host.append(box);});}
-function renderResources(type){const host=$(type+'List');host.replaceChildren();resources[type].forEach((item,index)=>{const card=document.createElement('article');card.className='resource-card';const meta=document.createElement('div');meta.className='meta';const title=document.createElement('strong');title.textContent=item.title;const url=document.createElement('small');url.textContent=item.url;meta.append(title,url);const del=document.createElement('button');del.type='button';del.className='btn danger';del.textContent='حذف';del.addEventListener('click',async()=>{const old=[...resources[type]];resources[type]=old.filter((_,i)=>i!==index);try{await call('save_resources',{type,items:resources[type]});renderResources(type);status(type+'Status','حذف شد.','ok');}catch(e){resources[type]=old;renderResources(type);status(type+'Status',e.message,'error');}});card.append(meta,del);host.append(card);});}
-const permissionLabels={manage_admins:'مدیریت مدیرها',manage_movies:'مدیریت فیلم‌ها',manage_posters:'مدیریت پوسترها',manage_ads:'مدیریت تبلیغات',manage_settings:'تنظیمات سایت',manage_documents:'مدیریت مستندها',manage_lessons:'مدیریت دروس'};
-function getPermissions(host){const p={};host.querySelectorAll('[data-perm]').forEach(el=>p[el.dataset.perm]=el.checked);return p;}
-function renderAdmins(){const host=$('adminList');host.replaceChildren();admins.forEach(admin=>{const card=document.createElement('article');card.className='admin-card';const head=document.createElement('div');head.className='admin-head';const meta=document.createElement('div');const email=document.createElement('strong');email.textContent=admin.email;const id=document.createElement('small');id.className='admin-id';id.textContent=admin.user_id;meta.append(email,id);const remove=document.createElement('button');remove.type='button';remove.className='btn danger';remove.textContent='حذف مدیر';remove.addEventListener('click',async()=>{if(!confirm('دسترسی مدیر '+admin.email+' حذف شود؟'))return;try{await call('remove_admin',{user_id:admin.user_id});admins=admins.filter(a=>a.user_id!==admin.user_id);renderAdmins();status('adminStatus','مدیر حذف شد.','ok');}catch(e){status('adminStatus',e.message,'error');}});head.append(meta,remove);card.append(head);const grid=document.createElement('div');grid.className='permissions';Object.entries(permissionLabels).forEach(([perm,label])=>{const lab=document.createElement('label');lab.className='permission';const input=document.createElement('input');input.type='checkbox';input.checked=admin.permissions?.[perm]===true;input.dataset.perm=perm;lab.append(input,document.createTextNode(label));grid.append(lab);});const save=document.createElement('button');save.type='button';save.className='btn';save.textContent='ذخیره دسترسی‌ها';save.style.marginTop='12px';save.addEventListener('click',async()=>{try{const permissions=getPermissions(grid);await call('set_admin_permissions',{user_id:admin.user_id,permissions});admin.permissions=permissions;status('adminStatus','دسترسی‌ها ذخیره شد.','ok');}catch(e){status('adminStatus',e.message,'error');}});card.append(grid,save);host.append(card);});}
-async function boot(){renderMovies();renderResources('documents');renderResources('lessons');renderAdmins();$('locked').classList.add('hide');$('workspace').classList.remove('hide');$('curtainBtn').textContent='بستن پرده برای همه';$('curtainText').textContent='پرده باز است.';if(!key){status('bootStatus','امکانات پنل فوراً نمایش داده شدند. برای دریافت اطلاعات واقعی و ذخیره تغییرات، لینک خصوصی مالک لازم است.','');return;}try{const d=await call('bootstrap');movies=(Array.isArray(d.playlist)&&d.playlist.length===3?d.playlist:defaults).map((m,i)=>({...defaults[i],...m}));curtainClosed=d.curtain===true;resources.documents=Array.isArray(d.documents)?d.documents:[];resources.lessons=Array.isArray(d.lessons)?d.lessons:[];admins=Array.isArray(d.admins)?d.admins:[];renderMovies();renderResources('documents');renderResources('lessons');renderAdmins();$('curtainBtn').textContent=curtainClosed?'باز کردن پرده برای همه':'بستن پرده برای همه';$('curtainText').textContent=curtainClosed?'پرده بسته است.':'پرده باز است.';$('bootStatus').textContent='';}catch(e){status('bootStatus','پنل نمایش داده شد؛ دریافت اطلاعات ذخیره‌شده از سرور ناموفق بود: '+(e.message||'خطای اتصال'),'error');}}
-$('movieForm').addEventListener('submit',async e=>{e.preventDefault();const b=$('saveMovies');b.disabled=true;try{await call('save_playlist',{movies});status('movieStatus','برنامه پخش ذخیره شد.','ok');}catch(err){status('movieStatus',err.message,'error');}finally{b.disabled=false;}});
-$('curtainBtn').addEventListener('click',async()=>{const b=$('curtainBtn');b.disabled=true;const old=curtainClosed;curtainClosed=!curtainClosed;try{await call('set_curtain',{closed:curtainClosed});b.textContent=curtainClosed?'باز کردن پرده برای همه':'بستن پرده برای همه';$('curtainText').textContent=curtainClosed?'پرده بسته است.':'پرده باز است.';}catch(e){curtainClosed=old;status('curtainText',e.message,'error');}finally{b.disabled=false;}});
-for(const type of ['documents','lessons'])$(type+'Form').addEventListener('submit',async e=>{e.preventDefault();const title=$(type==='documents'?'documentTitle':'lessonTitle').value.trim(),url=$(type==='documents'?'documentUrl':'lessonUrl').value.trim(),description=$(type==='documents'?'documentDescription':'lessonDescription').value.trim();try{const parsed=new URL(url);if(!['http:','https:'].includes(parsed.protocol))throw new Error('لینک باید http یا https باشد.');const item={title,url:parsed.href,description};resources[type].push(item);await call('save_resources',{type,items:resources[type]});renderResources(type);e.target.reset();status(type+'Status','به فهرست اضافه شد.','ok');}catch(err){resources[type]=resources[type].filter(x=>x.title!==title||x.url!==url);renderResources(type);status(type+'Status',err.message,'error');}});
-$('adminForm').addEventListener('submit',async e=>{e.preventDefault();try{const email=$('adminEmail').value.trim(),permissions=getPermissions($('newPermissions'));await call('add_admin',{email,permissions});const d=await call('bootstrap');admins=d.admins||[];renderAdmins();e.target.reset();status('adminStatus','مدیر اضافه یا به‌روزرسانی شد.','ok');}catch(err){status('adminStatus',err.message,'error');}});
-$('logoutBtn').addEventListener('click',()=>{sessionStorage.removeItem('mxmOwnerKey');key='';lock('پنل قفل شد. برای بازکردن دوباره از لینک خصوصی مالک استفاده کن.');});boot();})();
+(()=>{
+ const $=id=>document.getElementById(id);
+ const status=(id,msg,type='')=>{const el=$(id);if(el){el.textContent=msg;el.className='status '+type;}};
+ const defaults=[
+  {title:'Hoppers | هاپرز',poster:'./1.jpg',start:'15:30',end:'17:30'},
+  {title:'Toy Story 5 | داستان اسباب‌بازی ۵',poster:'./2.jpg',start:'17:30',end:'19:30'},
+  {title:'The Super Mario Galaxy Movie | سوپر ماریو: کهکشان',poster:'./3.jpg',start:'19:30',end:'21:30'}
+ ];
+ let data={version:1,playlist:defaults.map(x=>({...x})),curtainClosed:false,documents:[],lessons:[]};
+ const resources={documents:[],lessons:[]};
+ function downloadData(messageId){
+  data.version=(Number(data.version)||1)+1;
+  const blob=new Blob([JSON.stringify(data,null,2)+'\\n'],{type:'application/json;charset=utf-8'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='cinema-data.json';document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  status(messageId,'فایل cinema-data.json دانلود شد. برای انتشار، همین فایل را در مخزن GitHub و مسیر اصلی جایگزین کن.','ok');
+ }
+ function renderMovies(){
+  const host=$('movies');host.replaceChildren();
+  data.playlist.slice(0,3).forEach((m,i)=>{
+   const box=document.createElement('section');box.className='movie';
+   const h=document.createElement('h3');h.textContent='فیلم '+(i+1);box.append(h);
+   [['عنوان فیلم','title',m.title,'text'],['مسیر یا لینک پوستر','poster',m.poster,'text'],['شروع پخش','start',m.start,'time'],['پایان پخش','end',m.end,'time']].forEach(([label,name,value,type])=>{
+    const wrap=document.createElement('div');wrap.className='field';
+    const lab=document.createElement('label');lab.textContent=label;
+    const input=document.createElement('input');input.type=type;input.value=value||'';input.required=true;
+    input.addEventListener('input',()=>{data.playlist[i][name]=input.value;});
+    wrap.append(lab,input);box.append(wrap);
+   });
+   host.append(box);
+  });
+ }
+ function renderResources(type){
+  const host=$(type+'List');host.replaceChildren();
+  (data[type]||[]).forEach((item,index)=>{
+   const card=document.createElement('article');card.className='resource-card';
+   const meta=document.createElement('div');meta.className='meta';
+   const title=document.createElement('strong');title.textContent=item.title||'بدون عنوان';
+   const url=document.createElement('small');url.textContent=item.url||'';
+   meta.append(title,url);
+   const del=document.createElement('button');del.type='button';del.className='btn danger';del.textContent='حذف';
+   del.addEventListener('click',()=>{data[type].splice(index,1);renderResources(type);downloadData(type+'Status');});
+   card.append(meta,del);host.append(card);
+  });
+ }
+ function boot(){
+  $('locked').classList.add('hide');$('workspace').classList.remove('hide');
+  const adminSection=[...document.querySelectorAll('.panel')].find(s=>s.querySelector('h2')?.textContent.includes('مدیریت مدیرها'));
+  if(adminSection)adminSection.hidden=true;
+  renderMovies();renderResources('documents');renderResources('lessons');
+  $('curtainBtn').textContent=data.curtainClosed?'باز کردن پرده برای همه':'بستن پرده برای همه';
+  $('curtainText').textContent=data.curtainClosed?'پرده بسته است.':'پرده باز است.';
+  status('bootStatus','اتصال خواندن به cinema-data.json برقرار است. این پنل فایل به‌روزشده را دانلود می‌کند؛ GitHub Pages اجازه ذخیره مستقیم و امن در مخزن را از داخل مرورگر نمی‌دهد.');
+ }
+ fetch('./cinema-data.json?v='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('فایل اطلاعات در دسترس نیست');return r.json();}).then(saved=>{
+  data={...data,...saved};
+  data.playlist=Array.isArray(data.playlist)&&data.playlist.length===3?data.playlist:defaults.map(x=>({...x}));
+  data.documents=Array.isArray(data.documents)?data.documents:[];
+  data.lessons=Array.isArray(data.lessons)?data.lessons:[];
+  boot();
+ }).catch(err=>{boot();status('bootStatus','فایل داده خوانده نشد؛ مقادیر پیش‌فرض نمایش داده شده‌اند. '+err.message,'error');});
+ $('movieForm').addEventListener('submit',e=>{e.preventDefault();downloadData('movieStatus');});
+ $('curtainBtn').addEventListener('click',()=>{data.curtainClosed=!data.curtainClosed;$('curtainBtn').textContent=data.curtainClosed?'باز کردن پرده برای همه':'بستن پرده برای همه';$('curtainText').textContent=data.curtainClosed?'پرده بسته است.':'پرده باز است.';downloadData('curtainText');});
+ for(const type of ['documents','lessons']){
+  $(type+'Form').addEventListener('submit',e=>{
+   e.preventDefault();
+   const isDoc=type==='documents';
+   const title=$(isDoc?'documentTitle':'lessonTitle').value.trim();
+   const url=$(isDoc?'documentUrl':'lessonUrl').value.trim();
+   const description=$(isDoc?'documentDescription':'lessonDescription').value.trim();
+   try{
+    const parsed=new URL(url);if(!['http:','https:'].includes(parsed.protocol))throw new Error('لینک باید http یا https باشد.');
+    data[type].push({title,url:parsed.href,description});
+    renderResources(type);e.target.reset();downloadData(type+'Status');
+   }catch(err){status(type+'Status',err.message,'error');}
+  });
+ }
+ $('logoutBtn').addEventListener('click',()=>{status('bootStatus','برای قفل‌کردن نمای پنل، این صفحه را ببند. اطلاعات خصوصی یا توکن گیت‌هاب در این فایل ذخیره نمی‌شود.');});
+})();
 </script></body></html>
