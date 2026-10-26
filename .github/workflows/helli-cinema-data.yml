@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   update-cinema-data:
-    if: contains(github.event.issue.labels.*.name, 'cinema-data-update')
+    if: github.event.issue.user.login == 'Nevar-Dev' && startsWith(github.event.issue.title, '[CINEMA DATA]')
     runs-on: ubuntu-latest
     steps:
       - name: Validate trusted owner and payload
