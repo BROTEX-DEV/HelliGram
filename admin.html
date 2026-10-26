@@ -281,28 +281,36 @@
   finally{$('addAdminBtn').disabled=false;}
  });
 
- function showLoginError(err){
+ // Keep startup session restoration and manual login from racing each other.
+ let authFlow=0;
+ function showLoginError(err,flow=authFlow){
+  if(flow!==authFlow)return;
   $('editorPanel').classList.add('hide');
   $('loginPanel').classList.remove('hide');
   try{client.auth.signOut().catch(()=>{});}catch(_){}
-  const raw=String(err?.message||'');
+  const raw=String(err?.message||err?.error_description||'');
   let msg=raw||'ورود انجام نشد. دوباره تلاش کن.';
   if(/invalid login credentials/i.test(raw))msg='ایمیل یا رمز عبور اشتباه است.';
   else if(/email not confirmed/i.test(raw))msg='ایمیل این حساب هنوز تأیید نشده است.';
+  else if(/failed to fetch|networkerror|load failed/i.test(raw))msg='ارتباط با سرور ورود برقرار نشد. اینترنت را بررسی کن و دوباره تلاش کن.';
   setStatus('loginStatus',msg,'error');
  }
  $('loginForm').addEventListener('submit',async e=>{
-  e.preventDefault();$('loginBtn').disabled=true;setStatus('loginStatus','در حال بررسی حساب...');
+  e.preventDefault();
+  const flow=++authFlow;
+  $('loginBtn').disabled=true;setStatus('loginStatus','در حال بررسی حساب...');
   try{
    const email=$('email').value.trim(),password=$('password').value;
    if(!email||!password)throw new Error('ایمیل و رمز عبور را وارد کن.');
    const {data,error}=await withTimeout(client.auth.signInWithPassword({email,password}),'ورود به حساب');
+   if(flow!==authFlow)return;
    if(error)throw error;
    if(!data?.user)throw new Error('ورود تأیید نشد؛ دوباره تلاش کن.');
    await enterIfAdmin(data.user);
+   if(flow!==authFlow)return;
    setStatus('saveStatus','ورود موفق بود.','ok');
-  }catch(err){showLoginError(err);}
-  finally{$('loginBtn').disabled=false;}
+  }catch(err){showLoginError(err,flow);}
+  finally{if(flow===authFlow)$('loginBtn').disabled=false;}
  });
  $('editorForm').addEventListener('submit',async e=>{
   e.preventDefault();$('saveBtn').disabled=true;setStatus('saveStatus','در حال ذخیره...');
@@ -318,13 +326,15 @@
   finally{$('saveBtn').disabled=currentPermissions.manage_movies!==true;}
  });
  $('logoutBtn').addEventListener('click',async()=>{await client.auth.signOut();$('editorPanel').classList.add('hide');$('loginPanel').classList.remove('hide');$('password').value='';setStatus('loginStatus','از حساب خارج شدی.');});
+ const startupFlow=++authFlow;
  client.auth.getSession().then(async({data,error})=>{
-  if(error){showLoginError(error);return;}
+  if(startupFlow!==authFlow)return;
+  if(error){showLoginError(error,startupFlow);return;}
   if(data.session){
    try{await enterIfAdmin(data.session.user);}
-   catch(err){showLoginError(err);}
+   catch(err){showLoginError(err,startupFlow);}
   }
- }).catch(showLoginError);
+ }).catch(err=>showLoginError(err,startupFlow));
 })();
 </script>
 
